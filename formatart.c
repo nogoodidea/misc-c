@@ -19,7 +19,21 @@ int checkBlacklist(char *inputStr){
 
 //check if the file extenction is a image 
 int checkValidImage(char *inputStr){
-
+ int inputLen = strlen(inputStr);
+ char *suffex = ".png";
+ int suffexLen = strlen(suffex);
+ int i;
+ int i2 = 0;
+ int returnInt = TRUE;
+ if (inputLen <= suffexLen) {returnInt = FALSE;}
+ for (i=inputLen-suffexLen;i==inputLen;i++){
+  if (inputStr[i] =! suffex[i2]) { returnInt = FALSE;break;}
+fprintf(stderr,"GOT HERE");
+fprintf(stderr,"%s",inputStr[i]);
+fprintf(stderr,"%s\n",suffex[i2]);
+  i2++;
+ }
+ return returnInt;
 }
 
 int main(int argc, char *argv[]) {
@@ -36,7 +50,7 @@ int main(int argc, char *argv[]) {
   printf("%s",formatHeader);
   if (targetDir) {
     while ((dir = readdir(targetDir)) != NULL) {
-      if (checkBlacklist(dir->d_name) == FALSE){
+      if (checkValidImage(dir->d_name) != FALSE){
          printf(formatData,dir->d_name);
         }
     }    closedir(targetDir);
