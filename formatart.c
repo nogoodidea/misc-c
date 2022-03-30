@@ -5,13 +5,14 @@
 #define TRUE 1
 #define FALSE 0
 
-//checks if a file is part of the blacklist ie
+//checks if a file is part of the blacklist
 int checkBlacklist(char *inputStr){
  char *blacklist[] = {".",".."};
  int blacklistLen = 2;
- int i=0;
+ int i;
  int returnInt = FALSE;
- for (;i==blacklistLen-1;i++){
+fprintf(stderr,"%s",blacklist[1]);
+ for (i=0;i==blacklistLen;i++){
 fprintf(stderr,"%s ",blacklist[i]);
 fprintf(stderr,"%s\n",inputStr);
  if (strcmp(blacklist[i],inputStr)==0){returnInt = TRUE;break;}
@@ -19,7 +20,8 @@ fprintf(stderr,"%s\n",inputStr);
  return returnInt;
 }
 
-//check if the file extenction is a image 
+/*check if the file extenction is a image
+ * fix later useing the blacklist function now 
 int checkValidImage(char *inputStr){
  int inputLen = strlen(inputStr);
  char *suffex = "png";
@@ -37,7 +39,7 @@ fprintf(stderr,"%i\n",inputLen);
   i++;
  }
  return returnInt;
-}
+}*/
 
 int main(int argc, char *argv[]) {
   //errors out if the user does not input a file, uses relative path
