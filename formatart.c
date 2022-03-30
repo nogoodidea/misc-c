@@ -9,10 +9,12 @@
 int checkBlacklist(char *inputStr){
  char *blacklist[] = {".",".."};
  int blacklistLen = 2;
- int i;
+ int i=0;
  int returnInt = FALSE;
- for (i=0;i==blacklistLen-1;i++){
-	if (strcmp(blacklist[i],inputStr)==0){returnInt = TRUE;break;}
+ for (;i==blacklistLen-1;i++){
+fprintf(stderr,"%s ",blacklist[i]);
+fprintf(stderr,"%s\n",inputStr);
+ if (strcmp(blacklist[i],inputStr)==0){returnInt = TRUE;break;}
   }
  return returnInt;
 }
@@ -20,41 +22,42 @@ int checkBlacklist(char *inputStr){
 //check if the file extenction is a image 
 int checkValidImage(char *inputStr){
  int inputLen = strlen(inputStr);
- char *suffex = ".png";
+ char *suffex = "png";
  int suffexLen = strlen(suffex);
  int i;
  int i2 = 0;
+fprintf(stderr,"%s\n",inputStr);
  int returnInt = TRUE;
- if (inputLen <= suffexLen) {returnInt = FALSE;}
- for (i=inputLen-suffexLen;i==inputLen;i++){
+ i = inputLen-suffexLen;
+fprintf(stderr,"%i\n",inputLen);
+ if (inputLen <= suffexLen) {returnInt = FALSE;return returnInt;}
+  while (i != inputLen){
   if (inputStr[i] =! suffex[i2]) { returnInt = FALSE;break;}
-fprintf(stderr,"GOT HERE");
-fprintf(stderr,"%s",inputStr[i]);
-fprintf(stderr,"%s\n",suffex[i2]);
   i2++;
+  i++;
  }
  return returnInt;
 }
 
 int main(int argc, char *argv[]) {
   //errors out if the user does not input a file, uses relative path
-  if (argc == 2) { fprintf(stderr,"NEEDS <CONFIG> <DIR>");return 1;}
+  if (argc == 1) { fprintf(stderr,"NEEDS <DIR>");return 1;}
   //FILE *fopen(argv[1],'r');
   DIR *targetDir;
   struct dirent *dir;
-  targetDir = opendir(argv[2]);
+  targetDir = opendir(argv[1]);
   //headers
-  const char *formatHeader = "<!DOCTYPE HTML>\n<HTML>\n<HEAD>\n<TITLE>Art</TITLE>\n<BODY>";
+  const char *formatHeader = "<!DOCTYPE HTML>\n<HTML>\n<HEAD>\n<TITLE>Art</TITLE>\n<BODY>\n";
   const char *formatData = "<img src=\"art/%s\" style=\"width:70%;height:50%;\">\n";
   const char *formatFooter = "</BODY>\n</HTML>";
   printf("%s",formatHeader);
   if (targetDir) {
     while ((dir = readdir(targetDir)) != NULL) {
-      if (checkValidImage(dir->d_name) != FALSE){
+      if (checkBlacklist(dir->d_name) != TRUE){
          printf(formatData,dir->d_name);
         }
     }    closedir(targetDir);
-  }else{printf("ERROR %s NOT FOUND",argv[2]);}
+  }else{printf("ERROR %s NOT FOUND",argv[1]);}
   printf("%s",formatFooter);
   return(0);
 }
