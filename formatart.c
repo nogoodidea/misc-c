@@ -9,15 +9,12 @@
 int checkBlacklist(char *inputStr){
  char *blacklist[] = {".",".."};
  int blacklistLen = 2;
- int i;
- int returnInt = FALSE;
-fprintf(stderr,"%s",blacklist[1]);
- for (i=0;i==blacklistLen;i++){
-fprintf(stderr,"%s ",blacklist[i]);
-fprintf(stderr,"%s\n",inputStr);
- if (strcmp(blacklist[i],inputStr)==0){returnInt = TRUE;break;}
-  }
- return returnInt;
+ int i=0;
+ while (blacklistLen != i){
+ //check if the string is = than the blacklist string
+  if (strcmp(inputStr,blacklist[i])==0){return FALSE;}
+  i++;}
+ return TRUE;
 }
 
 /*check if the file extenction is a image
@@ -55,7 +52,7 @@ int main(int argc, char *argv[]) {
   printf("%s",formatHeader);
   if (targetDir) {
     while ((dir = readdir(targetDir)) != NULL) {
-      if (checkBlacklist(dir->d_name) != TRUE){
+      if (checkBlacklist(dir->d_name) == TRUE){
          printf(formatData,dir->d_name);
         }
     }    closedir(targetDir);
