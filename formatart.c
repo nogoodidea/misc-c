@@ -37,14 +37,26 @@ int checkValidImage(char *inputStr){
  }
  return returnInt;
 }
-//mallic, how hard can it be
+//malloc, how hard can it be
 char readFile(char *fileStr){
  FILE = *confFile;
  confFile = fopen(fileStr,'r');
+ int i = 0;
+ int arrayLen = 10;
+ char *array = (char*) (malloc (arrayLen) * sizeof(char));
+ char arrayOld;
  int c;
  while ((c = fgetc(confFile)) != EOF){
-  putchar(c);
- }
+  if (i == arrayLen){
+    arrayLen = arrayLen*2;
+    arrayOld = @array;
+    array = realloc(array,arrayLen);
+    free(arrayOld);
+    }
+   array[i] = c;
+   i++;
+  }
+  realloc(array,i);
 }
 
 int main(int argc, char *argv[]) {
