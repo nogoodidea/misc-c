@@ -1,6 +1,8 @@
 #include <dirent.h> 
 #include <stdio.h> 
 #include <string.h>
+#include <stdlib.h>
+
 //needed for me to understand my own code
 #define TRUE 1
 #define FALSE 0
@@ -18,17 +20,15 @@ int checkBlacklist(char *inputStr){
 }
 
 /*check if the file extenction is a image
- * fix later useing the blacklist function now 
+ * fix later useing the blacklist function now */
 int checkValidImage(char *inputStr){
  int inputLen = strlen(inputStr);
  char *suffex = "png";
  int suffexLen = strlen(suffex);
  int i;
  int i2 = 0;
-fprintf(stderr,"%s\n",inputStr);
  int returnInt = TRUE;
  i = inputLen-suffexLen;
-fprintf(stderr,"%i\n",inputLen);
  if (inputLen <= suffexLen) {returnInt = FALSE;return returnInt;}
   while (i != inputLen){
   if (inputStr[i] =! suffex[i2]) { returnInt = FALSE;break;}
@@ -36,27 +36,32 @@ fprintf(stderr,"%i\n",inputLen);
   i++;
  }
  return returnInt;
-}*/
+}
+//mallic, how hard can it be
+char readFile(char *fileStr){
+ FILE = *confFile;
+ confFile = fopen(fileStr,'r');
+ int c;
+ while ((c = fgetc(confFile)) != EOF){
+  putchar(c);
+ }
+}
 
 int main(int argc, char *argv[]) {
   //errors out if the user does not input a file, uses relative path
-  if (argc == 1) { fprintf(stderr,"NEEDS <DIR>");return 1;}
-  //FILE *fopen(argv[1],'r');
+  if (argc == 2) { fprintf(stderr,"NEEDS <CONFIG FILE> <DIR>");return 1;}
+  char *format[] = readFile(argv[1]);
   DIR *targetDir;
   struct dirent *dir;
   targetDir = opendir(argv[1]);
-  //headers
-  const char *formatHeader = "<!DOCTYPE HTML>\n<HTML>\n<HEAD>\n<TITLE>Art</TITLE>\n<BODY>\n";
-  const char *formatData = "<img src=\"art/%s\" style=\"width:70%;height:50%;\">\n";
-  const char *formatFooter = "</BODY>\n</HTML>";
-  printf("%s",formatHeader);
+  printf("%s",format[0]);
   if (targetDir) {
     while ((dir = readdir(targetDir)) != NULL) {
       if (checkBlacklist(dir->d_name) == TRUE){
-         printf(formatData,dir->d_name);
+         printf(format[1],dir->d_name);
         }
     }    closedir(targetDir);
   }else{printf("ERROR %s NOT FOUND",argv[1]);}
-  printf("%s",formatFooter);
+  printf("%s",format[2]);
   return(0);
 }
