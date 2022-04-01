@@ -20,49 +20,65 @@ int checkBlacklist(char *inputStr){
 }
 
 /*check if the file extenction is a image
- * fix later useing the blacklist function now */
+ * fix later use the blacklist function for now */
 int checkValidImage(char *inputStr){
  int inputLen = strlen(inputStr);
  char *suffex = "png";
  int suffexLen = strlen(suffex);
- int i;
+ int i = 0;
  int i2 = 0;
- int returnInt = TRUE;
  i = inputLen-suffexLen;
- if (inputLen <= suffexLen) {returnInt = FALSE;return returnInt;}
+ if (inputLen <= suffexLen) {return FALSE;}
   while (i != inputLen){
-  if (inputStr[i] =! suffex[i2]) { returnInt = FALSE;break;}
+  if (inputStr[i]=!suffex[i2]) {return FALSE;}
   i2++;
   i++;
  }
- return returnInt;
+ return TRUE;
 }
-//malloc, how hard can it be
-char readFile(char *fileStr){
- FILE = *confFile;
- confFile = fopen(fileStr,'r');
+
+//malloc, how hard can it be, VERY
+char** readFile(char *fileStr){
+ FILE *confFile; 
+ if ((confFile = fopen(fileStr,"r")) == NULL){fprintf(stderr,"file \"%s\" not found",fileStr);exit(1);}
  int i = 0;
  int arrayLen = 10;
- char *array = (char*) (malloc (arrayLen) * sizeof(char));
- char arrayOld;
+ char *array = malloc(arrayLen*sizeof(char));
+ if(array==NULL){fprintf(stderr,"out of mem");exit(1);}
  int c;
  while ((c = fgetc(confFile)) != EOF){
   if (i == arrayLen){
     arrayLen = arrayLen*2;
-    arrayOld = @array;
     array = realloc(array,arrayLen);
-    free(arrayOld);
+    if(array==NULL){fprintf(stderr,"out of mem");exit(1);}
     }
    array[i] = c;
    i++;
   }
-  realloc(array,i);
+  fclose(confFile);
+  array = realloc(array,i);
+  arrayLen = i;
+  char **arrayOut;
+  char *temp;
+  temp = strtok(array,"\n");
+//segfalts here
+  arrayOut[0] = malloc(strlen(temp)*sizeof(char));
+  if(arrayOut==NULL){fprintf(stderr,"out of mem");exit(1);}
+  arrayOut[i] = temp;
+  for (i=1;3==i;i++){
+   temp = strtok(temp,"\n");
+   arrayOut[i] = malloc(strlen(temp)*sizeof(char));
+   if(arrayOut==NULL){fprintf(stderr,"out of mem");exit(1);}
+   arrayOut[i] = temp;
+  }
+  free(array);
+  return arrayOut;
 }
 
 int main(int argc, char *argv[]) {
   //errors out if the user does not input a file, uses relative path
-  if (argc == 2) { fprintf(stderr,"NEEDS <CONFIG FILE> <DIR>");return 1;}
-  char *format[] = readFile(argv[1]);
+  if (argc == 2) { fprintf(stderr,"needs <CONFIG FILE> <DIR>");return 1;}
+  char **format = readFile(argv[1]);
   DIR *targetDir;
   struct dirent *dir;
   targetDir = opendir(argv[1]);
@@ -73,7 +89,8 @@ int main(int argc, char *argv[]) {
          printf(format[1],dir->d_name);
         }
     }    closedir(targetDir);
-  }else{printf("ERROR %s NOT FOUND",argv[1]);}
+  }else{fprintf(stderr,"dir \"%s\" not found",argv[1]);}
   printf("%s",format[2]);
+  free(format);
   return(0);
 }
