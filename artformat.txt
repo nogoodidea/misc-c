@@ -1,3 +1,4 @@
-"<!DOCTYPE HTML>\n<HTML>\n<HEAD>\n<TITLE>Art</TITLE>\n<BODY>\n"
-"<img src=\"art/%s\" style=\"width:70%;height:50%;\">\n"
-"</BODY>\n</HTML>"
+"<!DOCTYPE HTML><HTML><HEAD><TITLE>Art</TITLE>\n<BODY>"
+"<img src=\"art/%s\" style=\"width:70%;height:50%;\">"
+"</BODY></HTML>"
+

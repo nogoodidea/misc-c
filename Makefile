@@ -1,4 +1,4 @@
-CC = gcc -Wall
+CC = gcc -Wall -g
 
 clean:
 	@echo "Removeing compiled files"
