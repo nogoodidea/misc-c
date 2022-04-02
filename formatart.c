@@ -36,7 +36,7 @@ int checkValidImage(char *inputStr){
  }
  return TRUE;
 }
-
+void checkNull(char pointer){if(pointer==NULL){fprintf(stderr,"out of mem");exit(1);}}
 //malloc, how hard can it be, VERY
 char** readFile(char *fileStr){
  FILE *confFile; 
@@ -44,31 +44,36 @@ char** readFile(char *fileStr){
  int i = 0;
  int arrayLen = 10;
  char *array = malloc(arrayLen*sizeof(char));
- if(array==NULL){fprintf(stderr,"out of mem");exit(1);}
+ checkNull(array);
  int c;
  while ((c = fgetc(confFile)) != EOF){
   if (i == arrayLen){
     arrayLen = arrayLen*2;
-    array = realloc(array,arrayLen);
-    if(array==NULL){fprintf(stderr,"out of mem");exit(1);}
+    array = realloc(array,arrayLen*sizeof(char));
+    checkNull(array);
     }
    array[i] = c;
    i++;
   }
   fclose(confFile);
   array = realloc(array,i);
-  arrayLen = i;
-  char **arrayOut;
+  arrayLen = 2;
+  i=0;
+  char **arrayOut = malloc(arrayLen*sizeof(char *));
   char *temp;
   temp = strtok(array,"\n");
 //segfalts here
   arrayOut[0] = malloc(strlen(temp)*sizeof(char));
-  if(arrayOut==NULL){fprintf(stderr,"out of mem");exit(1);}
+  checkNull(arrayOut);
   arrayOut[i] = temp;
-  for (i=1;3==i;i++){
-   temp = strtok(temp,"\n");
+  while(temp = strtok(temp,"\n")!= NULL){
+   if(i==arrayLen){
+    arrayLen = arrayLen*2;
+    arrayOut = realloc(arrayOut,arrayLen*sizeof(char *));
+    checkNull(arrayOut);
+   }
    arrayOut[i] = malloc(strlen(temp)*sizeof(char));
-   if(arrayOut==NULL){fprintf(stderr,"out of mem");exit(1);}
+   checkNull(arrayOut);
    arrayOut[i] = temp;
   }
   free(array);
