@@ -28,7 +28,7 @@ int checkValidImage(char *inputStr){
  int i = 0;
  int i2 = 0;
  i = inputLen-suffexLen;
- if (inputLen <= suffexLen) {return FALSE;}
+ if (inputLen == suffexLen) {return FALSE;}
   while (i != inputLen){
   if (inputStr[i]=!suffex[i2]) {return FALSE;}
   i2++;
@@ -36,45 +36,46 @@ int checkValidImage(char *inputStr){
  }
  return TRUE;
 }
-void checkNull(char pointer){if(pointer==NULL){fprintf(stderr,"out of mem");exit(1);}}
+
+void checkNull(char* pointer){if(pointer==NULL){fprintf(stderr,"out of mem");exit(1);}}
+
 //malloc, how hard can it be, VERY
 char** readFile(char *fileStr){
  FILE *confFile; 
  if ((confFile = fopen(fileStr,"r")) == NULL){fprintf(stderr,"file \"%s\" not found",fileStr);exit(1);}
  int i = 0;
  int arrayLen = 10;
- char *array = malloc(arrayLen*sizeof(char));
+ char *array = (char*) malloc(arrayLen*sizeof(char));
  checkNull(array);
  int c;
  while ((c = fgetc(confFile)) != EOF){
-  if (i == arrayLen){
+  if (i == arrayLen -2){
     arrayLen = arrayLen*2;
     array = realloc(array,arrayLen*sizeof(char));
     checkNull(array);
     }
-   array[i] = c;
+    array[i] = (char) c;
    i++;
   }
+  array[i]='\0'; //end str
   fclose(confFile);
-  array = realloc(array,i);
   arrayLen = 2;
   i=0;
-  char **arrayOut = malloc(arrayLen*sizeof(char *));
+  char **arrayOut = (char**) malloc(arrayLen*sizeof(char*));
   char *temp;
-  temp = strtok(array,"\n");
-//segfalts here
-  arrayOut[0] = malloc(strlen(temp)*sizeof(char));
-  checkNull(arrayOut);
-  arrayOut[i] = temp;
-  while(temp = strtok(temp,"\n")!= NULL){
+  while(temp = strtok(array,"\n")!= NULL){
+   fprintf(stderr,"GOT HERE %c",temp[0]); 
    if(i==arrayLen){
     arrayLen = arrayLen*2;
-    arrayOut = realloc(arrayOut,arrayLen*sizeof(char *));
+    arrayOut = realloc(arrayOut,arrayLen*sizeof(char*));
     checkNull(arrayOut);
+    fprintf(stderr,"PAIN");
    }
-   arrayOut[i] = malloc(strlen(temp)*sizeof(char));
+   fprintf(stderr,"got here %s \n",temp);
+   arrayOut[i] = (char*) malloc(strlen(temp)*sizeof(char*));
    checkNull(arrayOut);
    arrayOut[i] = temp;
+   i++;
   }
   free(array);
   return arrayOut;
