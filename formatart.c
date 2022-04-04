@@ -62,19 +62,20 @@ char** readFile(char *fileStr){
   arrayLen = 2;
   i=0;
   char **arrayOut = (char**) malloc(arrayLen*sizeof(char*));
+  //temp does not seem to be set, breaks
   char *temp;
   while(temp = strtok(array,"\n")!= NULL){
-   fprintf(stderr,"GOT HERE %c",temp[0]); 
+   fprintf(stderr,"GOT HERE"); 
    if(i==arrayLen){
     arrayLen = arrayLen*2;
     arrayOut = realloc(arrayOut,arrayLen*sizeof(char*));
     checkNull(arrayOut);
-    fprintf(stderr,"PAIN");
    }
-   fprintf(stderr,"got here %s \n",temp);
+   fprintf(stderr,"got here");
    arrayOut[i] = (char*) malloc(strlen(temp)*sizeof(char*));
    checkNull(arrayOut);
    arrayOut[i] = temp;
+   fprintf(stderr,"AAA");
    i++;
   }
   free(array);
