@@ -39,7 +39,6 @@ int checkValidImage(char *inputStr){
 
 void checkNull(char* pointer){if(pointer==NULL){fprintf(stderr,"out of mem");exit(1);}}
 
-//malloc, how hard can it be, VERY
 char** readFile(char *fileStr){
  FILE *confFile; 
  if ((confFile = fopen(fileStr,"r")) == NULL){fprintf(stderr,"file \"%s\" not found",fileStr);exit(1);}
@@ -54,30 +53,35 @@ char** readFile(char *fileStr){
     array = realloc(array,arrayLen*sizeof(char));
     checkNull(array);
     }
-    array[i] = (char) c;
+    array[i] = c;
    i++;
   }
   array[i]='\0'; //end str
   fclose(confFile);
   arrayLen = 2;
-  i=0;
+  i=1;
   char **arrayOut = (char**) malloc(arrayLen*sizeof(char*));
-  //temp does not seem to be set, breaks
   char *temp;
-  while(temp = strtok(array,"\n")!= NULL){
-   fprintf(stderr,"GOT HERE"); 
+  temp = strtok(array,"\n");
+  arrayOut[i] = temp;
+  arrayOut[i][strlen(temp)+1] = '\0';
+  fprintf(stderr,"%s",temp);
+  while(TRUE){
+   temp = strtok(NULL,"\n");
+   if (temp==NULL){break;}
    if(i==arrayLen){
     arrayLen = arrayLen*2;
     arrayOut = realloc(arrayOut,arrayLen*sizeof(char*));
     checkNull(arrayOut);
    }
-   fprintf(stderr,"got here");
-   arrayOut[i] = (char*) malloc(strlen(temp)*sizeof(char*));
    checkNull(arrayOut);
    arrayOut[i] = temp;
-   fprintf(stderr,"AAA");
+   fprintf(stderr,"%s",temp);
+   arrayOut[i][strlen(temp)+1] = '\0';
    i++;
   }
+  fprintf(stderr,"E");
+  fprintf(stderr,"%s",arrayOut[0]);
   free(array);
   return arrayOut;
 }
@@ -85,7 +89,7 @@ char** readFile(char *fileStr){
 int main(int argc, char *argv[]) {
   //errors out if the user does not input a file, uses relative path
   if (argc == 2) { fprintf(stderr,"needs <CONFIG FILE> <DIR>");return 1;}
-  char **format = readFile(argv[1]);
+  char **format = (char**) readFile(argv[1]);
   DIR *targetDir;
   struct dirent *dir;
   targetDir = opendir(argv[1]);
