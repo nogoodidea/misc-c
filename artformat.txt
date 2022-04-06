@@ -1,4 +1,5 @@
-"<!DOCTYPE HTML><HTML><HEAD><TITLE>Art</TITLE>\n<BODY>"
-"<img src=\"art/%s\" style=\"width:70%;height:50%;\">"
+"<!DOCTYPE HTML><HTML><HEAD><TITLE>Art</TITLE><BODY>"
+"<img src\"art
+" style=\"width:70%;height:50%;\">\n"
 "</BODY></HTML>"
 
