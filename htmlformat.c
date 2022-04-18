@@ -72,7 +72,7 @@ char** readFile(char *fileStr){
   temp = strtok(array,"\n");
   while(temp) { // fails if temp == '\0' so if we run out 
    strcpy(arrayOut[i],strcat(temp, "\0"));
-   fprintf(stderr,"||%s||\n",arrayOut[i]);
+   fprintf(stderr,"%s\n",arrayOut[i]);
    i += 1;
    temp = strtok(NULL,"\n");
    if(i==arrayLen){//fails here
