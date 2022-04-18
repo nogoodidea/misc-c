@@ -30,14 +30,14 @@ int checkValidImage(char *inputStr){
  i = inputLen-suffexLen;
  if (inputLen == suffexLen) {return FALSE;}
   while (i != inputLen){
-  if (inputStr[i]=!suffex[i2]) {return FALSE;}
+  if ((inputStr[i])=!suffex[i2]) {return FALSE;}
   i2++;
   i++;
  }
  return TRUE;
 }
 
-void checkNull(char* pointer){if(pointer==NULL){fprintf(stderr,"out of mem");exit(1);}}
+void checkNull(void* pointer){if(pointer==NULL){fprintf(stderr,"out of mem");exit(1);}}
 
 void init(void* arr, int len) {
   for (int i = 0; i < len; i++) {
@@ -50,23 +50,24 @@ char** readFile(char *fileStr){
  if ((confFile = fopen(fileStr,"r")) == NULL){fprintf(stderr,"file \"%s\" not found",fileStr);exit(1);}
  int i = 0;
  int arrayLen = 10;
- char *array = (char*) malloc(arrayLen*sizeof(char));
+ char *array = (char) malloc(arrayLen*sizeof(char));
  checkNull(array);
  int c;
  while ((c = fgetc(confFile)) != EOF){
   if (i == arrayLen -2){
     arrayLen = arrayLen*2;
-    array = realloc(array,arrayLen*sizeof(char));
+    array = (char) realloc(array,arrayLen*sizeof(char));
     checkNull(array);
     }
     array[i] = c;
    i++;
   }
+fprintf(stderr,"got here");
   array[i]='\0'; //end str
   fclose(confFile);
-  arrayLen = 4;
+  arrayLen = 2;
   i=0;//1
-  char **arrayOut = (char**) malloc(arrayLen*sizeof(char*));
+  char **arrayOut = (char**) malloc(arrayLen*sizeof(char**));
   init(arrayOut, arrayLen);
   char *temp;
   temp = strtok(array,"\n");
@@ -77,12 +78,11 @@ char** readFile(char *fileStr){
    temp = strtok(NULL,"\n");
    if(i==arrayLen){//fails here
     arrayLen = arrayLen*2;
-    arrayOut = realloc(arrayOut,arrayLen*sizeof(char*));
+    arrayOut = (char**) realloc(arrayOut,arrayLen*sizeof(char**));
     checkNull(arrayOut);
    }
   } 
   free(array);
-fprintf(stderr,"HERE");
   return arrayOut;
 }
 
@@ -90,11 +90,12 @@ int main(int argc, char *argv[]) {
  //errors out if the user does not input a file, uses relative path
  if (argc == 2) { fprintf(stderr,"needs <CONFIG FILE> <DIR>");return 1;}
  char **format = (char**) readFile(argv[1]);
+ fprintf(stderr,"got here");
  DIR *targetDir;
  char *targetDirName;
  struct dirent *dir;
+ fprintf(stderr,"got here too");
  targetDir = opendir(argv[2]);
-fprintf(stderr,"HERE");
  printf("%s\n",format[0]);
  if (targetDir) {
   while ((dir = readdir(targetDir)) != NULL) {
