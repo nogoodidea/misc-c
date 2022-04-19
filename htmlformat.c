@@ -50,35 +50,33 @@ char** readFile(char *fileStr){
  if ((confFile = fopen(fileStr,"r")) == NULL){fprintf(stderr,"file \"%s\" not found",fileStr);exit(1);}
  int i = 0;
  int arrayLen = 10;
- char *array = (char) malloc(arrayLen*sizeof(char));
+ char *array = (char *) malloc(arrayLen*sizeof(char *));
  checkNull(array);
  int c;
  while ((c = fgetc(confFile)) != EOF){
   if (i == arrayLen -2){
     arrayLen = arrayLen*2;
-    array = (char) realloc(array,arrayLen*sizeof(char));
+    array = (char *) realloc(array,arrayLen*sizeof(char *));
     checkNull(array);
     }
     array[i] = c;
    i++;
   }
-fprintf(stderr,"got here");
   array[i]='\0'; //end str
   fclose(confFile);
-  arrayLen = 2;
+  arrayLen = 5;
   i=0;//1
-  char **arrayOut = (char**) malloc(arrayLen*sizeof(char**));
+  char **arrayOut = (char **) malloc(arrayLen*sizeof(char **));
   init(arrayOut, arrayLen);
   char *temp;
   temp = strtok(array,"\n");
-  while(temp) { // fails if temp == '\0' so if we run out 
+  while(temp) { // breaks if temp == '\0' so if we exit the loop
    strcpy(arrayOut[i],strcat(temp, "\0"));
-   fprintf(stderr,"%s\n",arrayOut[i]);
    i += 1;
    temp = strtok(NULL,"\n");
-   if(i==arrayLen){//fails here
+   if(i==arrayLen){
     arrayLen = arrayLen*2;
-    arrayOut = (char**) realloc(arrayOut,arrayLen*sizeof(char**));
+    arrayOut = (char **) realloc(arrayOut,arrayLen*sizeof(char **));
     checkNull(arrayOut);
    }
   } 
@@ -89,14 +87,19 @@ fprintf(stderr,"got here");
 int main(int argc, char *argv[]) {
  //errors out if the user does not input a file, uses relative path
  if (argc == 2) { fprintf(stderr,"needs <CONFIG FILE> <DIR>");return 1;}
- char **format = (char**) readFile(argv[1]);
- fprintf(stderr,"got here");
+ char **format;
+ format = (char**) readFile(argv[1]);
  DIR *targetDir;
  char *targetDirName;
  struct dirent *dir;
- fprintf(stderr,"got here too");
+fprintf(stderr,"\nformat[0]:%p",&format[0]);
+fprintf(stderr,"\nformat[1]:%p",&format[1]);
+fprintf(stderr,"\nformat[2]:%p",&format[2]);
+fprintf(stderr,"\nformat[3]:%p",&format[3]);
+fprintf(stderr,"\nformat[4]:%p",&format[4]);
  targetDir = opendir(argv[2]);
- printf("%s\n",format[0]);
+fprintf(stderr,"\nprinting fromat");
+ printf("%s\n", format[0]);
  if (targetDir) {
   while ((dir = readdir(targetDir)) != NULL) {
    if (checkBlackList(dir->d_name) == TRUE){

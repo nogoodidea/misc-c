@@ -18,5 +18,5 @@ move:
 	${CC} move.c -o move -lncurses
 menu:
 	${CC} menu.c -o menu
-formatart:
-	${CC} formatart.c -o formatart
+htmlfromat:
+	${CC} htmlformat.c -o htmlformat
