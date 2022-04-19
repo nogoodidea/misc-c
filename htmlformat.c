@@ -39,12 +39,6 @@ int checkValidImage(char *inputStr){
 
 void checkNull(void* pointer){if(pointer==NULL){fprintf(stderr,"out of mem");exit(1);}}
 
-void init(void* arr, int len) {
-  for (int i = 0; i < len; i++) {
-    arr= 0;
-  }
-}
-
 char** readFile(char *fileStr){
  FILE *confFile; 
  if ((confFile = fopen(fileStr,"r")) == NULL){fprintf(stderr,"file \"%s\" not found",fileStr);exit(1);}
@@ -67,17 +61,17 @@ char** readFile(char *fileStr){
   arrayLen = 5;
   i=0;//1
   char **arrayOut = (char **) malloc(arrayLen*sizeof(char **));
-  init(arrayOut, arrayLen);
   char *temp;
   temp = strtok(array,"\n");
   while(temp) { // breaks if temp == '\0' so if we exit the loop
-   strcpy(arrayOut[i],strcat(temp, "\0"));
+   arrayOut[i] = strcat(temp, "\0");
    i += 1;
    temp = strtok(NULL,"\n");
    if(i==arrayLen){
     arrayLen = arrayLen*2;
     arrayOut = (char **) realloc(arrayOut,arrayLen*sizeof(char **));
     checkNull(arrayOut);
+    checkNull(arrayOut[i]);
    }
   } 
   free(array);
@@ -90,23 +84,18 @@ int main(int argc, char *argv[]) {
  char **format;
  format = (char**) readFile(argv[1]);
  DIR *targetDir;
- char *targetDirName;
+ char *fileNameHtml;
  struct dirent *dir;
-fprintf(stderr,"\nformat[0]:%p",&format[0]);
-fprintf(stderr,"\nformat[1]:%p",&format[1]);
-fprintf(stderr,"\nformat[2]:%p",&format[2]);
-fprintf(stderr,"\nformat[3]:%p",&format[3]);
-fprintf(stderr,"\nformat[4]:%p",&format[4]);
  targetDir = opendir(argv[2]);
-fprintf(stderr,"\nprinting fromat");
  printf("%s\n", format[0]);
  if (targetDir) {
   while ((dir = readdir(targetDir)) != NULL) {
    if (checkBlackList(dir->d_name) == TRUE){
-    targetDirName = strcat(dir->d_name,format[2]);
-    targetDirName = strcat(format[1],targetDirName);
-    printf("%s\n",targetDirName);
-    targetDirName = '\0';
+    fprintf(stderr,dir->d_name);
+    strcpy(fileNameHtml,format[1]);
+    strcat(fileNameHtml,dir->d_name);
+    strcat(fileNameHtml,format[2]);
+    printf("%s\n",fileNameHtml);
    }
   }
  closedir(targetDir);
