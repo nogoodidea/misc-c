@@ -84,17 +84,29 @@ int main(int argc, char *argv[]) {
  char **format;
  format = (char**) readFile(argv[1]);
  DIR *targetDir;
- char *fileNameHtml;
+ int fileNameHtmlLen = 30;
+ char *fileNameHtml = (char *) malloc(fileNameHtmlLen*sizeof(char *));
+ char *temp = (char *) malloc(fileNameHtmlLen*sizeof(char *));
  struct dirent *dir;
  targetDir = opendir(argv[2]);
- printf("%s\n", format[0]);
+ //loop untell FILE SECTION? for(i=0;strstr(format[i],"FILE SECTION);!= \0){ ... }
+ printf("%s\n",format[0]);
+ printf("%s\n",format[1]);
  if (targetDir) {
   while ((dir = readdir(targetDir)) != NULL) {
    if (checkBlackList(dir->d_name) == TRUE){
-    fprintf(stderr,dir->d_name);
-    strcpy(fileNameHtml,format[1]);
+    if (strlen(format[2]) + strlen(dir->d_name)-5 == fileNameHtmlLen) {
+     fileNameHtmlLen = strlen(format[2]) + strlen(dir->d_name)-1;
+     fileNameHtml = (char *) realloc(fileNameHtml,fileNameHtmlLen);
+     temp = (char *) realloc(fileNameHtml,fileNameHtmlLen);
+     checkNull(fileNameHtml);
+     checkNull(temp);
+    }
+    //str formating add it to a loop later something like (formatLen-3) times and i++,format[i] might want to use strstr() to find a section break in the file ei "HEADER" "FILE SECTION", "FOOTER"
+    strcpy(temp,format[2]);
+    fileNameHtml = strtok(temp,"FILE");
     strcat(fileNameHtml,dir->d_name);
-    strcat(fileNameHtml,format[2]);
+    strcat(fileNameHtml,strtok(NULL,"FILE"));
     printf("%s\n",fileNameHtml);
    }
   }

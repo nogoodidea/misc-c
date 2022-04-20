@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<HTML><HEAD><TITLE>Art</TITLE><BODY>
-<img src="art/
-"style="width:70%;height:50%;">
+<HTML><HEAD><TITLE>Art</TITLE><BODY><h1>so all of this is cool but it can be made better</h1>
+<img src="art/FILE"style="width:70%;height:50%;">
 </BODY></HTML>
