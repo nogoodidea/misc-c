@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
     }
     //str formating add it to a loop later something like (formatLen-3) times and i++,format[i] might want to use strstr() to find a section break in the file ei "HEADER" "FILE SECTION", "FOOTER"
     strcpy(temp,format[2]);
-    fileNameHtml = strtok(temp,"FILE");
+    strcpy(fileNameHtml,strtok(temp,"FILE"));
     strcat(fileNameHtml,dir->d_name);
     strcat(fileNameHtml,strtok(NULL,"FILE"));
     printf("%s\n",fileNameHtml);
