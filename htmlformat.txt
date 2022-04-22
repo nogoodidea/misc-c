@@ -1,4 +1,14 @@
 <!DOCTYPE html>
-<HTML><HEAD><TITLE>Art</TITLE><BODY><h1>so all of this is cool but it can be made better</h1>
+<HTML>
+<HEAD>
+<TITLE>Art</TITLE>
+<BODY>
+<h1>some cool art i made</h1>
+<p style="color:RED">wow it's like cool and stuff</p>
+<FILE>
+<p>FILE</p>
 <img src="art/FILE"style="width:70%;height:50%;">
-</BODY></HTML>
+</FILE>
+</BODY>
+</HTML>
+END

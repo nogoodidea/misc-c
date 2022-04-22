@@ -85,34 +85,43 @@ int main(int argc, char *argv[]) {
  format = (char**) readFile(argv[1]);
  DIR *targetDir;
  int fileNameHtmlLen = 30;
+ int line = 0;
+ int loopStartLine = 0;
  char *fileNameHtml = (char *) malloc(fileNameHtmlLen*sizeof(char *));
  char *temp = (char *) malloc(fileNameHtmlLen*sizeof(char *));
  struct dirent *dir;
  targetDir = opendir(argv[2]);
- //loop untell FILE SECTION? for(i=0;strstr(format[i],"FILE SECTION);!= \0){ ... }
- printf("%s\n",format[0]);
- printf("%s\n",format[1]);
+ for(;strstr(format[line],"<FILE>") == NULL;line += 1){
+  printf("%s\n",format[line]);
+ }
+ line += 1;
+ loopStartLine = line;
  if (targetDir) {
   while ((dir = readdir(targetDir)) != NULL) {
-   if (checkBlackList(dir->d_name) == TRUE){
-    if (strlen(format[2]) + strlen(dir->d_name)-5 == fileNameHtmlLen) {
-     fileNameHtmlLen = strlen(format[2]) + strlen(dir->d_name)-1;
-     fileNameHtml = (char *) realloc(fileNameHtml,fileNameHtmlLen);
-     temp = (char *) realloc(fileNameHtml,fileNameHtmlLen);
+    line=loopStartLine;
+    if (checkBlackList(dir->d_name) == TRUE){
+     for(loopStartLine = line;strstr(format[line],"</FILE>")==NULL;line+=1){
+     if (strlen(format[line]) + strlen(dir->d_name)-5 == fileNameHtmlLen) {
+      fileNameHtmlLen = strlen(format[line]) + strlen(dir->d_name)-1;
+      fileNameHtml = (char *) realloc(fileNameHtml,fileNameHtmlLen);
+      temp = (char *) realloc(fileNameHtml,fileNameHtmlLen);
+      }
      checkNull(fileNameHtml);
      checkNull(temp);
+     strcpy(temp,format[line]);
+     strcpy(fileNameHtml,strtok(temp,"FILE"));
+     strcat(fileNameHtml,dir->d_name);
+     strcat(fileNameHtml,strtok(NULL,"FILE"));
+     printf("%s\n",fileNameHtml);
     }
-    //str formating add it to a loop later something like (formatLen-3) times and i++,format[i] might want to use strstr() to find a section break in the file ei "HEADER" "FILE SECTION", "FOOTER"
-    strcpy(temp,format[2]);
-    strcpy(fileNameHtml,strtok(temp,"FILE"));
-    strcat(fileNameHtml,dir->d_name);
-    strcat(fileNameHtml,strtok(NULL,"FILE"));
-    printf("%s\n",fileNameHtml);
    }
   }
  closedir(targetDir);
+ line +=1;
  }else{fprintf(stderr,"dir %s not found",argv[2]);exit(1);}
- printf("%s\n",format[3]);
+ for(;strstr(format[line],"END")== NULL;line+=1){
+  printf("%s\n",format[line]);
+ }
  free(format);
  return(0);
 }
