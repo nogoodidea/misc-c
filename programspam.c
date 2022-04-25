@@ -4,31 +4,29 @@
 #include <string.h>
 
 
-void onFork(char *programPath,char *programArgs) {
- 
- execlp(programPath,programArgs);
+void onFork(char *programPath,char **programArgs) {
+ fprintf(stderr,"%s\n",programPath);
+ execve(programPath,programArgs,NULL);
 }
 
 int main(int argc,char *argv[]) {
- int pid[5];
- int i=3;
+ int i=2;
  int programAmount = 5;
  int programArgsLen = 10;
- char *programArgs = (char*) malloc(programArgsLen*sizeof(char*));
+ char *programPath = argv[2];
+ char **programArgs = (char**) malloc(programArgsLen*sizeof(char**));
+ int pid[programAmount];
+ //arg handling
  for(;i!=argc;i+=1){
-  if (strlen(argv[i])+1 >= programArgsLen){
+  if(i==argc){break;}
+  if (i+1 >= programArgsLen){
    programArgsLen = programArgsLen*2;
-   programArgs = (char*) realloc(programArgs,programArgsLen*sizeof(char*));
+   programArgs = (char**) realloc(programArgs,programArgsLen*sizeof(char**));
    if(programArgs == NULL){fprintf(stderr,"OUT OF RAM");exit(1);}
   }
-  strcat(programArgs," ");
-  strcat(programArgs,argv[i]);
+  strcpy(programArgs[i],argv[i]);
  }
- fprintf(stderr,"%s\n",programArgs);
- fprintf(stderr,"%i\n",programAmount);
  for(i=0;i!=programAmount;i+=1){ 
-  pid[i] = fork();
-  if (pid[i] == 0){onFork(argv[2],programArgs);}
-  else {printf("%i\n",pid[i]);}
+  if ((pid[i] = fork())==0){onFork(programPath,programArgs);}
  } 
 }
