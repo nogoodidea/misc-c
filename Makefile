@@ -20,3 +20,5 @@ menu:
 	${CC} menu.c -o menu
 htmlfromat:
 	${CC} htmlformat.c -o htmlformat
+programspam:
+	${CC} programspam.c -o programspam
