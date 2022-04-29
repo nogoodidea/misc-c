@@ -2,27 +2,50 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 
-#define PORT 5000;
-struct iplist {int connectionNumb; char** connectionIp;} connections;
-
+#define PORT 5000
+struct iplist {int Numbr; char** Ip;} connections;
 // socket, <command> <args>
 // connect 
 // send
 
-main(int argc, char* argv) {
- if (argc!=2){fprintf(stderr,"NEEDS IP ADDR OF CLIENT\n");exit(1);}
- struct sockaddr_in socketAddr;
- memset(&socketAddr, 0, sizeof(socketAddr));
- connections.connetionNumb = 0;
- connections.connectionIp = (char**) mollic(sizeof(char**));
- strcpy(connections.connectionIp[0],argv[1]); 
- 
- if((int socket = socket(AF_INET, SOCK_STREAM, 0))!=0) {fprintf(stderr,"ERROR MAKING SOCKET\n");exit(1);
- // 0.0.0.0:5000
- socketAddr.sin_family = AF_INET;
- socketAddr.sin_port = htons(PORT);
- socketAddr.sin_addr.s_addr = htonl(0.0.0.0); 
- connect(socket, (struct sockaddr *)&socketAddr, sizeof(struct sockaddr_in));
+
+void checkNull(void* pointer){if(pointer==NULL){fprintf(stderr,"OUT OF MEM");exit(1);}}
+char* socketrecv(int socketSev) {
+ int buffLen = 100;
+ int messageLen;
+ char* buff = (char*) malloc(buffLen*sizeof(char*));
+ messageLen = recv(mysocket, buff, buffLen-1, 0);
+ buff[messageLen] = NULL;
+ fprintf(stderr,"%s\n",buff);
+ // not going to work use a string compare function
+ switch (strtok(buffer,':')) {
+ case ://connections
+ connections.Ip = (char**) relloc((commections.Numb+1)*sizeof(char**));
+ checkNull(connections.Ip);
+ connections.Numb += 1;
+ strcat(connections.Ip[connections.Numb],strtok(NULL,':'));
+ case ://message
+ }
 }
 
+int main(int argc, char* argv) {
+ if (argc!=2){fprintf(stderr,"NEEDS IP ADDR OF CLIENT\n");exit(1);}
+ struct sockaddr_in socketAddr;
+ int socketSev;
+ memset(&socketAddr, 0, sizeof(socketAddr));
+ connections.Numb = 0;
+ connections.Ip = (char**) malloc(sizeof(char**));
+ strcpy(connections.Ip[0],argv[1]); 
+ if(( socketSev = socket(AF_INET, SOCK_STREAM, 0))!=0) {fprintf(stderr,"ERROR MAKING SOCKET\n");exit(1);}
+ // 172.168.0.1:5000
+ // for testing
+ socketAddr.sin_family = AF_INET;
+ socketAddr.sin_port = htons(PORT);
+ socketAddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK); 
+ connect(socketSev, (struct sockaddr *)&socketAddr, sizeof(struct sockaddr_in));
+ //code go here
+ 
+}
