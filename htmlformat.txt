@@ -1,3 +1,5 @@
+*.png
+START
 <!DOCTYPE html>
 <HTML>
 <HEAD>
