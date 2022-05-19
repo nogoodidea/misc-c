@@ -27,18 +27,18 @@ int checkValidImage(char *inputStr,char **checkValid,int checkValidLen){
  int i = 0;
  int i2 = 0;
  int passedPart = 0;
+ fprintf(stderr,"GOT HERE");
  for(;line==checkValidLen;line+=1){
-  }
-  for (i=0;i+strlen(checkValid)==inputStr;i+=1){
-   for(i2=0;i+i2+strlen(checkValid)==strlen(inputStr);i2+=1){
+  for (i=0;i+strlen(checkValid[line])==strlen(inputStr);i+=1){
+   for(i2=0;i+i2+strlen(checkValid[line])==strlen(inputStr);i2+=1){
     //check if char == then contenue if section = checkValid set passed TRUE and exit
-    if (checkValid[line][i2] == inputStr[i2+i];){
+    if (checkValid[line][i2] == inputStr[i2+i]){
      passedPart =+ 1;
      if(passedPart == strlen(checkValid[line])){return TRUE;}
-   } 
+    } 
+   }
   }
  }
- free(checkLine);
  return FALSE;
 }
 
@@ -88,8 +88,8 @@ int main(int argc, char *argv[]) {
  if (argc == 2) { fprintf(stderr,"needs <CONFIG FILE> <DIR>");return 1;}
  char **format;
  format = (char**) readFile(argv[1]);
- int validCheckInt = 2;
- char **validCheck= (char**) malloc(validCheckInt*sizeof(char **));
+ int validCheckLen = 2;
+ char **validCheck= (char**) malloc(validCheckLen*sizeof(char **));
  DIR *targetDir;
  int fileNameHtmlLen = 30;
  int line = 0;
@@ -99,13 +99,15 @@ int main(int argc, char *argv[]) {
  struct dirent *dir;
  targetDir = opendir(argv[2]);
  for(int i=0;strstr(format[line],"START") == NULL;line+=1){
-  if(i+1==validCheckInt){
-   validCheckInt =* 2;
-   validCheck = (char **) relloc(validCheck,validCheckInt*sizeof(char **));
+  if(i+1==validCheckLen){
+   validCheckLen = validCheckLen * 2;
+   validCheck = (char **) realloc(validCheck,validCheckLen*sizeof(char **));
   }
   strcpy(validCheck[i],format[line]);
+  fprintf(stderr,"%s",validCheck[i]);
   i+=1;
  }
+ validCheckLen = line-1;
  for(;strstr(format[line],"<FILE>") == NULL;line += 1){
   printf("%s\n",format[line]);
  }
@@ -114,9 +116,9 @@ int main(int argc, char *argv[]) {
  if (targetDir) {
   while ((dir = readdir(targetDir)) != NULL) {
     line=loopStartLine;
-    if (checkBlackList(dir->d_name) == TRUE){
+    if (checkValidImage(dir->d_name,validCheck,validCheckLen) == TRUE){
      for(loopStartLine = line;strstr(format[line],"</FILE>")==NULL;line+=1){
-     if (strlen(format[line]) + strlen(dir->d_name)-5 => fileNameHtmlLen) {
+     if (strlen(format[line]) + strlen(dir->d_name)-5 >= fileNameHtmlLen) {
       fileNameHtmlLen = strlen(format[line]) + strlen(dir->d_name)-1;
       fileNameHtml = (char *) realloc(fileNameHtml,fileNameHtmlLen);
       temp = (char *) realloc(fileNameHtml,fileNameHtmlLen);

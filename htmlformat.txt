@@ -1,4 +1,4 @@
-*.png
+.png
 START
 <!DOCTYPE html>
 <HTML>
