@@ -9,11 +9,11 @@ void onFork(char *programPath,char *programArgs) {
 }
 
 int main(int argc,char *argv[]) {
- int i=2;
- int programAmount = 5;
+ if(argc <= 2){printf("needs 2 args");exit(1);}
+ int programAmount = atoi(argv[1]);
  int programArgsLen = 10;
- char *programPath = argv[1];
- fprintf(stderr,"%s\n",programPath);
+ char *programPath = argv[2];
+ int i=3;
  char *programArgs = (char*) malloc(programArgsLen*sizeof(char**));
  int pid[programAmount];
  //arg handling
@@ -26,6 +26,7 @@ int main(int argc,char *argv[]) {
   strcat(programArgs," ");
   strcat(programArgs,argv[i]);
  }
+ printf("%s",programArgs);
  for(i=0;i!=programAmount;i+=1){ 
   if ((pid[i] = fork())==0){onFork(programPath,programArgs);}
  } 
