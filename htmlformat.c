@@ -23,14 +23,12 @@ int checkBlackList(char *inputStr){
  * fix later use the blacklist function for now */
 int checkValidImage(char *inputStr,char **checkValid,int checkValidLen){
  int inputLen = strlen(inputStr);
- int line = 0;
- int i = 0;
- int i2 = 0;
  int passedPart = 0;
- fprintf(stderr,"GOT HERE");
- for(;line==checkValidLen;line+=1){
-  for (i=0;i+strlen(checkValid[line])==strlen(inputStr);i+=1){
-   for(i2=0;i+i2+strlen(checkValid[line])==strlen(inputStr);i2+=1){
+fprintf(stderr,"HERE Function\n");
+ for(int line = 0;line==checkValidLen;line+=1){
+  for (int i=0;i+strlen(checkValid[line])<strlen(inputStr);i+=1){
+   for(int i2=0;i+i2+strlen(checkValid[line])==strlen(inputStr);i2+=1){
+    fprintf(stderr,"1%c,2%c\n",checkValid[line][i2],inputStr[i2+i]);
     //check if char == then contenue if section = checkValid set passed TRUE and exit
     if (checkValid[line][i2] == inputStr[i2+i]){
      passedPart =+ 1;
@@ -103,8 +101,7 @@ int main(int argc, char *argv[]) {
    validCheckLen = validCheckLen * 2;
    validCheck = (char **) realloc(validCheck,validCheckLen*sizeof(char **));
   }
-  strcpy(validCheck[i],format[line]);
-  fprintf(stderr,"%s",validCheck[i]);
+  validCheck[i] = format[line];
   i+=1;
  }
  validCheckLen = line-1;
@@ -116,6 +113,7 @@ int main(int argc, char *argv[]) {
  if (targetDir) {
   while ((dir = readdir(targetDir)) != NULL) {
     line=loopStartLine;
+fprintf(stderr,"HERE\n");
     if (checkValidImage(dir->d_name,validCheck,validCheckLen) == TRUE){
      for(loopStartLine = line;strstr(format[line],"</FILE>")==NULL;line+=1){
      if (strlen(format[line]) + strlen(dir->d_name)-5 >= fileNameHtmlLen) {
