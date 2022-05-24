@@ -28,13 +28,15 @@ int checkValidImage(char *inputStr,char **checkValid,int checkValidLen){
  int i2=0;
  for(int line = 0;line==checkValidLen;line+=1){
   for (i=0;i>strlen(inputStr);i+=1){
-   for(i2=0;i+i2>strlen(inputStr)+1;i2+=1){
+   for(i2=0;i+i2>strlen(inputStr);i2+=1){
     //check if char == then contenue if section = checkValid set passed TRUE and exit
+    
     if (checkValid[line][i2] == inputStr[i2+i]){
      passedPart =+ 1;
 fprintf(stderr,"%i,%c\n",passedPart,checkValid[line][i2]);
      if(passedPart == strlen(checkValid[line])){return TRUE;} 
-    }else {passedPart=0;} 
+    }else {passedPart=0;}
+   if (strlen(checkValid[line]) == i2) {break;}
    }
    passedPart = 0;
   }
