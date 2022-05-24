@@ -19,22 +19,24 @@ int checkBlackList(char *inputStr){
  return TRUE;
 }
 
-/*check if the file extenction is a image
+/*check if the file extension is a image
  * fix later use the blacklist function for now */
 int checkValidImage(char *inputStr,char **checkValid,int checkValidLen){
  int inputLen = strlen(inputStr);
  int passedPart = 0;
-fprintf(stderr,"HERE Function\n");
+ int i=0;
+ int i2=0;
  for(int line = 0;line==checkValidLen;line+=1){
-  for (int i=0;i+strlen(checkValid[line])<strlen(inputStr);i+=1){
-   for(int i2=0;i+i2+strlen(checkValid[line])==strlen(inputStr);i2+=1){
-    fprintf(stderr,"1%c,2%c\n",checkValid[line][i2],inputStr[i2+i]);
+  for (i=0;i<strlen(inputStr);i+=1){
+   for(i2=0;i+i2<strlen(inputStr)+1;i2+=1){
     //check if char == then contenue if section = checkValid set passed TRUE and exit
     if (checkValid[line][i2] == inputStr[i2+i]){
      passedPart =+ 1;
-     if(passedPart == strlen(checkValid[line])){return TRUE;}
-    } 
+fprintf(stderr,"%i,%c\n",passedPart,checkValid[line][i2]);
+     if(passedPart == strlen(checkValid[line])){return TRUE;} 
+    }else {passedPart=0;} 
    }
+   passedPart = 0;
   }
  }
  return FALSE;
@@ -104,6 +106,7 @@ int main(int argc, char *argv[]) {
   validCheck[i] = format[line];
   i+=1;
  }
+ line +=1;
  validCheckLen = line-1;
  for(;strstr(format[line],"<FILE>") == NULL;line += 1){
   printf("%s\n",format[line]);
@@ -113,7 +116,6 @@ int main(int argc, char *argv[]) {
  if (targetDir) {
   while ((dir = readdir(targetDir)) != NULL) {
     line=loopStartLine;
-fprintf(stderr,"HERE\n");
     if (checkValidImage(dir->d_name,validCheck,validCheckLen) == TRUE){
      for(loopStartLine = line;strstr(format[line],"</FILE>")==NULL;line+=1){
      if (strlen(format[line]) + strlen(dir->d_name)-5 >= fileNameHtmlLen) {
