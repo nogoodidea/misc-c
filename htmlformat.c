@@ -22,23 +22,10 @@ int checkBlackList(char *inputStr){
 /*check if the file extension is a image
  * fix later use the blacklist function for now */
 int checkValidImage(char *inputStr,char **checkValid,int checkValidLen){
- int inputLen = strlen(inputStr);
- int passedPart = 0;
- int i=0;
- int i2=0;
- for(int line = 0;line==checkValidLen;line+=1){
-  for (i=0;i>strlen(inputStr);i+=1){
-   for(i2=0;i+i2>strlen(inputStr);i2+=1){
-    //check if char == then contenue if section = checkValid set passed TRUE and exit
-    
-    if (checkValid[line][i2] == inputStr[i2+i]){
-     passedPart =+ 1;
-fprintf(stderr,"%i,%c\n",passedPart,checkValid[line][i2]);
-     if(passedPart == strlen(checkValid[line])){return TRUE;} 
-    }else {passedPart=0;}
-   if (strlen(checkValid[line]) == i2) {break;}
-   }
-   passedPart = 0;
+ int line = 0;
+ for (;line<=checkValidLen;line+=1){
+  if(strstr(inputStr,checkValid[line])!=NULL){
+   return TRUE;
   }
  }
  return FALSE;
@@ -120,19 +107,19 @@ int main(int argc, char *argv[]) {
     line=loopStartLine;
     if (checkValidImage(dir->d_name,validCheck,validCheckLen) == TRUE){
      for(loopStartLine = line;strstr(format[line],"</FILE>")==NULL;line+=1){
-     if (strlen(format[line]) + strlen(dir->d_name)-5 >= fileNameHtmlLen) {
-      fileNameHtmlLen = strlen(format[line]) + strlen(dir->d_name)-1;
-      fileNameHtml = (char *) realloc(fileNameHtml,fileNameHtmlLen);
-      temp = (char *) realloc(fileNameHtml,fileNameHtmlLen);
+      if (strlen(format[line]) + strlen(dir->d_name) >= fileNameHtmlLen) {
+       fileNameHtmlLen = strlen(format[line]) + strlen(dir->d_name)-1;
+       fileNameHtml = (char *) realloc(fileNameHtml,fileNameHtmlLen*sizeof(char*));
+       temp = (char *) realloc(fileNameHtml,fileNameHtmlLen*sizeof(char*));
+       checkNull(fileNameHtml);
+       checkNull(temp);
       }
-     checkNull(fileNameHtml);
-     checkNull(temp);
-     strcpy(temp,format[line]);
-     strcpy(fileNameHtml,strtok(temp,"FILE"));
-     strcat(fileNameHtml,dir->d_name);
-     strcat(fileNameHtml,strtok(NULL,"FILE"));
-     printf("%s\n",fileNameHtml);
-    }
+      strcpy(temp,format[line]);
+      strcpy(fileNameHtml,strtok(temp,"FILE"));
+      strcat(fileNameHtml,dir->d_name);
+      strcat(fileNameHtml,strtok(NULL,"FILE"));
+      printf("%s\n",fileNameHtml);
+     }
    }
   }
  closedir(targetDir);
