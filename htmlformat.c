@@ -107,8 +107,8 @@ int main(int argc, char *argv[]) {
     line=loopStartLine;
     if (checkValidImage(dir->d_name,validCheck,validCheckLen) == TRUE){
      for(loopStartLine = line;strstr(format[line],"</FILE>")==NULL;line+=1){
-      if (strlen(format[line]) + strlen(dir->d_name) >= fileNameHtmlLen) {
-       fileNameHtmlLen = strlen(format[line]) + strlen(dir->d_name)-1;
+      if (strlen(format[line]) + strlen(dir->d_name)-4 >= fileNameHtmlLen) {
+       fileNameHtmlLen = strlen(format[line]) + strlen(dir->d_name)-4;
        fileNameHtml = (char *) realloc(fileNameHtml,fileNameHtmlLen*sizeof(char*));
        temp = (char *) realloc(fileNameHtml,fileNameHtmlLen*sizeof(char*));
        checkNull(fileNameHtml);
@@ -119,6 +119,8 @@ int main(int argc, char *argv[]) {
       strcat(fileNameHtml,dir->d_name);
       strcat(fileNameHtml,strtok(NULL,"FILE"));
       printf("%s\n",fileNameHtml);
+fprintf(stderr,"##%s##\n",format[line]);
+fprintf(stderr,"##%s##\n",temp);
      }
    }
   }
