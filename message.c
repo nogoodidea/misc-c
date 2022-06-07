@@ -6,28 +6,30 @@
 #include <netinet/in.h>
 
 #define PORT 5000
-struct iplist {int Numbr; char** Ip;} connections;
+struct iplist {int Numbr; int* Sockets;} connections;
 // socket, <command> <args>
 // connect 
 // send
 
+//not working on rn
+//use multithreading for connections
 
 void checkNull(void* pointer){if(pointer==NULL){fprintf(stderr,"OUT OF MEM");exit(1);}}
+
 char* socketrecv(int socketSev) {
  int buffLen = 100;
  int messageLen;
+ char* command;
  char* buff = (char*) malloc(buffLen*sizeof(char*));
  messageLen = recv(mysocket, buff, buffLen-1, 0);
  buff[messageLen] = NULL;
  fprintf(stderr,"%s\n",buff);
  // not going to work use a string compare function
- switch (strtok(buffer,':')) {
- case ://connections
- connections.Ip = (char**) relloc((commections.Numb+1)*sizeof(char**));
- checkNull(connections.Ip);
- connections.Numb += 1;
- strcat(connections.Ip[connections.Numb],strtok(NULL,':'));
- case ://message
+ if (strcmp((strtok(buffer,':')=command),"command")==1) {
+
+ }else (command=="message"){
+ 
+ }
  }
 }
 
