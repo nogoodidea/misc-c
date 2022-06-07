@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
  int validCheckLen = 2;
  char **validCheck= (char**) malloc(validCheckLen*sizeof(char **));
  DIR *targetDir;
- int fileNameHtmlLen = 100;
+ int fileNameHtmlLen = 10;
  int line = 0;
  int loopStartLine = 0;
  char *fileNameHtml = (char *) malloc(fileNameHtmlLen*sizeof(char *));
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
       if (strlen(format[line]) + strlen(dir->d_name) >= fileNameHtmlLen) {
        fileNameHtmlLen = strlen(format[line]) + strlen(dir->d_name)+10;
        fileNameHtml = (char *) realloc(fileNameHtml,fileNameHtmlLen*sizeof(char*));
-       temp = (char *) realloc(fileNameHtml,fileNameHtmlLen*sizeof(char*));
+       temp = (char *) realloc(temp,fileNameHtmlLen*sizeof(char*));
        checkNull(fileNameHtml);
        checkNull(temp);
       }
