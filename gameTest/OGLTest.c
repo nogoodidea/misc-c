@@ -9,9 +9,9 @@
 
 // that one struct that makes the world go round
 struct MainStruct {int exitCode;SDL_Window* win;SDL_GLContext gCont;GLuint progID;GLuint VBO;GLuint IBO;};
+struct VB {unsigned char v;/*magnitude*/char x;char y; char z;};
 
-
-// to be regerseded to run on exit
+// to executed when ever the program needs to exit
 void progExit(struct MainStruct ctlStruct){
   if(ctlStruct.progID!=0){glDeleteProgram(ctlStruct.progID);}
   if(ctlStruct.win!=NULL){SDL_DestroyWindow(ctlStruct.win);}
@@ -44,70 +44,35 @@ struct MainStruct progInit(){
   glewExperimental = GL_TRUE; 
   GLenum glewError = glewInit();
   if(glewError != GLEW_OK){fprintf(stderr,"GLEW ERROR: %s\n", glewGetErrorString(glewError));progExit(ctlStruct);}
-  // Init GL
-  //MAJIC CODE
-  GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
-  const GLchar* vertexShaderSource[] = {"#version 140\nin vec2 LVertexPos2D; void main() { gl_Position = vec4( LVertexPos2D.x, LVertexPos2D.y, 0, 1 ); }"};
-  glShaderSource(vertShader,1,vertexShaderSource,NULL);
-  glCompileShader(vertShader);
+
+  // redoing all of this
   
-  GLint glError = GL_FALSE;// best name
-  glGetShaderiv(vertShader,GL_COMPILE_STATUS,&glError);
-  if(glError != GL_TRUE){fprintf(stderr,"GL ERROR: SHADER FAILED");progExit(ctlStruct);}
-  glAttachShader(ctlStruct.progID,vertShader);
+  //points
+  struct VB Vert={.x=0.0f,.y=0.0f,.z=0.0f.v=0};
   
-  //mor shaders BLACK MAJIC CODE FROM STACKOVERFLOW SAME AS ABOVE
-  GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-  const GLchar* fragmentShaderSource[] = {"#version 140\nout vec4 LFragment; void main() { LFragment = vec4( 1.0, 1.0, 1.0, 1.0 );"};
-  glShaderSource(fragShader,1,fragmentShaderSource,NULL);
-  glCompileShader(fragShader);
-  
-  glGetShaderiv(vertShader,GL_COMPILE_STATUS,&glError);
-  if(glError != GL_TRUE){fprintf(stderr,"GL ERROR: SHADER FAILED");progExit(ctlStruct);}
-  glAttachShader(ctlStruct.progID,fragShader);
-  
-  glLinkProgram(ctlStruct.progID);
-  glGetProgramiv(ctlStruct.progID,GL_LINK_STATUS,&glError);
-  if(glError != GL_TRUE){fprintf(stderr,"GL ERROR: LINKING FAILED");progExit(ctlStruct);}
-  
-  GLint vertPos = glGetAttribLocation(ctlStruct.progID,"LVertexPos2D");
-  if(vertPos == -1){fprintf(stderr,"GL ERROR: think the virtex shader broke IDK");progExit(ctlStruct);}  
-  
-  //majic color code
-  glClearColor(0.f,0.f,0.f,1.f); 
-  //VBO
-  GLfloat verData[]={-0.5,-0.5,0.5,-0.5,0.5,0.5,-0.5,0.5};
-  // IBO
-  GLuint indexData[]={0,1,2,3};
-  // get the pointers for the struct elements
-  GLuint VBO;
-  GLuint IBO;
+  GLuint VBO; // VBO
+  //https://stackoverflow.com/questions/62121635/passing-data-to-a-glsl-vertex-shader
   glGenBuffers(1,&VBO);
   glBindBuffer(GL_ARRAY_BUFFER,VBO);
-  glBufferData(GL_ARRAY_BUFFER,2*4*sizeof(GLfloat),verData,GL_STATIC_DRAW);
   
-  glGenBuffers(1,&IBO);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,IBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,4*sizeof(GLuint),indexData,GL_STATIC_DRAW);
-  // copy to struct
-  ctlStruct.VBO = VBO;
-  ctlStruct.IBO = IBO;
+  glBufferData(GL_ARRAY_BUFFER,sizeof(struct VB),Vert,GL_STATIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER,VBO);
+
+  ctlStruct.VBO=VBO;// copy changes
   return ctlStruct;
 }
 //GL Rendering function 3d stuff
 int GLRend(struct MainStruct ctlStruct){
   //todo mur OGL
   glUseProgram(ctlStruct.progID);
-  GLint virt2D = glGetAttribLocation(ctlStruct.progID,"LVertexPos2D");
-  if(virt2D == -1){fprintf(stderr,"OGL Rend Error");progExit(ctlStruct);}
-  glEnableVertexAttribArray(virt2D);
+  glEnableVertexAttribArray(0);
   // data vor render
   glBindBuffer(GL_ARRAY_BUFFER,ctlStruct.VBO);
-  glVertexAttribPointer(virt2D,2,GL_FLOAT,GL_FALSE,2*sizeof(GLfloat),NULL);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
   // data index???????
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ctlStruct.IBO);
-  glDrawElements(GL_TRIANGLE_FAN,4,GL_UNSIGNED_INT,NULL);
-  glDisableVertexAttribArray(virt2D);
+  glDrawArrays(GL_POINTS, 0,1);
+  glDisableVertexAttribArray(0);
   return 0;
 }
 // SDL Rendering function 2d stuff
