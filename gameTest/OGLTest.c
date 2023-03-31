@@ -9,7 +9,7 @@
 
 // that one struct that makes the world go round
 struct MainStruct {int exitCode;SDL_Window* win;SDL_GLContext gCont;GLuint progID;GLuint VBO;GLuint IBO;};
-struct VB {unsigned char v;/*magnitude*/char x;char y; char z;};
+struct VB {float v;/*magnitude*/float x;float y;float z;};
 
 // to executed when ever the program needs to exit
 void progExit(struct MainStruct ctlStruct){
@@ -48,7 +48,7 @@ struct MainStruct progInit(){
   // redoing all of this
   
   //points
-  struct VB Vert={.x=0.0f,.y=0.0f,.z=0.0f.v=0};
+  struct VB Vert={.x=0.0f,.y=0.0f,.z=0.0f,.v=0};
   
   GLuint VBO; // VBO
   //https://stackoverflow.com/questions/62121635/passing-data-to-a-glsl-vertex-shader
@@ -78,6 +78,24 @@ int GLRend(struct MainStruct ctlStruct){
 // SDL Rendering function 2d stuff
 
 
+
+// gen shaders
+void genShader(struct MainStruct ctlStruct,GLenum type,const char code){
+// shader prog https://github.com/emeiri/ogldev/blob/master/tutorial04/tutorial04.cpp
+  GLuint shader = glCreateShader(type);
+  if(ShaderObj ==  0){fprintf(stderr,"GL ERROR: Shader Make Fail %d\n",type);progExit(ctlStruct);}
+  const GLchar* p[1];// gl char so things work?
+  p[0] = code;
+  GLint PLen =(GLint)strlen(code);//not obsure
+  glShaderSource(shader,1,p,PLen);
+  
+  glCompileShader(ShaderObj);
+  GLint error;
+  glGetShaderiv(shader, GL_COMPILE_STATUS,&success);
+  if(!error){// if there is an error this will trip
+  fprintf(stderr,"GL ERROR: Shader Comp Fail %d\n",type);progExit(ctlStruct);}
+  glAttachShader(ctlStruct.prog,shader);
+}
 int main(int argc,char** argv){ 
   // init SDL/OpenGL
   struct MainStruct ctlStruct = progInit();
