@@ -1,12 +1,15 @@
 // trying /w c++ 
 // https://www.ogldev.org/index.html
-
 // c style stdlib/stdio 
 // it's what i know 
 //TODO CHANGE TO C++ style headers
 #include<cstdio>
 
+#include<GL/glew.h>
 #include<GL/freeglut.h>
+#include "math_3d.h"
+
+
 
 static void RenderSceneCB(){
   glClear(GL_COLOR_BUFFER_BIT);
@@ -39,6 +42,8 @@ bool intOGL(){return true;}
 
 int main(int argc, char** argv){
   if(intGlut(&argc,argv) != true){fprintf(stderr,"GLUT INT FAILED");_Exit(1);}
+  
+  //https://stackoverflow.com/questions/5091570/most-basic-working-vbo-example
 
   glutDisplayFunc(RenderSceneCB);
   
