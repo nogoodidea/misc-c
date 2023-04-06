@@ -5,31 +5,40 @@
 #include<iostream>
 #include<string>
 
-#include<GL/glew.h>
-#include<GL/freeglut.h>
+// idea ever see that part of jarrasic park?
+// #include<filesystem>
+
+#include<glad/glad.h>
+#include<GL/glfw.h>
 
 
-
-static void RenderSceneCB(){
-  glClear(GL_COLOR_BUFFER_BIT);
-  glutSwapBuffers();
-}
-
+// if the user resized the window god forbid
+void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);i/*_Exit(1);*/}
 // glut startup function
-bool intGlut(int* argc,char** argv){
+bool intGlfw(){
   // needs argc/argv don't know why
-  glutInit(argc,argv);
-  glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
-
+  glfwInit();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  
   const int winW = 600;
   const int winH = 600;
-  glutInitWindowSize(winW,winH);
-  
-  int winX = 400;
-  int winY = 400;
-  glutInitWindowPosition(winX,winY);
-  int win = glutCreateWindow("SUFFERING HERE DOC");
-  if(win == 0){fprintf(stderr,"GLUT ERROR: window failed to init");_Exit(1);}
+  const int winX = 400;
+  const int winY = 400;
+
+  GLFWwindow* win = glfwCreateWindow(winW,winH,"SUFFER",winX,winY`);
+  if(win==NULL){std::cerr<<"ERROR::GLFW::WINDOW_CREATION"<<std::endl;
+    glfwTerminate(); // can't recover from it
+    return false;}
+  glfwMakeContextCurrent(win);
+  // glad
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
+     std::cerr<<"ERROR::GLAD::INIT_FAILED"<<std::endl;
+     return false;}
+
+  // redgester the callback function
+  glfwSetFramebufferSizeCallback(win,fbResizeCallback);
 
   //R,G,B,A
   glClearColor(0.0f,0.0f,0.0f,0.0f);
@@ -42,30 +51,35 @@ bool intOGL(){
   // vertex shader
   // going to be baked in as i don't give an
   //https://learnopengl.com/Getting-started/Hello-Triangle
-  const char *vertShadSc = "#version 330 core\n"
+  const char *vertShadSc ="#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
-    "void main(){gl_Postion = vec4(aPos.x,aPos.y,aPos,z,1);}";
+    "void main()\n"
+    "{\n"
+    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "}\0";
   const char *fragShadSc = "#version 330 core\n"
     "out vec4 FragColor;\n"
-    "void main(){FragColor = vec4(1.0f,0.5f,0.2f,1.0f);}";
+    "void main(){FragColor = vec4(1.0f,0.5f,0.2f,1.0f);}\0";
   
   //vertex
-  GLuint vertShad = glCreateShader(GL_VERTEX_SHADER);
+  GLuint vertShad;
+  vertShad = glCreateShader(GL_VERTEX_SHADER); // errors out here SEGFULT
   glShaderSource(vertShad,1,&vertShadSc,NULL);
   glCompileShader(vertShad);
-  
+
   // error checking
   GLint error;
   char errorLog[512];
   glGetShaderiv(vertShad,GL_COMPILE_STATUS,&error);
   if(!error){
     glGetShaderInfoLog(vertShad,512,NULL,errorLog);
-    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << errorLog;
+    std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << errorLog;
   return false;
   }
   
   //fragment
-  GLuint fragShad = glCreateShader(GL_FRAGMENT_SHADER);
+  GLuint fragShad;
+  fragShad = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fragShad,1,&fragShadSc,NULL);
   glCompileShader(fragShad);
 
@@ -73,7 +87,7 @@ bool intOGL(){
   
   if(!error){
     glGetShaderInfoLog(fragShad,512,NULL,errorLog);
-    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << errorLog;
+    std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << errorLog;
   return false;
   } 
   std::cout << "INFO::SHADER::PROGRAM_COMPILATION_DONE\n";
@@ -82,17 +96,18 @@ bool intOGL(){
 
 
 int main(int argc, char** argv){
-  if(intGlut(&argc,argv) != true){std::cout << "ERROR::GLUT::INT_FAILED\n";_Exit(1);}
+  if(intGlfw() != true){std::cout << "ERROR::GLFW::INT_FAILED\n";_Exit(1);}
   std::cout << "INFO::GLUT::STARTED\n";
   std::cout << std::endl;
   intOGL();
   std::cout << std::endl; 
+  std::cerr << std::endl;
   //https://stackoverflow.com/questions/5091570/most-basic-working-vbo-example
   //https://learnopengl.com/Getting-started/Hello-Triangle
   // now with ... PAIN
   // 3 * 3, 3 points 
   
-  /*int amtPoints = 3;
+  int amtPoints = 3;
   GLfloat vertPoints[3*amtPoints]={
   -0.5f,-0.5f,0.0f,
   0.5f,-0.5f,0.0f,
@@ -101,11 +116,12 @@ int main(int argc, char** argv){
   //buffer 
   glGenBuffers(1,&VBO);
   glBindBuffer(GL_ARRAY_BUFFER,VBO);
-  glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*3*amtPoints,vertPoints,GL_STATIC_DRAW);*/
+  glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*3*amtPoints,vertPoints,GL_STATIC_DRAW);
+ 
+  while(!glfwWindowShouldClose(win))//todo get the window pointer here
+   {glfwSwapBuffers(win);
+   glfwPollEvents();
+   } 
   
-  
-  glutDisplayFunc(RenderSceneCB);
-  
-  glutMainLoop();
   return 0;
 }
