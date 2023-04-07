@@ -8,14 +8,19 @@
 // idea ever see that part of jarrasic park?
 // #include<filesystem>
 
-#include<glad/glad.h>
-#include<GL/glfw.h>
+// so your going to need to use glad to make the header files
+// make glad.h might work, if i added it.
+// gl 3.3
+// good luck
+#include<glad/gl.h>
+
+#include<GLFW/glfw3.h>
 
 
 // if the user resized the window god forbid
-void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);i/*_Exit(1);*/}
+void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);/*_Exit(1);*/}
 // glut startup function
-bool intGlfw(){
+GLFWwindow* intGlfw(){
   // needs argc/argv don't know why
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -24,25 +29,20 @@ bool intGlfw(){
   
   const int winW = 600;
   const int winH = 600;
-  const int winX = 400;
-  const int winY = 400;
 
-  GLFWwindow* win = glfwCreateWindow(winW,winH,"SUFFER",winX,winY`);
-  if(win==NULL){std::cerr<<"ERROR::GLFW::WINDOW_CREATION"<<std::endl;
-    glfwTerminate(); // can't recover from it
-    return false;}
+  GLFWwindow* win = glfwCreateWindow(winW,winH,"SUFFER",NULL,NULL);
   glfwMakeContextCurrent(win);
   // glad
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
+  if (!gladLoadGL((GLADloadfunc)glfwGetProcAddress)){
      std::cerr<<"ERROR::GLAD::INIT_FAILED"<<std::endl;
-     return false;}
+     return NULL;}
 
   // redgester the callback function
   glfwSetFramebufferSizeCallback(win,fbResizeCallback);
 
   //R,G,B,A
   glClearColor(0.0f,0.0f,0.0f,0.0f);
-  return true;
+  return win;
 }
 
 // OpenGl startup function
@@ -96,7 +96,12 @@ bool intOGL(){
 
 
 int main(int argc, char** argv){
-  if(intGlfw() != true){std::cout << "ERROR::GLFW::INT_FAILED\n";_Exit(1);}
+  // int GLFW/GLAD
+  GLFWwindow* win = intGlfw();
+  if(win==NULL){std::cerr<<"ERROR::GLFW::WINDOW_CREATION"<<std::endl;
+  glfwTerminate(); // can't recover from it
+  _Exit(1);}
+
   std::cout << "INFO::GLUT::STARTED\n";
   std::cout << std::endl;
   intOGL();

@@ -1,10 +1,10 @@
 CC=g++ -Wall -g
-LDFLAGS= -lGLEW -lglut -lGL
+LDFLAGS= -lglfw -lGL -Iinclude
 
 OGLTest:
 	echo "Building OGLTest"
-	$(CC) $(LDFLAGS) OGLTest.cpp -o OGLTest
+	$(CC) $(LDFLAGS) src/gl.c OGLTest.cpp -o OGLTest
 
 glad.h:
 	echo "Running GLAD"
-	glad --api gl:core=3.3 --out-path . c
+	glad --api gl:core=3.3 --profile core --out-path . c
