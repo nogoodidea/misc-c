@@ -21,10 +21,11 @@
 
 // if the user resized update the screen
 void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);/*_Exit(1);*/}
-// glut startup function
+
+// glfw startup function
 GLFWwindow* intGlfw(){
-  // needs argc/argv don't know why
   glfwInit();
+  glfwWindowHint(GLFW_SAMPLES,4);//anti aliasing
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -49,6 +50,8 @@ GLFWwindow* intGlfw(){
 
 // OpenGl startup function
 bool intOGL(){
+  //enables that anti-aliasing thingy
+  glEnable(GL_MULTISAMPLE);
   // vertex shader
   // going to be baked in as i don't give an
   //https://learnopengl.com/Getting-started/Hello-Triangle
