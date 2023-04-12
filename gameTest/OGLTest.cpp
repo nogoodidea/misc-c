@@ -144,7 +144,7 @@ int main(int argc, char** argv){
    
   int amtPoints = 4;
   GLfloat vertPoints[3*amtPoints]={
-  0.5f,0.5f,0.0f,
+  0.7f,0.5f,0.0f,
   0.5f,-0.5f,0.0f,
   -0.5f,-0.5f,0.0f,
   -0.5f,0.5f,0.0f};
