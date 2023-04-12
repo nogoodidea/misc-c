@@ -3,5 +3,4 @@ htmlformat does things
 
 ui uses https://github.com/Immediate-Mode-UI/Nuklear/
 
-the gl project may or may not work.
-the sdl project in the same folder does not.
+the gl project may work but i am kind of useing the "poke the code untell it works" form of dev
