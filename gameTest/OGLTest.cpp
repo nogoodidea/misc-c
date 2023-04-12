@@ -116,7 +116,7 @@ bool intOGL(){
   glDeleteShader(fragShad);
 
   return shadProg;
-  }
+}
 
 
 int main(int argc, char** argv){
