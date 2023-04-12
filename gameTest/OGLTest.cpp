@@ -4,6 +4,7 @@
 
 #include<iostream>
 #include<string>
+#include<cmath> // IN 3D
 
 // idea ever see that part of jarrasic park?
 // #include<filesystem>
@@ -63,7 +64,8 @@ bool intOGL(){
     "}\0";
   const char *fragShadSc = "#version 330 core\n"
     "out vec4 FragColor;\n"
-    "void main(){FragColor = vec4(1.0f,0.5f,0.2f,1.0f);}\0";
+    "uniform vec4 ourColor;"
+    "void main(){FragColor = ourColor;}\0";
   
   //vertex
   GLuint vertShad;
@@ -144,10 +146,10 @@ int main(int argc, char** argv){
    
   int amtPoints = 4;
   GLfloat vertPoints[3*amtPoints]={
-  0.7f,0.5f,0.0f,
-  0.5f,-0.5f,0.0f,
-  -0.5f,-0.5f,0.0f,
-  -0.5f,0.5f,0.0f};
+  0.7f,0.5f,0.0f,//0
+  0.5f,-0.5f,0.0f,//0,1
+  -0.5f,-0.5f,0.0f,//1
+  -0.5f,0.5f,0.0f};//0,1
 
   int amtTri = 2;
   GLuint vertIndices[3*amtPoints] = {0,1,3, //tri0
@@ -183,6 +185,13 @@ int main(int argc, char** argv){
    
       
    glUseProgram(shadProg);// same as 1 line down
+   
+   //uniforms
+   float time = glfwGetTime();
+   float gV = static_cast<float>(sin(time)/2.0+.5);
+   int vColor = glGetUniformLocation(shadProg,"ourColor");
+   glUniform4f(vColor,0.0f,gV,0.0f,1.0f);
+  
    glBindVertexArray(VAO);// only have one now but if we say had 20 this will be usefull
    
    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
