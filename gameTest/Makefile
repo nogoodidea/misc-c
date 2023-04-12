@@ -3,7 +3,7 @@ LDFLAGS= -lglfw -lGL -Iinclude
 
 OGLTest:
 	echo "Building OGLTest"
-	$(CC) $(LDFLAGS) src/gl.c OGLTest.cpp -o OGLTest
+	$(CC) $(LDFLAGS) src/gl.c OGLTest.cpp -o a.out
 
 glad.h:
 	echo "Running GLAD"
