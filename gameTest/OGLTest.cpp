@@ -4,11 +4,14 @@
 
 #include<iostream>
 #include<string>
+#include<cmath> // IN 3D
 
 // idea ever see that part of jarrasic park?
 // #include<filesystem>
 
-// so your going to need to use glad to make the header files
+// so your going to need to use glad to make the header files/c source
+// so use the online version, v2 
+// or the cli can be added with pip
 // make glad.h might work, if i added it.
 // gl 3.3
 // good luck
@@ -17,12 +20,13 @@
 #include<GLFW/glfw3.h>
 
 
-// if the user resized the window god forbid
+// if the user resized update the screen
 void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);/*_Exit(1);*/}
-// glut startup function
+
+// glfw startup function
 GLFWwindow* intGlfw(){
-  // needs argc/argv don't know why
   glfwInit();
+  glfwWindowHint(GLFW_SAMPLES,4);//anti aliasing
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -47,6 +51,8 @@ GLFWwindow* intGlfw(){
 
 // OpenGl startup function
 bool intOGL(){
+  //enables that anti-aliasing thingy
+  glEnable(GL_MULTISAMPLE);
   // vertex shader
   // going to be baked in as i don't give an
   //https://learnopengl.com/Getting-started/Hello-Triangle
@@ -58,7 +64,8 @@ bool intOGL(){
     "}\0";
   const char *fragShadSc = "#version 330 core\n"
     "out vec4 FragColor;\n"
-    "void main(){FragColor = vec4(1.0f,0.5f,0.2f,1.0f);}\0";
+    "uniform vec4 ourColor;"
+    "void main(){FragColor = ourColor;}\0";
   
   //vertex
   GLuint vertShad;
@@ -132,40 +139,67 @@ int main(int argc, char** argv){
   // 3 * 3, 3 points 
 
   //virtex atrib 0, 3 vaules per vertix, floats,not normalized, mem size of vert, offset poniter of array????
+  //no del it works
   glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(GLfloat),(void*)0);
   glEnableVertexAttribArray(0);
+  // see above
    
-  int amtPoints = 3;
+  int amtPoints = 4;
   GLfloat vertPoints[3*amtPoints]={
-  -0.5f,-0.5f,0.0f,
-  0.5f,-0.5f,0.0f,
-  0.0f,0.5f,0.0f};
-  GLuint VBO;
-  //vertex buffer 
-  glGenBuffers(1,&VBO);
+  0.7f,0.5f,0.0f,//0
+  0.5f,-0.5f,0.0f,//0,1
+  -0.5f,-0.5f,0.0f,//1
+  -0.5f,0.5f,0.0f};//0,1
+
+  int amtTri = 2;
+  GLuint vertIndices[3*amtPoints] = {0,1,3, //tri0
+    1,2,3};//tri1  
+  
+    
+  GLuint VBO,EBO,VAO; 
+  
+  glGenVertexArrays(1,&VAO); // vertex array object
+  glGenBuffers(1,&VBO); //Vertex Buffer
+  glGenBuffers(1,&EBO);// or Element Buffer Object
+
+  // needs to be bound first
+  glBindVertexArray(VAO);
+  
   glBindBuffer(GL_ARRAY_BUFFER,VBO);
   glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*3*amtPoints,vertPoints,GL_STATIC_DRAW);
   
-  // use OUR program
-  glUseProgram(shadProg);
-	
-  // vertex array object
-  GLuint VAO;
-  glGenVertexArrays(1,&VAO);
-  glBindVertexArray(VAO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*3*amtPoints,vertPoints,GL_STATIC_DRAW);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,EBO);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(GLuint)*3*amtTri,vertIndices,GL_STATIC_DRAW);
 
+  //set the vertexattrib pointer
   glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(GLfloat),(void*)0);
+  //notes: do not unbind the EBO when the VAO is used
   glEnableVertexAttribArray(0);
+  
+  
+  glBindBuffer(GL_ARRAY_BUFFER,0);
+  glBindVertexArray(0); // rebound at render loop	
 
   while(!glfwWindowShouldClose(win))//todo get the window pointer here
-   {glfwSwapBuffers(win);
-   glfwPollEvents();
+   {
+   
+      
+   glUseProgram(shadProg);// same as 1 line down
+   
+   //uniforms
+   float time = glfwGetTime();
+   float gV = static_cast<float>(sin(time)/2.0+.5);
+   int vColor = glGetUniformLocation(shadProg,"ourColor");
+   glUniform4f(vColor,0.0f,gV,0.0f,1.0f);
+  
+   glBindVertexArray(VAO);// only have one now but if we say had 20 this will be usefull
+   
+   glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 
-   glUseProgram(shadProg);
-   glBindVertexArray(VAO);
-   glDrawArrays(GL_TRIANGLES,0,3);
+   glBindVertexArray(0);// see bind vao
+   
+   glfwSwapBuffers(win);
+   glfwPollEvents();
    } 
   
   return 0;
