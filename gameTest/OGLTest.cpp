@@ -15,7 +15,9 @@
 // make glad.h might work, if i added it.
 // gl 3.3
 // good luck
-#include<glad/gl.h>
+#include "shader.h" // yay things
+
+#includeform1f(glGetUniformLocation(ID, name.c_str()), value); <glad/gl.h>
 
 #include<GLFW/glfw3.h>
 
@@ -53,65 +55,9 @@ GLFWwindow* intGlfw(){
 bool intOGL(){
   //enables that anti-aliasing thingy
   glEnable(GL_MULTISAMPLE);
-  // vertex shader
-  // going to be baked in as i don't give an
-  //https://learnopengl.com/Getting-started/Hello-Triangle
-  const char *vertShadSc ="#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-  const char *fragShadSc = "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "uniform vec4 ourColor;"
-    "void main(){FragColor = ourColor;}\0";
   
-  //vertex
-  GLuint vertShad;
-  vertShad = glCreateShader(GL_VERTEX_SHADER); // errors out here SEGFULT
-  glShaderSource(vertShad,1,&vertShadSc,NULL);
-  glCompileShader(vertShad);
+  //refractoring shaders to an obj, following https://learnopengl.com/Getting-started/Shaders
 
-  // error checking
-  GLint error;
-  char errorLog[512];
-  glGetShaderiv(vertShad,GL_COMPILE_STATUS,&error);
-  if(!error){
-    glGetShaderInfoLog(vertShad,512,NULL,errorLog);
-    std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << errorLog;
-  return NULL;
-  }
-  
-  //fragment
-  GLuint fragShad;
-  fragShad = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragShad,1,&fragShadSc,NULL);
-  glCompileShader(fragShad);
-
-  glGetShaderiv(fragShad,GL_COMPILE_STATUS,&error);
-  
-  if(!error){
-    glGetShaderInfoLog(fragShad,512,NULL,errorLog);
-    std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << errorLog;
-  return 0;
-  } 
-  //shader program
-  GLuint shadProg;
-  shadProg = glCreateProgram();
-
-  glAttachShader(shadProg,vertShad);
-  glAttachShader(shadProg,fragShad);
-  glLinkProgram(shadProg);
-  // error checking
-  glGetProgramiv(shadProg,GL_LINK_STATUS, &error);
-  if(!error){
-    glGetShaderInfoLog(shadProg,512,NULL,errorLog);
-    std::cerr << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << errorLog;
-  return 0;
-  }
-  glUseProgram(shadProg);
-  //bye
   glDeleteShader(vertShad);
   glDeleteShader(fragShad);
 
@@ -180,20 +126,15 @@ int main(int argc, char** argv){
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
 
-  while(!glfwWindowShouldClose(win))//todo get the window pointer here
-   {
+  while(!glfwWindowShouldClose(win)){
    
-      
+   glClearColor(0.3f,0.1f,1.0f,1.0f);
+   glClear(GL_COLOR_BUFFER_BIT);
+
    glUseProgram(shadProg);// same as 1 line down
    
-   //uniforms
-   float time = glfwGetTime();
-   float gV = static_cast<float>(sin(time)/2.0+.5);
-   int vColor = glGetUniformLocation(shadProg,"ourColor");
-   glUniform4f(vColor,0.0f,gV,0.0f,1.0f);
-  
+   //rend the stuff attatched to VAO
    glBindVertexArray(VAO);// only have one now but if we say had 20 this will be usefull
-   
    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 
    glBindVertexArray(0);// see bind vao
