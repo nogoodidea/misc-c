@@ -28,18 +28,18 @@ class Shader{
         vertStream << vertFile.rdbuf();
         fragStream << fragFile.rdbuf();
         // closeing files
-        vertStream.close();
-        fragStream.close();
+        vertFile.close();
+        fragFile.close();
         vertStr = vertStream.str();
         fragStr = fragStream.str();
-      }catch (std::ifstream::fail& e){
+      }catch (std::ifstream::failure& e){
         std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
         }
       const char* vertCode = vertStr.c_str();
       const char* fragCode = fragStr.c_str();
 
       // onto compiling
-      GLUint vert,frag;
+      GLuint vert,frag;
       
       //Vertix Shader
       vert = glCreateShader(GL_VERTEX_SHADER);
@@ -80,20 +80,20 @@ class Shader{
   private:
     void checkError(GLuint shad,std::string type){
       GLint error;
-      char log[1024]
+      char log[1024];
       if(type != "PROG"){
         glGetShaderiv(shad,GL_COMPILE_STATUS,&error);
         if(!error){
-          glGetShaderInfoLog(shader, 1024, NULL, log);
-          std::cerr << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << std::endl;
+          glGetShaderInfoLog(shad, 1024, NULL, log);
+          std::cerr << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << log << std::endl;
         }
       }else{
         glGetProgramiv(shad,GL_LINK_STATUS,&error);
         if(!error){
-          glGetShaderInfoLog(shader, 1024, NULL, log);
-          std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << std::endl;
+          glGetShaderInfoLog(shad, 1024, NULL, log);
+          std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << log << std::endl;
         }
       }
     }
-}
+};
 #endif

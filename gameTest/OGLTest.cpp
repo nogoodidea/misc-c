@@ -15,12 +15,11 @@
 // make glad.h might work, if i added it.
 // gl 3.3
 // good luck
-#include "shader.h" // yay things
-
-#includeform1f(glGetUniformLocation(ID, name.c_str()), value); <glad/gl.h>
+#include <glad/gl.h>
 
 #include<GLFW/glfw3.h>
 
+#include "shader.h" // yay things
 
 // if the user resized update the screen
 void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);/*_Exit(1);*/}
@@ -52,16 +51,14 @@ GLFWwindow* intGlfw(){
 }
 
 // OpenGl startup function
-bool intOGL(){
+Shader intOGL(){
   //enables that anti-aliasing thingy
   glEnable(GL_MULTISAMPLE);
   
   //refractoring shaders to an obj, following https://learnopengl.com/Getting-started/Shaders
+  Shader shad("vertShad.vs","fragShad.fs");
 
-  glDeleteShader(vertShad);
-  glDeleteShader(fragShad);
-
-  return shadProg;
+  return shad;
 }
 
 
@@ -74,10 +71,7 @@ int main(int argc, char** argv){
 
   std::cout << "INFO::GLUT::STARTED\n";
   std::cout << std::endl;
-  GLuint shadProg = intOGL();
-  if(shadProg==0/*hopefully it can never be zero*/){std::cerr<<std::endl;
-    glfwTerminate(); // same deal
-    _Exit(1);}
+  Shader shadProg = intOGL();
 
   //https://stackoverflow.com/questions/5091570/most-basic-working-vbo-example
   //https://learnopengl.com/Getting-started/Hello-Triangle
@@ -91,11 +85,12 @@ int main(int argc, char** argv){
   // see above
    
   int amtPoints = 4;
-  GLfloat vertPoints[3*amtPoints]={
-  0.7f,0.5f,0.0f,//0
-  0.5f,-0.5f,0.0f,//0,1
-  -0.5f,-0.5f,0.0f,//1
-  -0.5f,0.5f,0.0f};//0,1
+  // x,y,z,r,g,b
+  GLfloat vertPoints[6*amtPoints]={
+  0.7f,0.5f,0.0f, 1.0f,0.0f,0.0f,//0
+  0.5f,-0.5f,0.0f, 0.0f, 1.0f, 0.0f//0,1
+  -0.5f,-0.5f,0.0f, 0.0f, 0.0f, 1.0f//1
+  -0.5f,0.5f,0.0f, 0.5f,0.3f,0.6f};//0,1
 
   int amtTri = 2;
   GLuint vertIndices[3*amtPoints] = {0,1,3, //tri0
@@ -112,15 +107,19 @@ int main(int argc, char** argv){
   glBindVertexArray(VAO);
   
   glBindBuffer(GL_ARRAY_BUFFER,VBO);
-  glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*3*amtPoints,vertPoints,GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*6*amtPoints,vertPoints,GL_STATIC_DRAW);
   
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(GLuint)*3*amtTri,vertIndices,GL_STATIC_DRAW);
 
-  //set the vertexattrib pointer
-  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(GLfloat),(void*)0);
+  //set the vertexattrib pointer for pos
+  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6*sizeof(GLfloat),(void*)0);
   //notes: do not unbind the EBO when the VAO is used
   glEnableVertexAttribArray(0);
+
+  //set the vertexattrib pointer for color
+  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,6*sizeof(GLfloat),(void*)0);
+  glEnableVertexAttribArray(1);
   
   
   glBindBuffer(GL_ARRAY_BUFFER,0);
@@ -131,7 +130,7 @@ int main(int argc, char** argv){
    glClearColor(0.3f,0.1f,1.0f,1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
 
-   glUseProgram(shadProg);// same as 1 line down
+   shadProg.use();// same as 1 line down
    
    //rend the stuff attatched to VAO
    glBindVertexArray(VAO);// only have one now but if we say had 20 this will be usefull
