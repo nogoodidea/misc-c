@@ -65,6 +65,8 @@ class Shader{
     }
 
     void use(){glUseProgram(ID);}
+    // cleanup
+    void del(){glDeleteProgram(ID);}
     
     // functions for messing with uniforms
     // not like that sicko

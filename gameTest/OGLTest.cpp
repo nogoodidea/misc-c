@@ -11,7 +11,7 @@
 
 // so your going to need to use glad to make the header files/c source
 // so use the online version, v2 
-// or the cli can be added with pip
+// or the cli can be added with pip. pip install glad2
 // make glad.h might work, if i added it.
 // gl 3.3
 // good luck
@@ -83,12 +83,15 @@ int main(int argc, char** argv){
   //no del it works
   // see above
   
-  GLfloat vert[] = {0.5f,0.5f,0.0f, 1.0f,0.0f,0.0f,//0
-  0.5f,-0.5f,0.0f, 0.0f, 1.0f, 0.0f//0,1
-  -0.5f,-0.5f,0.0f, 0.0f, 0.0f, 1.0f//1
-  -0.5f,0.5f,0.0f, 0.5f,0.3f,0.6f};
+  GLfloat vert[] = {
+    0.5f,0.5f,0.0f,   1.0f,0.0f,0.0f,//0
+    0.5f,-0.5f,0.0f,  0.0f, 1.0f, 0.0f//0,1
+    -0.5f,-0.5f,0.0f,   0.0f, 0.0f, 1.0f//1
+    -0.5f,0.5f,0.0f,   0.0f,0.0f,0.0f //0,1
+  };
 
   GLuint t[] = {0,1,3,1,2,3};
+  // loads the Object3D
   Object3D testObj(vert,4,t,2);
   
   glBindBuffer(GL_ARRAY_BUFFER,0);
@@ -109,7 +112,11 @@ int main(int argc, char** argv){
    
    glfwSwapBuffers(win);
    glfwPollEvents();
-   } 
-  
+   }
+  // cleanup
+  shadProg.del();
+  testObj.del(); 
+
+  glfwTerminate();
   return 0;
 }
