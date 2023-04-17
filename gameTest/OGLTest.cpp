@@ -47,7 +47,7 @@ GLFWwindow* intGlfw(){
   glfwSetFramebufferSizeCallback(win,fbResizeCallback);
 
   //R,G,B,A
-  glClearColor(0.0f,0.0f,0.0f,0.0f);
+  glClearColor(1.0f,0.0f,0.5f,1.0f);
   return win;
 }
 
@@ -82,15 +82,16 @@ int main(int argc, char** argv){
   //virtex atrib 0, 3 vaules per vertix, floats,not normalized, mem size of vert, offset poniter of array????
   //no del it works
   // see above
-  
+ 
+  // should be x,y,z, r,g,b  
   GLfloat vert[] = {
-    0.5f,0.5f,0.0f,   1.0f,0.0f,0.0f,//0
-    0.5f,-0.5f,0.0f,  0.0f, 1.0f, 0.0f//0,1
-    -0.5f,-0.5f,0.0f,   0.0f, 0.0f, 1.0f//1
-    -0.5f,0.5f,0.0f,   0.0f,0.0f,0.0f //0,1
+    0.5f,0.5f,0.0f,   0.0f,0.0f,0.0f,//0,1
+    0.5f,-0.5f,0.0f,  0.0f, 0.0f, 0.0f//0
+    -0.5f,-0.5f,0.0f,   0.0f, 0.0f, 0.0f//0,1
+    -0.5f,0.5f,0.0f,   0.0f,0.0f,0.0f //1
   };
 
-  GLuint t[] = {0,1,3,1,2,3};
+  GLuint t[] = {0,1,2,0,2,3};
   // loads the Object3D
   Object3D testObj(vert,4,t,2);
   
@@ -98,8 +99,6 @@ int main(int argc, char** argv){
   glBindVertexArray(0); // rebound at render loop	
 
   while(!glfwWindowShouldClose(win)){
-   
-   glClearColor(0.3f,0.1f,1.0f,1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
 
    shadProg.use();// same as 1 line down
