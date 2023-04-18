@@ -2,6 +2,7 @@
 
 #include <glad/gl.h>
 
+#include <cmath> // math
 
 // keeps track of the VBO/VAO Points and Colors
 class Object3D{
@@ -48,7 +49,6 @@ class Object3D{
       for(v=0;v<amtP;v+=1){
         for(i=0;i<3;i+=1){
           // does 2 things 1 updaes vertP to the new data,2 updates the VBO with new data
-          std::cout<<transform[i] << "|" << vertP[i+v*6] << std::endl;
           vertP[i+v*6]+=transform[i];// v*6 because 1 verticy is 6 floats.
           glNamedBufferSubData(VBO,(i+v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*6]);
         }
@@ -59,11 +59,32 @@ class Object3D{
       int v,i;
       for(v=0;v<amtP;v+=1){
         for(i=0;i<3;i+=1){
-          std::cout<<transform[i] << "|" << vertP[i+v*6] << std::endl;
           vertP[i+v*6]*=transform[i];// v*6 because 1 verticy is 6 floats.
           glNamedBufferSubData(VBO,(i+v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*6]);
         }
       }
+    }
+    // x y z
+    void rotx(GLfloat thata){ //rot on the x
+      GLfloat oy,oz;// old y,z placeholders
+                    //
+                    // well time to read up on linear algebra
+                    // https://www.khanacademy.org/math/linear-algebra/matrix-transformations/linear-transformations/v/vector-transformations
+      int v,i;
+      for(v=0;v<amtP;v+=1){
+          oy=vertP[v*6+1]; // v6+1 = y
+          oz=vertP[v*6+2]; // v6+2 = z
+
+          vertP[v*6+1]=;// y
+          glNamedBufferSubData(VBO,(i+v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*6]);
+      }
+      
+    }
+    void roty(){ //rot on the y
+      
+    }
+    void rotz(){ //rot on the z
+
     }
 
     // rend function
