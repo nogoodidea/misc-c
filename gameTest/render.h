@@ -41,6 +41,31 @@ class Object3D{
       glBindVertexArray(0);
 
     }
+    // does all the transforms and matrix *
+    void trans(GLfloat transform[3]){ // in the form of x,y,z , r,g,b is an other function
+      // transfroms the shape by the vertex transform, does not change the colors
+      int v,i;
+      for(v=0;v<amtP;v+=1){
+        for(i=0;i<3;i+=1){
+          // does 2 things 1 updaes vertP to the new data,2 updates the VBO with new data
+          std::cout<<transform[i] << "|" << vertP[i+v*6] << std::endl;
+          vertP[i+v*6]+=transform[i];// v*6 because 1 verticy is 6 floats.
+          glNamedBufferSubData(VBO,(i+v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*6]);
+        }
+      }
+    }
+
+    void scale(GLfloat transform[3]){// copy and past from above but =* 
+      int v,i;
+      for(v=0;v<amtP;v+=1){
+        for(i=0;i<3;i+=1){
+          std::cout<<transform[i] << "|" << vertP[i+v*6] << std::endl;
+          vertP[i+v*6]*=transform[i];// v*6 because 1 verticy is 6 floats.
+          glNamedBufferSubData(VBO,(i+v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*6]);
+        }
+      }
+    }
+
     // rend function
     void rend(){
       // binds the vao, this holds the VAO and the EBO

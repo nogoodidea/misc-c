@@ -85,12 +85,13 @@ int main(int argc, char** argv){
  
   // should be x,y,z, r,g,b  
   GLfloat vert[] = {
-    0.5f,0.5f,0.0f,   0.0f,0.0f,0.0f,//0,1
-    0.5f,-0.5f,0.0f,  0.0f, 0.0f, 0.0f,//0
-    -0.5f,-0.5f,0.0f,   0.0f, 0.0f, 0.0f,//0,1
-    -0.5f,0.5f,0.0f,   0.0f,0.0f,0.0f //1
+    0.5f,0.5f,0.0f,   1.0f,0.0f,0.0f,//0,1
+    0.5f,-0.5f,0.0f,  0.0f, 1.0f, 0.0f,//0
+    -0.5f,-0.5f,0.0f,   0.0f, 0.0f, 1.0f,//0,1
+    -0.5f,0.5f,0.0f,   2.5f,1.0f,0.0f //1
   };
 
+  GLfloat testInput[3]={0.01f,0.0f,0.0f};
   GLuint t[] = {0,1,2,0,2,3};
   // loads the Object3D
   Object3D testObj(vert,4,t,2);
@@ -100,13 +101,15 @@ int main(int argc, char** argv){
 
   while(!glfwWindowShouldClose(win)){
    glClear(GL_COLOR_BUFFER_BIT);
-
-   shadProg.use();// same as 1 line down
    
-   //rend the stuff attatched to VAO
+   // window inputs
+   if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
+      testObj.trans(testInput);
+   }
+   shadProg.use();
 
    testObj.rend();
-
+   
    glBindVertexArray(0);// see bind vao
    
    glfwSwapBuffers(win);
