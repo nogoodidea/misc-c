@@ -4,6 +4,9 @@
 
 #include <cmath> // math
 
+// pi
+#define PI 3.14159
+
 // keeps track of the VBO/VAO Points and Colors
 class Object3D{
   public:
@@ -55,7 +58,7 @@ class Object3D{
       }
     }
 
-    void scale(GLfloat transform[3]){// copy and past from above but =* 
+    void scale(double transform[3]){// copy and past from above but =* 
       int v,i;
       for(v=0;v<amtP;v+=1){
         for(i=0;i<3;i+=1){
@@ -65,26 +68,28 @@ class Object3D{
       }
     }
     // x y z
-    void rotx(GLfloat thata){ //rot on the x
-      GLfloat oy,oz;// old y,z placeholders
+    void rot(GLfloat theta[3]){ //rotate
+      GLfloat ox,oy,oz;// old x,y,z
                     //
                     // well time to read up on linear algebra
                     // https://www.khanacademy.org/math/linear-algebra/matrix-transformations/linear-transformations/v/vector-transformations
       int v,i;
+      // turn thata in to radions
+      for(i=0;i<3;i+=1){theta[i]*=(PI/180);}
       for(v=0;v<amtP;v+=1){
+          ox=vertP[v*6];
           oy=vertP[v*6+1]; // v6+1 = y
           oz=vertP[v*6+2]; // v6+2 = z
-
-          vertP[v*6+1]=;// y
-          glNamedBufferSubData(VBO,(i+v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*6]);
+          // matrix is from 
+          std::cout<<ox<<"|"<<oy<<"|"<<oz<<std::endl;
+          vertP[v*6]=(ox*(cos(theta[0])+(ox*ox)*(1-cos(theta[0]))))+(ox*(ox*oy*(1-cos(theta[0]))-oz*sin(theta[0])))+(ox*(ox*oz*(1-cos(theta[0]))+oy*sin(theta[0])));// x
+          glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
+          vertP[v*6+1]=oy*(oy*ox*(1-cos(theta[1]))+oz*sin(theta[1]))+oy*(cos(theta[1])+oy*oy*(1-cos(theta[1])))+oy*(oy*oz*(1-cos(theta[1]))-ox*sin(theta[1]));// y
+          glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
+          vertP[v*6+1]=oz*(oz*ox*(1-cos(theta[2]))-oy*sin(theta[2]))+oz*(oz*oy*(1-cos(theta[2]))+ox*sin(theta[2]))+oz*(cos(theta[2])+oz*oz*(1-cos(theta[2])));// z
+          glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
       }
       
-    }
-    void roty(){ //rot on the y
-      
-    }
-    void rotz(){ //rot on the z
-
     }
 
     // rend function
