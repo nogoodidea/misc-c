@@ -104,7 +104,9 @@ int main(int argc, char** argv){
    
    // window inputs
    if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
-      testObj.rot(testInput);
+      testObj.rotz(-1.0f);
+      testObj.rotx(0.0f);
+      testObj.roty(0.5f);
    }
    shadProg.use();
 

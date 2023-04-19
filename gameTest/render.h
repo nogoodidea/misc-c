@@ -82,16 +82,62 @@ class Object3D{
           oz=vertP[v*6+2]; // v6+2 = z
           // matrix is from 
           std::cout<<ox<<"|"<<oy<<"|"<<oz<<std::endl;
-          vertP[v*6]=(ox*(cos(theta[0])+(ox*ox)*(1-cos(theta[0]))))+(ox*(ox*oy*(1-cos(theta[0]))-oz*sin(theta[0])))+(ox*(ox*oz*(1-cos(theta[0]))+oy*sin(theta[0])));// x
+          vertP[v*6]=(ox*(cos(theta[0])+(ox*ox)*(1-cos(theta[0]))))+(oy*(ox*oy*(1-cos(theta[0]))-oz*sin(theta[0])))+(oz*(ox*oz*(1-cos(theta[0]))+oy*sin(theta[0])));// x
           glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
-          vertP[v*6+1]=(oy*(oy*ox*(1-cos(theta[1]))+oz*sin(theta[1])))+(oy*(cos(theta[1])+oy*oy*(1-cos(theta[1]))))+(oy*(oy*oz*(1-cos(theta[1]))-ox*sin(theta[1])));// y
+          vertP[v*6+1]=(ox*(oy*ox*(1-cos(theta[1]))+oz*sin(theta[1])))+(oy*(cos(theta[1])+(oy*oy)*(1-cos(theta[1]))))+(oz*(oy*oz*(1-cos(theta[1]))-ox*sin(theta[1])));// y
           glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
-          vertP[v*6+1]=(oz*(oz*ox*(1-cos(theta[2]))-oy*sin(theta[2])))+(oz*(oz*oy*(1-cos(theta[2]))+ox*sin(theta[2])))+(oz*(cos(theta[2])+oz*oz*(1-cos(theta[2]))));// z
+          vertP[v*6+1]=(ox*(oz*ox*(1-cos(theta[2]))-oy*sin(theta[2])))+(oy*(oz*oy*(1-cos(theta[2]))+ox*sin(theta[2])))+(oz*(cos(theta[2])+(oz*oz)*(1-cos(theta[2]))));// z
           glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
       }
-      
     }
-
+    void rotz(GLfloat theta){ //rotate around z
+      GLfloat ox,oy,oz;// old x,y,z
+      int v;
+      theta*=(PI/180);
+      for(v=0;v<amtP;v+=1){
+          ox=vertP[v*6];
+          oy=vertP[v*6+1]; // v6+1 = y
+          oz=vertP[v*6+2]; // v6+2 = z
+          // matrix is from 
+          std::cout<<ox<<"|"<<oy<<"|"<<oz<<std::endl;
+          vertP[v*6]=(cos(theta)*ox)-(sin(theta)*oy);// x
+          glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
+          vertP[v*6+1]=(sin(theta)*ox)+(cos(theta)*oy);// y
+          glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
+      }
+    }
+    void rotx(GLfloat theta){ //rotate around x
+      GLfloat ox,oy,oz;// old x,y,z
+      int v;
+      theta*=(PI/180);
+      for(v=0;v<amtP;v+=1){
+          ox=vertP[v*6];
+          oy=vertP[v*6+1]; // v6+1 = y
+          oz=vertP[v*6+2]; // v6+2 = z
+          // matrix is from 
+          std::cout<<ox<<"|"<<oy<<"|"<<oz<<std::endl;
+          vertP[v*6+1]=(cos(theta)*oy)-(sin(theta)*oz);// y
+          glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
+          vertP[v*6+2]=(sin(theta)*oy)+(cos(theta)*oz);// z
+          glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
+      }
+    }
+    void roty(GLfloat theta){ //rotate around y
+      GLfloat ox,oy,oz;// old x,y,z
+      int v;
+      theta*=(PI/180);
+      for(v=0;v<amtP;v+=1){
+          ox=vertP[v*6];
+          oy=vertP[v*6+1]; // v6+1 = y
+          oz=vertP[v*6+2]; // v6+2 = z
+          // matrix is from 
+          std::cout<<ox<<"|"<<oy<<"|"<<oz<<std::endl;
+          vertP[v*6]=(cos(theta)*ox)-(sin(theta)*oz);// x
+          glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
+          vertP[v*6+2]=(-1*sin(theta)*ox)+(cos(theta)*oz);// z
+          glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
+      }
+    }
     // rend function
     void rend(){
       // binds the vao, this holds the VAO and the EBO
