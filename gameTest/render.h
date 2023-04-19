@@ -84,9 +84,9 @@ class Object3D{
           std::cout<<ox<<"|"<<oy<<"|"<<oz<<std::endl;
           vertP[v*6]=(ox*(cos(theta[0])+(ox*ox)*(1-cos(theta[0]))))+(ox*(ox*oy*(1-cos(theta[0]))-oz*sin(theta[0])))+(ox*(ox*oz*(1-cos(theta[0]))+oy*sin(theta[0])));// x
           glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
-          vertP[v*6+1]=oy*(oy*ox*(1-cos(theta[1]))+oz*sin(theta[1]))+oy*(cos(theta[1])+oy*oy*(1-cos(theta[1])))+oy*(oy*oz*(1-cos(theta[1]))-ox*sin(theta[1]));// y
+          vertP[v*6+1]=(oy*(oy*ox*(1-cos(theta[1]))+oz*sin(theta[1])))+(oy*(cos(theta[1])+oy*oy*(1-cos(theta[1]))))+(oy*(oy*oz*(1-cos(theta[1]))-ox*sin(theta[1])));// y
           glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
-          vertP[v*6+1]=oz*(oz*ox*(1-cos(theta[2]))-oy*sin(theta[2]))+oz*(oz*oy*(1-cos(theta[2]))+ox*sin(theta[2]))+oz*(cos(theta[2])+oz*oz*(1-cos(theta[2])));// z
+          vertP[v*6+1]=(oz*(oz*ox*(1-cos(theta[2]))-oy*sin(theta[2])))+(oz*(oz*oy*(1-cos(theta[2]))+ox*sin(theta[2])))+(oz*(cos(theta[2])+oz*oz*(1-cos(theta[2]))));// z
           glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
       }
       
