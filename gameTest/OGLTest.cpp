@@ -88,13 +88,29 @@ int main(int argc, char** argv){
     0.5f,0.5f,0.0f,   1.0f,0.0f,0.0f,//0,1
     0.5f,-0.5f,0.0f,  0.0f, 1.0f, 0.0f,//0
     -0.5f,-0.5f,0.0f,   0.0f, 0.0f, 1.0f,//0,1
-    -0.5f,0.5f,0.0f,   2.5f,1.0f,0.0f //1
+    -0.5f,0.5f,0.0f,   2.5f,1.0f,0.0f, //1
+    0.5f,0.5f,0.5f,   1.0f,0.0f,0.0f,//2,3
+    0.5f,-0.5f,0.5f,  0.0f, 1.0f, 0.0f,//2
+    -0.5f,-0.5f,0.5f,   0.0f, 0.0f, 1.0f,//2,3
+    -0.5f,0.5f,0.5f,   2.5f,1.0f,0.0f //3
   };
 
   GLfloat testInput[3]={5.0f,0.0f,0.0f};
-  GLuint t[] = {0,1,2,0,2,3};
+  GLuint t[] = {
+	  0,1,2,
+	  0,2,3,
+	  4,5,6,
+	  4,6,7,
+  	  0,1,4,
+	  4,5,1,
+	  1,2,5,
+	  5,6,2,
+	  7,0,3,
+	  0,2,3
+
+  };
   // loads the Object3D
-  Object3D testObj(vert,4,t,2);
+  Object3D testObj(vert,8,t,10);
   
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
@@ -104,10 +120,13 @@ int main(int argc, char** argv){
    
    // window inputs
    if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
-      testObj.rotz(-1.0f);
-      testObj.rotx(0.0f);
-      testObj.roty(0.5f);
+      glfwSetWindowShouldClose(win,true);
    }
+   if(glfwGetKey(win,GLFW_KEY_DOWN)){testObj.rotx(-0.1f);}
+   if(glfwGetKey(win,GLFW_KEY_UP)){testObj.rotx(0.1f);}
+   if(glfwGetKey(win,GLFW_KEY_RIGHT)){testObj.rotz(0.1f);}
+   if(glfwGetKey(win,GLFW_KEY_LEFT)){testObj.rotz(-0.1f);}
+
    shadProg.use();
 
    testObj.rend();
