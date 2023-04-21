@@ -47,7 +47,7 @@ GLFWwindow* intGlfw(){
   glfwSetFramebufferSizeCallback(win,fbResizeCallback);
 
   //R,G,B,A
-  glClearColor(0.0f,0.0f,0.0f,1.0f);
+  glClearColor(1.0f,0.0f,0.5f,1.0f);
   return win;
 }
 
@@ -55,10 +55,6 @@ GLFWwindow* intGlfw(){
 Shader intOGL(){
   //enables that anti-aliasing thingy
   glEnable(GL_MULTISAMPLE);
-  // depth testing so shapes don't overlap
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LESS);
-
   
   //refractoring shaders to an obj, following https://learnopengl.com/Getting-started/Shaders
   Shader shad("vertShad.vs","fragShad.fs");
@@ -93,40 +89,34 @@ int main(int argc, char** argv){
     0.5f,-0.5f,0.0f,  0.0f, 1.0f, 0.0f,//0
     -0.5f,-0.5f,0.0f,   0.0f, 0.0f, 1.0f,//0,1
     -0.5f,0.5f,0.0f,   2.5f,1.0f,0.0f, //1
-    0.5f,0.5f,1.0f,   0.0f,0.0f,0.0f,//2,3
-    0.5f,-0.5f,1.0f,  0.0f, 0.0f, 0.0f,//2
-    -0.5f,-0.5f,1.0f,   0.0f, 0.0f, 0.0f,//2,3
-    -0.5f,0.5f,1.0f,   0.0f,0.0f,0.0f //3
+    0.5f,0.5f,0.5f,   0.0f,0.0f,0.0f,//2,3
+    0.5f,-0.5f,0.5f,  0.0f, 0.0f, 0.0f,//2
+    -0.5f,-0.5f,0.5f,   0.0f, 0.0f, 0.0f,//2,3
+    -0.5f,0.5f,0.5f,   0.0f,0.0f,0.0f //3
   };
 
   GLfloat testInput[3]={5.0f,0.0f,0.0f};
   GLuint t[] = {
 	  0,1,2,
 	  0,2,3,
-	  
 	  4,5,6,
 	  4,6,7,
-	   
-	  4,0,1,
+  	  0,1,4,
 	  4,5,1,
-
-	  5,1,2,
+	  1,2,5,
 	  5,6,2,
-
-	  6,2,3,
-	  6,7,3,
-
-	  7,3,0,
+	  7,0,3,
 	  7,4,0
+
   };
   // loads the Object3D
-  Object3D testObj(vert,8,t,12);
+  Object3D testObj(vert,8,t,10);
   
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
 
   while(!glfwWindowShouldClose(win)){
-   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT);
    
    // window inputs
    if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
