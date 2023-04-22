@@ -129,7 +129,7 @@ class Object3D{
     void roty(GLfloat theta){ //rotate around y
       GLfloat ox,oz;// old x,z
       int v;
-      theta*=(PI/180);
+      theta*=(PI/180); // input is in deg
       for(v=0;v<amtP;v+=1){
           ox=vertP[v*6]-midPoint[0];
           oz=vertP[v*6+2]-midPoint[2]; // v6+2 = z
@@ -158,19 +158,19 @@ class Object3D{
     void findMidpoint(GLfloat *out){
     // find the mid point
     int i;
-    GLfloat avg=0;
+    GLfloat avg=0.f;
     for(i=0;i<amtP;i+=1){
       avg+=vertP[i*6]; //x
       }
     out[0]=avg/amtP; //y
     avg=0.0f;
     for(i=0;i<amtP;i+=1){
-      avg+=vertP[i*6+1];
+      avg+=vertP[(i*6)+1];
       }
-    avg=0.0f;
     out[1]=avg/amtP;
+    avg=0.0f;
     for(i=0;i<amtP;i+=1){
-      avg+=vertP[i*6+2]; //z
+      avg+=vertP[(i*6)+2]; //z
       }
     out[2] = avg/amtP;
     }
