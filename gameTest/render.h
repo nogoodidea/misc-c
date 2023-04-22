@@ -13,6 +13,7 @@ class Object3D{
     GLuint VBO,VAO,EBO;
     GLfloat* vertP;
     GLuint* vertT;
+    GLfloat midPoint[3] = {0.0f,0.0f,0.0f}; // hold the mid point used for transform matrix
     int amtP,amtT; // amount vertexes, amout T 
     // int function
     Object3D(GLfloat* IvertP,int IamtP,GLuint* IvertT,int IamtT){
@@ -44,6 +45,13 @@ class Object3D{
       //glBindBuffer(GL_ARRAY_BUFFER, 0);
       glBindVertexArray(0);
 
+      // find the midpoint needed for stuff
+      GLfloat buf[3]; 
+      findMidpoint(buf);
+      midPoint[0] = buf[0];
+      midPoint[1] = buf[1];
+      midPoint[2] = buf[2];
+      std::cout << buf[0] <<" "<< buf[1] <<" "<< buf[2] << std::endl;
     }
     // does all the transforms and matrix *
     void trans(GLfloat transform[3]){ // in the form of x,y,z , r,g,b is an other function
@@ -95,12 +103,12 @@ class Object3D{
       int v;
       theta*=(PI/180);
       for(v=0;v<amtP;v+=1){
-          ox=vertP[v*6];
-          oy=vertP[v*6+1]; // v6+1 = y
+          ox=vertP[v*6]-midPoint[0];
+          oy=vertP[v*6+1]-midPoint[1]; // v6+1 = y
           // matrix is from 
-          vertP[v*6]=(cos(theta)*ox)-(sin(theta)*oy);// x
+          vertP[v*6]=(cos(theta)*ox)-(sin(theta)*oy)+midPoint[0];// x
           glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
-          vertP[v*6+1]=(sin(theta)*ox)+(cos(theta)*oy);// y
+          vertP[v*6+1]=(sin(theta)*ox)+(cos(theta)*oy)+midPoint[1];// y
           glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
       }
     }
@@ -109,12 +117,12 @@ class Object3D{
       int v;
       theta*=(PI/180);
       for(v=0;v<amtP;v+=1){
-          oy=vertP[v*6+1]; // v6+1 = y
-          oz=vertP[v*6+2]; // v6+2 = z
+          oy=vertP[v*6+1]-midPoint[1]; // v6+1 = y
+          oz=vertP[v*6+2]-midPoint[2]; // v6+2 = z
           // matrix is from 
-          vertP[v*6+1]=(cos(theta)*oy)-(sin(theta)*oz);// y
+          vertP[v*6+1]=(cos(theta)*oy)-(sin(theta)*oz)+midPoint[1];// y
           glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
-          vertP[v*6+2]=(sin(theta)*oy)+(cos(theta)*oz);// z
+          vertP[v*6+2]=(sin(theta)*oy)+(cos(theta)*oz)+midPoint[2];// z
           glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
       }
     }
@@ -123,12 +131,12 @@ class Object3D{
       int v;
       theta*=(PI/180);
       for(v=0;v<amtP;v+=1){
-          ox=vertP[v*6];
-          oz=vertP[v*6+2]; // v6+2 = z
+          ox=vertP[v*6]-midPoint[0];
+          oz=vertP[v*6+2]-midPoint[2]; // v6+2 = z
           // matrix is from 
-          vertP[v*6]=(cos(theta)*ox)+(sin(theta)*oz);// x
+          vertP[v*6]=(cos(theta)*ox)+(sin(theta)*oz)+midPoint[0];// x
           glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
-          vertP[v*6+2]=(-1*sin(theta)*ox)+(cos(theta)*oz);// z
+          vertP[v*6+2]=(-1*sin(theta)*ox)+(cos(theta)*oz)+midPoint[2];// z
           glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
       }
     }
@@ -145,5 +153,25 @@ class Object3D{
       glDeleteBuffers(1,&VBO);
       glDeleteBuffers(1,&EBO);
       // your going to want to del the object after this
+    }
+    
+    void findMidpoint(GLfloat *out){
+    // find the mid point
+    int i;
+    GLfloat avg=0;
+    for(i=0;i<amtP;i+=1){
+      avg+=vertP[i*6]; //x
+      }
+    out[0]=avg/amtP; //y
+    avg=0.0f;
+    for(i=0;i<amtP;i+=1){
+      avg+=vertP[i*6+1];
+      }
+    avg=0.0f;
+    out[1]=avg/amtP;
+    for(i=0;i<amtP;i+=1){
+      avg+=vertP[i*6+2]; //z
+      }
+    out[2] = avg/amtP;
     }
 };
