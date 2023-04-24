@@ -47,7 +47,7 @@ GLFWwindow* intGlfw(){
   glfwSetFramebufferSizeCallback(win,fbResizeCallback);
 
   //R,G,B,A
-  glClearColor(0.0f,0.0f,0.0f,1.0f);
+  glClearColor(0.1f,0.1f,0.1f,1.0f);
   return win;
 }
 
@@ -89,14 +89,14 @@ int main(int argc, char** argv){
  
   // should be x,y,z, r,g,b  
   GLfloat vert[] = {
-    0.2f,0.2f,0.2f,   1.0f,0.0f,0.0f,//0,1
-    0.2f,-0.2f,0.2f,  0.0f, 1.0f, 0.0f,//0
-    -0.2f,-0.2f,0.2f,   0.0f, 0.0f, 1.0f,//0,1
-    -0.2f,0.2f,0.2f,   2.5f,1.0f,0.0f, //1
-    0.2f,0.2f,-0.2f,   0.0f,0.0f,0.0f,//2,3
+    0.5f,0.5f,0.2f,   2.5f,0.0f,0.0f,//0,1
+    0.5f,-0.5f,0.2f,  0.0f, 0.0f, 0.0f,//0
+    -0.5f,-0.5f,0.2f,   0.0f, 0.0f, 2.5f,//0,1
+    -0.5f,0.5f,0.2f,   0.0f,2.5f,0.0f, //1
+    0.2f,0.2f,-0.2f,   0.0f,0.0f,2.5f,//2,3
     0.2f,-0.2f,-0.2f,  0.0f, 0.0f, 0.0f,//2
-    -0.2f,-0.2f,-0.2f,   0.0f, 0.0f, 0.0f,//2,3
-    -0.2f,0.2f,-0.2f,   0.0f,0.0f,0.0f //3
+    -0.2f,-0.2f,-0.2f,   0.0f, 2.5f, 0.0f,//2,3
+    -0.2f,0.2f,-0.2f,   2.5f,0.0f,0.0f //3
   };
 
   GLfloat testInput[3]={5.0f,0.0f,0.0f};
@@ -136,6 +136,10 @@ int main(int argc, char** argv){
    if(glfwGetKey(win,GLFW_KEY_UP)){testObj.rotx(0.1f);}
    if(glfwGetKey(win,GLFW_KEY_RIGHT)){testObj.rotz(0.1f);}
    if(glfwGetKey(win,GLFW_KEY_LEFT)){testObj.rotz(-0.1f);}
+    
+   testObj.rotx(0.2f);
+   testObj.roty(0.5f);
+   testObj.rotz(0.01f);
 
    shadProg.use();
 

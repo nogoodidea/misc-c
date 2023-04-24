@@ -3,9 +3,8 @@
 #include <glad/gl.h>
 
 #include <cmath> // math
+#include <vector>
 
-
-#include "dynArry.h" // when you rewrite new/del
 // pi
 #define PI 3.14159
 
@@ -49,11 +48,11 @@ class Object3D{
 
       // find the midpoint needed for stuff
       GLfloat buf[3]; 
-      findMidpoint(buf);
-      midPoint[0] = buf[0];
-      midPoint[1] = buf[1];
-      midPoint[2] = buf[2];
-      std::cout << buf[0] <<" "<< buf[1] <<" "<< buf[2] << std::endl;
+      findMidpoint(buf); // zero + something is something
+      midPoint[0] += buf[0];
+      midPoint[1] += buf[1];
+      midPoint[2] += buf[2];
+      std::cout << midPoint[0] <<" "<< midPoint[1] <<" "<< midPoint[2] << std::endl;
     }
     // does all the transforms and matrix *
     void trans(GLfloat transform[3]){ // in the form of x,y,z , r,g,b is an other function
@@ -174,7 +173,7 @@ class Object3D{
     for(i=0;i<amtP;i+=1){
       avg+=vertP[(i*6)+2]; //z
       }
-    out[2] = avg/amtP;
+    out[2]=avg/amtP;
     }
 };
 
@@ -182,14 +181,14 @@ class Object3D{
 // has a list of all 3Dobjects and renders them squentuly
 // does new list and all that
 //
-class Renderer{
+/*class Renderer{
   public:
     // mask might not be needed 
-    DynArry obj(0+sizeof(Object3D));
-    DynArry mask(0+sizeof(Bool));
+    std::vector<Object3D> obj;
+    std::vector<bool> mask;
 
     void push(Object3D item){
-    obj.push(item);
-    mask.push(true);
+    obj.insert(0,item);
+    mask.insert(0,true);
     }
-};
+};*/
