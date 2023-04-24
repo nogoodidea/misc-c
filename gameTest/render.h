@@ -4,6 +4,8 @@
 
 #include <cmath> // math
 
+
+#include "arry.h" // when you rewrite new/del
 // pi
 #define PI 3.14159
 
@@ -173,5 +175,21 @@ class Object3D{
       avg+=vertP[(i*6)+2]; //z
       }
     out[2] = avg/amtP;
+    }
+};
+
+// render object
+// has a list of all 3Dobjects and renders them squentuly
+// does new list and all that
+//
+class Renderer{
+  public:
+    // mask might not be needed 
+    DynArry obj(sizeof(Object3D));
+    DynArry mask(sizeof(Bool));
+
+    void push(Object3D item){
+    obj.push(item);
+    mask.push(true);
     }
 };
