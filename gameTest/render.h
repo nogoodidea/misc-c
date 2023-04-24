@@ -5,7 +5,7 @@
 #include <cmath> // math
 
 
-#include "arry.h" // when you rewrite new/del
+#include "dynArry.h" // when you rewrite new/del
 // pi
 #define PI 3.14159
 
@@ -185,8 +185,8 @@ class Object3D{
 class Renderer{
   public:
     // mask might not be needed 
-    DynArry obj(sizeof(Object3D));
-    DynArry mask(sizeof(Bool));
+    DynArry obj(0+sizeof(Object3D));
+    DynArry mask(0+sizeof(Bool));
 
     void push(Object3D item){
     obj.push(item);

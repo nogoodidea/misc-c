@@ -6,7 +6,7 @@ class DynArry {
     void **arry=NULL;
 
     int size=0;
-    DynArry(int iSize){
+    DynArry(unsigned long iSize){
       size = iSize;// size needs to be set with sizeof(datatype)
       arry = (void **) malloc(size*arryMax);
       if(arry == NULL){std::cerr << "ERROR::RENDER::ARRAY_REALLOC_FAILED" << std::endl;}
@@ -28,7 +28,6 @@ class DynArry {
       return true;
     }
     bool del(int index){
-      // TODO fix the memory leaks
       // might need to use find, then free THEN del going to need to be on a per item bases
       if(index > arryUsed){std::cerr << "ERROR::RENDER::INDEX_OUT_OF_BOUNDS" << std::endl;return false;}
       int i = index+1;// i = index +1, move all pointer after index back 1
