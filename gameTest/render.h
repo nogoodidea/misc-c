@@ -11,13 +11,14 @@
 // keeps track of the VBO/VAO Points and Colors
 class Object3D{
   public:
+    std::string name;
     GLuint VBO,VAO,EBO;
     GLfloat* vertP;
     GLuint* vertT;
     GLfloat midPoint[3] = {0.0f,0.0f,0.0f}; // hold the mid point used for transform matrix
     int amtP,amtT; // amount vertexes, amout T 
     // int function
-    Object3D(GLfloat* IvertP,int IamtP,GLuint* IvertT,int IamtT){
+    Object3D(std::string name,GLfloat* IvertP,int IamtP,GLuint* IvertT,int IamtT){
       // save the vars so we can do MATH on them
       amtP = IamtP;
       amtT = IamtT;
@@ -46,7 +47,8 @@ class Object3D{
       //glBindBuffer(GL_ARRAY_BUFFER, 0);
       glBindVertexArray(0);
 
-      // find the midpoint needed for stuff
+      //
+      //find the midpoint needed for stuff
       GLfloat buf[3]; 
       findMidpoint(buf); // zero + something is something
       midPoint[0] += buf[0];
@@ -149,7 +151,7 @@ class Object3D{
       glBindVertexArray(0); // unbind the VBO so if i use snowflake code latter it will not mess up as much
     }
     // clean up
-    void del(){
+    void cleanUp(){
       glDeleteVertexArrays(1,&VAO);
       glDeleteBuffers(1,&VBO);
       glDeleteBuffers(1,&EBO);
@@ -181,14 +183,35 @@ class Object3D{
 // has a list of all 3Dobjects and renders them squentuly
 // does new list and all that
 //
-/*class Renderer{
+class Renderer{
   public:
     // mask might not be needed 
     std::vector<Object3D> obj;
     std::vector<bool> mask;
 
     void push(Object3D item){
-    obj.insert(0,item);
-    mask.insert(0,true);
+    obj.insert(obj.size(),&item);
+    mask.insert(obj.size(),true);
+   ize()
+    
+    void del(unsigned int i){
+        obj.at(i).cleanUp();
+        obj.erase(obj.begin()+i);
     }
-};*/
+    
+    void rend(){
+     unsigned int i;
+     while(i=0,i<obj.size(),i+=1){
+        obj.at(i).rend();
+     }
+    }
+
+    void cleanUp(){//del all
+     unsigned int i;
+     while(i=0,i<obj.size(),i+=1){
+        obj.at(i).cleanUp();
+    }
+     obj.clear();
+     mask.clear();
+    }
+};

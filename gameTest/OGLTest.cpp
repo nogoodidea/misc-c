@@ -99,7 +99,6 @@ int main(int argc, char** argv){
     -0.2f,0.2f,-0.2f,   2.5f,0.0f,0.0f //3
   };
 
-  GLfloat testInput[3]={5.0f,0.0f,0.0f};
   GLuint t[] = {
 	  0,1,2,
 	  0,2,3,
@@ -119,8 +118,11 @@ int main(int argc, char** argv){
 	  7,3,0,
 	  7,4,0
   };
+
+  // render obj
+  Renderer rend;
   // loads the Object3D
-  Object3D testObj(vert,8,t,12);
+  rend.push(Object3D("Test Cube",vert,8,t,12));
   
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
@@ -132,18 +134,18 @@ int main(int argc, char** argv){
    if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
       glfwSetWindowShouldClose(win,true);
    }
-   if(glfwGetKey(win,GLFW_KEY_DOWN)){testObj.rotx(-0.1f);}
+   /*if(glfwGetKey(win,GLFW_KEY_DOWN)){testObj.rotx(-0.1f);}
    if(glfwGetKey(win,GLFW_KEY_UP)){testObj.rotx(0.1f);}
    if(glfwGetKey(win,GLFW_KEY_RIGHT)){testObj.rotz(0.1f);}
    if(glfwGetKey(win,GLFW_KEY_LEFT)){testObj.rotz(-0.1f);}
     
    testObj.rotx(0.2f);
    testObj.roty(0.5f);
-   testObj.rotz(0.01f);
+   testObj.rotz(0.01f);*/
 
    shadProg.use();
 
-   testObj.rend();
+   rend.rend();
    
    glBindVertexArray(0);// see bind vao
    
@@ -151,8 +153,8 @@ int main(int argc, char** argv){
    glfwPollEvents();
    }
   // cleanup
-  shadProg.del();
-  testObj.del(); 
+  shadProg.cleanUp();
+  rend.cleanUp(); 
 
   glfwTerminate();
   return 0;
