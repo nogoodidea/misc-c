@@ -192,8 +192,7 @@ class Renderer{
     void push(Object3D item){
     obj.insert(obj.size(),&item);
     mask.insert(obj.size(),true);
-   ize()
-    
+    } 
     void del(unsigned int i){
         obj.at(i).cleanUp();
         obj.erase(obj.begin()+i);
@@ -201,14 +200,22 @@ class Renderer{
     
     void rend(){
      unsigned int i;
-     while(i=0,i<obj.size(),i+=1){
+     for(i=0;i<obj.size();i+=1){
         obj.at(i).rend();
      }
     }
 
+    int search(std::string name){
+      unsigned int i;
+      for(i=0;i<obj.size();i+=1){
+      if(obj.at(i).name == name){return i;}
+      }
+      return -1;
+    }
+
     void cleanUp(){//del all
      unsigned int i;
-     while(i=0,i<obj.size(),i+=1){
+     for(i=0;i<obj.size();i+=1){
         obj.at(i).cleanUp();
     }
      obj.clear();
