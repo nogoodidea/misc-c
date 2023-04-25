@@ -196,6 +196,11 @@ class Renderer{
     void del(unsigned int i){
         obj.at(i).cleanUp();
         obj.erase(obj.begin()+i);
+        mask.erase(mask.begin()+i);
+    }
+
+    Object3D get(unsigned int i){
+      return obj.at(i);
     }
     
     void rend(){
@@ -204,11 +209,11 @@ class Renderer{
         obj.at(i).rend();
      }
     }
-
+    
     int search(std::string name){
       unsigned int i;
       for(i=0;i<obj.size();i+=1){
-      if(obj.at(i).name == name){return i;}
+        if(obj.at(i).name == name){return i;}
       }
       return -1;
     }

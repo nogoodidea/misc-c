@@ -127,21 +127,19 @@ int main(int argc, char** argv){
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
 
+  unsigned int testObj = rend.search("Test Cube");
+  
   while(!glfwWindowShouldClose(win)){
    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-   
+    
    // window inputs
    if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
       glfwSetWindowShouldClose(win,true);
    }
-   /*if(glfwGetKey(win,GLFW_KEY_DOWN)){testObj.rotx(-0.1f);}
-   if(glfwGetKey(win,GLFW_KEY_UP)){testObj.rotx(0.1f);}
-   if(glfwGetKey(win,GLFW_KEY_RIGHT)){testObj.rotz(0.1f);}
-   if(glfwGetKey(win,GLFW_KEY_LEFT)){testObj.rotz(-0.1f);}
     
-   testObj.rotx(0.2f);
-   testObj.roty(0.5f);
-   testObj.rotz(0.01f);*/
+   rend.get(testObj).rotx(0.2f);
+   rend.get(testObj).roty(0.5f);
+   rend.get(testObj).rotz(0.01f);
 
    shadProg.use();
 
