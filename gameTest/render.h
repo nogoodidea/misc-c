@@ -190,8 +190,8 @@ class Renderer{
     std::vector<bool> mask;
 
     void push(Object3D item){
-    obj.insert(obj.size(),&item);
-    mask.insert(obj.size(),true);
+    obj.insert(obj.begin()+obj.size(),item);
+    mask.insert(mask.begin()+mask.size(),true);
     } 
     void del(unsigned int i){
         obj.at(i).cleanUp();
