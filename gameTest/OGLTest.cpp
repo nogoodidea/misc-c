@@ -127,7 +127,7 @@ int main(int argc, char** argv){
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
 
-  unsigned int testObj = rend.search("Test Cube");
+  int testObj = rend.search("Test Cube");
   
   while(!glfwWindowShouldClose(win)){
    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);

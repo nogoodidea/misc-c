@@ -4,7 +4,7 @@
 
 #include <cmath> // math
 #include <vector>
-
+#include <iostream> // string comp 
 // pi
 #define PI 3.14159
 
@@ -18,8 +18,9 @@ class Object3D{
     GLfloat midPoint[3] = {0.0f,0.0f,0.0f}; // hold the mid point used for transform matrix
     int amtP,amtT; // amount vertexes, amout T 
     // int function
-    Object3D(std::string name,GLfloat* IvertP,int IamtP,GLuint* IvertT,int IamtT){
+    Object3D(std::string Iname,GLfloat* IvertP,int IamtP,GLuint* IvertT,int IamtT){
       // save the vars so we can do MATH on them
+      name = Iname;
       amtP = IamtP;
       amtT = IamtT;
       vertP = IvertP;
@@ -190,16 +191,17 @@ class Renderer{
     std::vector<bool> mask;
 
     void push(Object3D item){
-    obj.insert(obj.begin()+obj.size(),item);
-    mask.insert(mask.begin()+mask.size(),true);
-    } 
+    obj.push_back(item);
+    mask.push_back(true);
+    }
+
     void del(unsigned int i){
         obj.at(i).cleanUp();
         obj.erase(obj.begin()+i);
         mask.erase(mask.begin()+i);
     }
 
-    Object3D get(unsigned int i){
+    Object3D get(int i){
       return obj.at(i);
     }
     
@@ -213,9 +215,9 @@ class Renderer{
     int search(std::string name){
       unsigned int i;
       for(i=0;i<obj.size();i+=1){
-        if(obj.at(i).name == name){return i;}
+        if(obj.at(i).name.compare(name)==0){return i;}
       }
-      return -1;
+     throw std::invalid_argument("loop hit the end of the vector without finding the title");
     }
 
     void cleanUp(){//del all
