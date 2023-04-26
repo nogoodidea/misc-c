@@ -55,7 +55,7 @@ class Object3D{
       midPoint[0] += buf[0];
       midPoint[1] += buf[1];
       midPoint[2] += buf[2];
-      std::cout << midPoint[0] <<" "<< midPoint[1] <<" "<< midPoint[2] << std::endl;
+      std::cout << midPoint[0] << " | "  << midPoint[1] << " | " << midPoint[2] << std::endl;     
     }
     // does all the transforms and matrix *
     void trans(GLfloat transform[3]){ // in the form of x,y,z , r,g,b is an other function
@@ -80,25 +80,26 @@ class Object3D{
       }
     }
     // x y z
-    void rot(GLfloat theta[3]){ //rotate
+    void rot(GLfloat thetax,GLfloat thetay,GLfloat thetaz){ //rotate
       GLfloat ox,oy,oz;// old x,y,z
-                    //
-                    // well time to read up on linear algebra
-                    // https://www.khanacademy.org/math/linear-algebra/matrix-transformations/linear-transformations/v/vector-transformations
-      int v,i;
+      int v;
       // turn thata in to radions
-      for(i=0;i<3;i+=1){theta[i]*=(PI/180);}
+      thetax *= (PI/180);
+      thetay *= (PI/180);
+      thetaz *= (PI/180);
+      
+      // https://mathworld.wolfram.com/RodriguesRotationFormula.html
       for(v=0;v<amtP;v+=1){
           ox=vertP[v*6];
           oy=vertP[v*6+1]; // v6+1 = y
           oz=vertP[v*6+2]; // v6+2 = z
           // matrix is from 
           std::cout<<ox<<"|"<<oy<<"|"<<oz<<std::endl;
-          vertP[v*6]=(ox*(cos(theta[0])+(ox*ox)*(1-cos(theta[0]))))+(oy*(ox*oy*(1-cos(theta[0]))-oz*sin(theta[0])))+(oz*(ox*oz*(1-cos(theta[0]))+oy*sin(theta[0])));// x
+          vertP[v*6]=(ox*(cos(thetax)+(midPoint[0]*midPoint[0])*(1-cos(thetax))))+(oy*(midPoint[0]*midPoint[1]*(1-cos(thetax))-midPoint[2]*sin(thetax)))+(oz*(midPoint[0]*midPoint[2]*(1-cos(thetax))+oy*sin(thetax)));// x
           glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
-          vertP[v*6+1]=(ox*(oy*ox*(1-cos(theta[1]))+oz*sin(theta[1])))+(oy*(cos(theta[1])+(oy*oy)*(1-cos(theta[1]))))+(oz*(oy*oz*(1-cos(theta[1]))-ox*sin(theta[1])));// y
+          vertP[v*6+1]=(ox*(midPoint[2]*midPoint[0]*(1-cos(thetay))+midPoint[2]*sin(thetay)))+(oy*(cos(thetay)+(midPoint[1]*midPoint[1])*(1-cos(thetay))))+(oz*(midPoint[1]*midPoint[2]*(1-cos(thetay))-midPoint[0]*sin(thetay)));// y
           glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
-          vertP[v*6+1]=(ox*(oz*ox*(1-cos(theta[2]))-oy*sin(theta[2])))+(oy*(oz*oy*(1-cos(theta[2]))+ox*sin(theta[2])))+(oz*(cos(theta[2])+(oz*oz)*(1-cos(theta[2]))));// z
+          vertP[v*6+1]=(ox*(midPoint[2]*midPoint[0]*(1-cos(thetaz))-midPoint[1]*sin(thetaz)))+(oy*(midPoint[2]*midPoint[1]*(1-cos(thetaz))+midPoint[0]*sin(thetaz)))+(oz*(cos(thetaz)+(midPoint[2]*midPoint[2])*(1-cos(thetaz))));// z
           glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
       }
     }
@@ -181,7 +182,7 @@ class Object3D{
 };
 
 // render object
-// has a list of all 3Dobjects and renders them squentuly
+// has a list of all Object3D and renders them squentuly
 // does new list and all that
 //
 class Renderer{
@@ -208,7 +209,7 @@ class Renderer{
     void rend(){
      unsigned int i;
      for(i=0;i<obj.size();i+=1){
-        obj.at(i).rend();
+        if(mask.at(i)==true){obj.at(i).rend();std::cout <<"Rendering "<<obj.at(i).name<<std::endl;}
      }
     }
     

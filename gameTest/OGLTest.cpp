@@ -25,7 +25,7 @@
 
 
 // if the user resized update the screen
-void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);/*_Exit(1);*/}
+void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);}
 
 // glfw startup function
 GLFWwindow* intGlfw(){
@@ -49,7 +49,7 @@ GLFWwindow* intGlfw(){
   glfwSetFramebufferSizeCallback(win,fbResizeCallback);
 
   //R,G,B,A
-  glClearColor(0.1f,0.1f,0.1f,1.0f);
+  glClearColor(1.1f,1.1f,1.1f,1.0f);
   return win;
 }
 
@@ -76,8 +76,7 @@ int main(int argc, char** argv){
     glfwTerminate(); // can't recover from it
     _Exit(1);}
 
-  std::cout << "INFO::GLUT::STARTED\n";
-  std::cout << std::endl;
+  std::cout << "INFO::GLUT::STARTED" << std::endl;
   Shader shadProg = intOGL();
 
   //https://stackoverflow.com/questions/5091570/most-basic-working-vbo-example
@@ -90,11 +89,10 @@ int main(int argc, char** argv){
   // see above
  
 
-
   // render obj
   Renderer rend;
   // loads the Object3D
-  rend.push(genCube("Test Cube",0.0f,0.0f,0.0f,0.2f,0.0f,0.0f,0.0f));
+  rend.push(genCube("Test Cube",0.1f,0.1f,0.1f,0.5f));
   
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
@@ -109,9 +107,9 @@ int main(int argc, char** argv){
       glfwSetWindowShouldClose(win,true);
    }
     
-   rend.get(testObj).rotx(0.2f);
-   rend.get(testObj).roty(0.5f);
-   rend.get(testObj).rotz(0.01f);
+   rend.get(testObj).rot(0.2f,0.0f,0.0f);
+   //rend.get(testObj).roty(0.5f);
+   //rend.get(testObj).rotz(0.01f);
 
    shadProg.use();
 
