@@ -21,6 +21,8 @@
 
 #include "shader.h" // does shader things
 #include "render.h" // does obj mangment things
+#include "shapes.h" // helper functions to make shapes quicker
+
 
 // if the user resized update the screen
 void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);/*_Exit(1);*/}
@@ -87,42 +89,12 @@ int main(int argc, char** argv){
   //no del it works
   // see above
  
-  // should be x,y,z, r,g,b  
-  GLfloat vert[] = {
-    0.5f,0.5f,0.2f,   2.5f,0.0f,0.0f,//0,1
-    0.5f,-0.5f,0.2f,  0.0f, 0.0f, 0.0f,//0
-    -0.5f,-0.5f,0.2f,   0.0f, 0.0f, 2.5f,//0,1
-    -0.5f,0.5f,0.2f,   0.0f,2.5f,0.0f, //1
-    0.2f,0.2f,-0.2f,   0.0f,0.0f,2.5f,//2,3
-    0.2f,-0.2f,-0.2f,  0.0f, 0.0f, 0.0f,//2
-    -0.2f,-0.2f,-0.2f,   0.0f, 2.5f, 0.0f,//2,3
-    -0.2f,0.2f,-0.2f,   2.5f,0.0f,0.0f //3
-  };
 
-  GLuint t[] = {
-	  0,1,2,
-	  0,2,3,
-	  
-	  4,5,6,
-	  4,6,7,
-	   
-	  4,0,1,
-	  4,5,1,
-
-	  5,1,2,
-	  5,6,2,
-
-	  6,2,3,
-	  6,7,3,
-
-	  7,3,0,
-	  7,4,0
-  };
 
   // render obj
   Renderer rend;
   // loads the Object3D
-  rend.push(Object3D("Test Cube",vert,8,t,12));
+  rend.push(genCube("Test Cube",0.0f,0.0f,0.0f,0.2f,0.0f,0.0f,0.0f));
   
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
