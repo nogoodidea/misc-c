@@ -50,11 +50,7 @@ class Object3D{
 
       //
       //find the midpoint needed for stuff
-      GLfloat buf[3]; 
-      findMidpoint(buf); // zero + something is something
-      midPoint[0] += buf[0];
-      midPoint[1] += buf[1];
-      midPoint[2] += buf[2];
+      findMidpoint(midPoint); // zero + something is something
       std::cout << midPoint[0] << " | "  << midPoint[1] << " | " << midPoint[2] << std::endl;     
     }
     // does all the transforms and matrix *
@@ -80,26 +76,33 @@ class Object3D{
       }
     }
     // x y z
-    void rot(GLfloat thetax,GLfloat thetay,GLfloat thetaz){ //rotate
+    void rot(GLfloat rx,GLfloat ry,GLfloat rz,GLfloat theta){ //rotate
       GLfloat ox,oy,oz;// old x,y,z
       int v;
       // turn thata in to radions
-      thetax *= (PI/180);
-      thetay *= (PI/180);
-      thetaz *= (PI/180);
+      theta *= (PI/180);
+      // normalise the rot vector
+      float len = sqrt(rx*rx+ry*ry+rz*rz);
+
+      rx /= len; // dev by len
+      ry /= len;
+      rz /= len;
+      //maths that will need to be called a lot
+      GLfloat ct = cos(theta), st = sin(theta), t = 1.0 - ct;
+      // so ummm oh god basicly rewriteing someone elses code
+      // https://rosettacode.org/wiki/Rodrigues%E2%80%99_rotation_formula#C
       
       // https://mathworld.wolfram.com/RodriguesRotationFormula.html
       for(v=0;v<amtP;v+=1){
-          ox=vertP[v*6];
+          ox=vertP[v*6]; //v6 = x
           oy=vertP[v*6+1]; // v6+1 = y
           oz=vertP[v*6+2]; // v6+2 = z
           // matrix is from 
-          std::cout<<ox<<"|"<<oy<<"|"<<oz<<std::endl;
-          vertP[v*6]=(ox*(cos(thetax)+(midPoint[0]*midPoint[0])*(1-cos(thetax))))+(oy*(midPoint[0]*midPoint[1]*(1-cos(thetax))-midPoint[2]*sin(thetax)))+(oz*(midPoint[0]*midPoint[2]*(1-cos(thetax))+oy*sin(thetax)));// x
+          vertP[v*6]=(ct+rx*rx*t)*ox+(rx*ry*t-rz*t)*oy+(rx*rz*t+ry*st)*oz;
           glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
-          vertP[v*6+1]=(ox*(midPoint[2]*midPoint[0]*(1-cos(thetay))+midPoint[2]*sin(thetay)))+(oy*(cos(thetay)+(midPoint[1]*midPoint[1])*(1-cos(thetay))))+(oz*(midPoint[1]*midPoint[2]*(1-cos(thetay))-midPoint[0]*sin(thetay)));// y
+          vertP[v*6+1]=(rx*ry*t + rz*st)*ox+(ct+oy*ry*t)*oy+(ry*rz*t-ox*st)*oz;
           glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
-          vertP[v*6+1]=(ox*(midPoint[2]*midPoint[0]*(1-cos(thetaz))-midPoint[1]*sin(thetaz)))+(oy*(midPoint[2]*midPoint[1]*(1-cos(thetaz))+midPoint[0]*sin(thetaz)))+(oz*(cos(thetaz)+(midPoint[2]*midPoint[2])*(1-cos(thetaz))));// z
+          vertP[v*6+1]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rx*rx*t)*oz;
           glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
       }
     }
