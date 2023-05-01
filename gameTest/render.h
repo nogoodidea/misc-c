@@ -84,9 +84,9 @@ class Object3D{
       // normalise the rot vector
       float len = sqrt(rx*rx+ry*ry+rz*rz);
 
-      rx /= len; // dev by len
-      ry /= len;
-      rz /= len;
+      rx = rx/len; // dev by len
+      ry = ry/len;
+      rz = rz/len;
       //maths that will need to be called a lot
       GLfloat ct = cos(theta), st = sin(theta), t = 1.0 - ct;
       // so ummm oh god basicly rewriteing someone elses code

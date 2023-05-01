@@ -1,5 +1,5 @@
 CC=g++ -Wall -g
-LDFLAGS= -lglfw	-lGL -Iinclude
+LDFLAGS= -lfreetype -lglfw	-lGL -Iinclude
 
 OGLTest:
 	echo "Building OGLTest"
