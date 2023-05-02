@@ -88,19 +88,24 @@ class Object3D{
       ry = ry/len;
       rz = rz/len;
       //maths that will need to be called a lot
-      GLfloat ct = cos(theta), st = sin(theta), t = 1.0 - ct;
+      GLfloat ct = cos(theta), st = sin(theta);
+      GLfloat t = 1.0 - ct;
       // so ummm oh god basicly rewriteing someone elses code
       // https://rosettacode.org/wiki/Rodrigues%E2%80%99_rotation_formula#C
       
       // https://mathworld.wolfram.com/RodriguesRotationFormula.html
+      // might want to take a look at this 
+      // https://www.3dgep.com/understanding-quaternions/
       for(v=0;v<amtP;v+=1){
           ox=vertP[v*6]; //v6 = x
           oy=vertP[v*6+1]; // v6+1 = y
           oz=vertP[v*6+2]; // v6+2 = z
           // matrix is from 
-          vertP[v*6]=(ct+rx*rx*t)*ox+(rx*ry*t-rz*t)*oy+(rx*rz*t+ry*st)*oz;
+          std::cout << ox << " | "  << oy << " | " << oz << std::endl;
+          
+          vertP[v*6]=(ct+rx*rx*t)*ox+(rx*ry*t-rz*st)*oy+(rx*rz*t+ry*st)*oz;
           glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
-          vertP[v*6+1]=(rx*ry*t+rz*st)*ox+(ct+oy*ry*t)*oy+(ry*rz*t-ox*st)*oz;
+          vertP[v*6+1]=(rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz;
           glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
           vertP[v*6+1]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rx*rx*t)*oz;
           glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
@@ -170,7 +175,7 @@ class Renderer{
     void rend(){
      unsigned int i;
      for(i=0;i<obj.size();i+=1){
-        if(mask.at(i)==true){obj.at(i).rend();std::cout <<"Rendering "<<obj.at(i).name<<std::endl;}
+        if(mask.at(i)==true){obj.at(i).rend();}
      }
     }
     
