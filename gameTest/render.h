@@ -100,51 +100,9 @@ class Object3D{
           // matrix is from 
           vertP[v*6]=(ct+rx*rx*t)*ox+(rx*ry*t-rz*t)*oy+(rx*rz*t+ry*st)*oz;
           glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
-          vertP[v*6+1]=(rx*ry*t + rz*st)*ox+(ct+oy*ry*t)*oy+(ry*rz*t-ox*st)*oz;
+          vertP[v*6+1]=(rx*ry*t+rz*st)*ox+(ct+oy*ry*t)*oy+(ry*rz*t-ox*st)*oz;
           glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
           vertP[v*6+1]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rx*rx*t)*oz;
-          glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
-      }
-    }
-    void rotz(GLfloat theta){ //rotate around z
-      GLfloat ox,oy;// old x,y
-      int v;
-      theta*=(PI/180);
-      for(v=0;v<amtP;v+=1){
-          ox=vertP[v*6]-midPoint[0];
-          oy=vertP[v*6+1]-midPoint[1]; // v6+1 = y
-          // matrix is from 
-          vertP[v*6]=(cos(theta)*ox)-(sin(theta)*oy)+midPoint[0];// x
-          glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
-          vertP[v*6+1]=(sin(theta)*ox)+(cos(theta)*oy)+midPoint[1];// y
-          glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
-      }
-    }
-    void rotx(GLfloat theta){ //rotate around x
-      GLfloat oy,oz;// old y,z
-      int v;
-      theta*=(PI/180);
-      for(v=0;v<amtP;v+=1){
-          oy=vertP[v*6+1]-midPoint[1]; // v6+1 = y
-          oz=vertP[v*6+2]-midPoint[2]; // v6+2 = z
-          // matrix is from 
-          vertP[v*6+1]=(cos(theta)*oy)-(sin(theta)*oz)+midPoint[1];// y
-          glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
-          vertP[v*6+2]=(sin(theta)*oy)+(cos(theta)*oz)+midPoint[2];// z
-          glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
-      }
-    }
-    void roty(GLfloat theta){ //rotate around y
-      GLfloat ox,oz;// old x,z
-      int v;
-      theta*=(PI/180); // input is in deg
-      for(v=0;v<amtP;v+=1){
-          ox=vertP[v*6]-midPoint[0];
-          oz=vertP[v*6+2]-midPoint[2]; // v6+2 = z
-          // matrix is from 
-          vertP[v*6]=(cos(theta)*ox)+(sin(theta)*oz)+midPoint[0];// x
-          glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
-          vertP[v*6+2]=(-1*sin(theta)*ox)+(cos(theta)*oz)+midPoint[2];// z
           glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
       }
     }
