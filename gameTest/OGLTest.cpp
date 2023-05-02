@@ -107,7 +107,7 @@ int main(int argc, char** argv){
       glfwSetWindowShouldClose(win,true);
    }
     
-   rend.get(testObj).rot(0.0f,0.0f,1.0f,0.2f);
+   //rend.get(testObj).rot(0.0f,0.0f,1.0f,0.2f);
    //rend.get(testObj).roty(0.5f);
    //rend.get(testObj).rotz(0.01f);
 
