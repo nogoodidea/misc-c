@@ -62,15 +62,46 @@ class objectText{
     GLfloat x = 0.0f;
     GLfloat y = 0.0f;
     GLfloat z = 0.0f;
+    std::map<char, Char> font;
 
-    objectText(std::string istring,GLfloat ix,GLfloat iy, GLfloat iz){
+    objectText(std::string istring,GLfloat ix,GLfloat iy, GLfloat iz,std::map<char,Char> ifont){
     	string = istring;
 	x = ix;
 	y = iy;
 	z = iz;
+	font = ifont;
     }
 
     void rend(){
+       GLuint VBO; //TODO come up with a better system then regenarating every textUre every frame
+       std::string::const_iterator c;
+       for(c=string.begin();c!=text.end();c+=1){
+	        Char ch = font[*c];
+		GLfloat xpos = x + ch.bearingx;
+                GLfloat ypos = y + ch.bearingy;
+
+		GLfloat w = ch.sizex;
+		GLfloat h = ch.sizey;
+
+		float vertices[] = {
+            xpos,     ypos + h,   0.0f, 0.0f            
+            xpos,     ypos,       0.0f, 1.0f
+            xpos + w, ypos,       1.0f, 1.0f
+
+            xpos,     ypos + h,   0.0f, 0.0f
+            xpos + w, ypos,       1.0f, 1.0f
+            xpos + w, ypos + h,   1.0f, 0.0f           
+        	};
+		glBindTexture(GL_TEXTURE_2D,ch.textureID);
+		glBindBuffer(GL_ARRAY_BUFFER,VBO);
+		glBindBufferSubData(L_ARRAY_BUFFER, 0, sizeof(vertices),sizeof(GLfloat)*6*4);
+		glBindBuffer(GL_ARRAY_BUFFER,0);
+
+		glDrawArrays(GL_TRIANGLES,0,6);
+		x += (ch.Advance >> 6) //????? majic code is majjic looks like bit shifting
+
+       }
+       glBindVertexArray(0);
     }
 };
 
