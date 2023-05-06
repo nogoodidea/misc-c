@@ -82,13 +82,13 @@ class Object3D{
       // turn thata in to radions
       theta *= (PI/180);
       // normalise the rot vector
-      float len = sqrt(rx*rx+ry*ry+rz*rz);
-
-      rx = rx/len; // dev by len
-      ry = ry/len;
-      rz = rz/len;
+      float len = sqrtf(rx*rx+ry*ry+rz*rz);
+      // 0 dev by len return nan we don't like nan
+      if(rx!=0.0f){rx = rx/len;} 
+      if(ry!=0.0f){ry = ry/len;}
+      if(rz!=0.0f){rz = rz/len;}
       //maths that will need to be called a lot
-      GLfloat ct = cos(theta), st = sin(theta);
+      GLfloat ct = cosf(theta), st = sinf(theta);
       GLfloat t = 1.0 - ct;
       // so ummm oh god basicly rewriteing someone elses code
       // https://rosettacode.org/wiki/Rodrigues%E2%80%99_rotation_formula#C
@@ -107,7 +107,7 @@ class Object3D{
           glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
           vertP[v*6+1]=(rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz;
           glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
-          vertP[v*6+1]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rx*rx*t)*oz;
+          vertP[v*6+2]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz;
           glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
       }
     }
