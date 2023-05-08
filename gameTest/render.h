@@ -6,7 +6,7 @@
 #include <vector>
 #include <iostream> // string comp 
 // pi
-#define PI 3.14159
+#define PI 3.14159f
 
 // keeps track of the VBO/VAO Points and Colors
 class Object3D{
@@ -80,7 +80,7 @@ class Object3D{
       GLfloat ox,oy,oz;// old x,y,z
       int v;
       // turn thata in to radions
-      theta *= (PI/180);
+      //theta *= (PI/180);
       // normalise the rot vector
       float len = sqrtf(rx*rx+ry*ry+rz*rz);
       // 0 dev by len return nan we don't like nan
