@@ -98,7 +98,7 @@ int main(int argc, char** argv){
   glBindVertexArray(0); // rebound at render loop	
 
   int testObj = rend.search("Test Cube");
-  
+  bool keyPressed = false; // key holding 
   while(!glfwWindowShouldClose(win)){
    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     
@@ -106,8 +106,8 @@ int main(int argc, char** argv){
    if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
       glfwSetWindowShouldClose(win,true);
    }if(glfwGetKey(win,GLFW_KEY_SPACE)){
-   rend.get(testObj).rot(1.0f,0.0f,0.0f,360.0f);
-   }
+   if(keyPressed==false){keyPressed=true;rend.get(testObj).rot(1.0f,0.0f,0.0f,6.0f);}
+   }else{keyPressed=false;}
    //rend.get(testObj).roty(0.5f);
    //rend.get(testObj).rotz(0.01f);
 

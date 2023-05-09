@@ -84,9 +84,11 @@ class Object3D{
       // normalise the rot vector
       float len = sqrtf(rx*rx+ry*ry+rz*rz);
       // 0 dev by len return nan we don't like nan
+      if(len!=0.0f){
       if(rx!=0.0f){rx = rx/len;} 
       if(ry!=0.0f){ry = ry/len;}
       if(rz!=0.0f){rz = rz/len;}
+      }
       //maths that will need to be called a lot
       GLfloat ct = cosf(theta), st = sinf(theta);
       GLfloat t = 1.0 - ct;
@@ -104,6 +106,7 @@ class Object3D{
           vertP[v*6]=(ct+rx*rx*t)*ox+(rx*ry*t-rz*st)*oy+(rx*rz*t+ry*st)*oz;
           vertP[v*6+1]=(rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz;
           vertP[v*6+2]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz;
+          std::cerr<<"point: " << v << "x: " << vertP[v*6]<< "y: " << vertP[v*6+1]<< "z: " << vertP[v*6+2] << std::endl;
           // update vbo
           glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
           glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
