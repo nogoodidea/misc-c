@@ -15,16 +15,18 @@ class Object3D{
     GLuint VBO,VAO,EBO;
     GLfloat* vertP;
     GLuint* vertT;
+    GLuint texture;
     GLfloat midPoint[3] = {0.0f,0.0f,0.0f}; // hold the mid point used for transform matrix
     int amtP,amtT; // amount vertexes, amout T 
     // int function
-    Object3D(std::string Iname,GLfloat* IvertP,int IamtP,GLuint* IvertT,int IamtT){
+    Object3D(std::string Iname,GLfloat* IvertP,int IamtP,GLuint* IvertT,int IamtT,GLuint Itexture){
       // save the vars so we can do MATH on them
       name = Iname;
       amtP = IamtP;
       amtT = IamtT;
       vertP = IvertP;
       vertT = IvertT;
+      texture = Itexture;
 
       glGenVertexArrays(1,&VAO); // vertex array object
       glGenBuffers(1,&VBO); //Vertex Buffer
@@ -33,25 +35,22 @@ class Object3D{
       glBindVertexArray(VAO);
       // bind VBO
       glBindBuffer(GL_ARRAY_BUFFER,VBO);
-      glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*amtP*6,vertP,GL_STATIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*amtP*8,vertP,GL_STATIC_DRAW);
       // bind EBO
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,EBO);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(GLuint)*3*amtT,vertT,GL_STATIC_DRAW);
       // x,y,z pos
-      glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6*sizeof(GLfloat),(void*)0);
+      glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(void*)0);
       glEnableVertexAttribArray(0);
       // r,g,b color
-      glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,6*sizeof(GLfloat),(void*)(3*sizeof(GLfloat)));
+      glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(void*)(3*sizeof(GLfloat)));
       glEnableVertexAttribArray(1);
 
       // clean up
-      //glBindBuffer(GL_ARRAY_BUFFER, 0);
       glBindVertexArray(0);
 
-      //
       //find the midpoint needed for stuff
       findMidpoint(midPoint); // zero + something is something
-      std::cout << midPoint[0] << " | "  << midPoint[1] << " | " << midPoint[2] << std::endl;     
     }
     // does all the transforms and matrix *
     void trans(GLfloat transform[3]){ // in the form of x,y,z , r,g,b is an other function
@@ -60,8 +59,8 @@ class Object3D{
       for(v=0;v<amtP;v+=1){
         for(i=0;i<3;i+=1){
           // does 2 things 1 updaes vertP to the new data,2 updates the VBO with new data
-          vertP[i+v*6]+=transform[i];// v*6 because 1 verticy is 6 floats.
-          glNamedBufferSubData(VBO,(i+v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*6]);
+          vertP[i+v*8]+=transform[i];// v*6 because 1 verticy is 6 floats.
+          glNamedBufferSubData(VBO,(i+v*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*8]);
         }
       }
     }
@@ -70,8 +69,8 @@ class Object3D{
       int v,i;
       for(v=0;v<amtP;v+=1){
         for(i=0;i<3;i+=1){
-          vertP[i+v*6]*=transform[i];// v*6 because 1 verticy is 6 floats.
-          glNamedBufferSubData(VBO,(i+v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*6]);
+          vertP[i+v*8]*=transform[i];// v*6 because 1 verticy is 6 floats.
+          glNamedBufferSubData(VBO,(i+v*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*8]);
         }
       }
     }
@@ -99,18 +98,18 @@ class Object3D{
       // might want to take a look at this 
       // https://www.3dgep.com/understanding-quaternions/
       for(v=0;v<amtP;v+=1){
-          ox=vertP[v*6]; //v6 = x
-          oy=vertP[v*6+1]; // v6+1 = y
-          oz=vertP[v*6+2]; // v6+2 = z
+          ox=vertP[v*8]; //v6 = x
+          oy=vertP[v*8+1]; // v6+1 = y
+          oz=vertP[v*8+2]; // v6+2 = z
           // matrix is from
-          vertP[v*6]=(ct+rx*rx*t)*ox+(rx*ry*t-rz*st)*oy+(rx*rz*t+ry*st)*oz;
-          vertP[v*6+1]=(rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz;
-          vertP[v*6+2]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz;
-          std::cerr<<"point: " << v << "x: " << vertP[v*6]<< "y: " << vertP[v*6+1]<< "z: " << vertP[v*6+2] << std::endl;
+          vertP[v*8]=(ct+rx*rx*t)*ox+(rx*ry*t-rz*st)*oy+(rx*rz*t+ry*st)*oz;
+          vertP[v*8+1]=(rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz;
+          vertP[v*8+2]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz;
+          std::cerr<<"point: " << v << "x: " << vertP[v*8]<< "y: " << vertP[v*8+1]<< "z: " << vertP[v*8+2] << std::endl;
           // update vbo
-          glNamedBufferSubData(VBO,(v*6)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6]);
-          glNamedBufferSubData(VBO,(v*6+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+1]);
-          glNamedBufferSubData(VBO,(v*6+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*6+2]);
+          glNamedBufferSubData(VBO,(v*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8]);
+          glNamedBufferSubData(VBO,(v*8+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8+1]);
+          glNamedBufferSubData(VBO,(v*8+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8+2]);
       }
     }
     // rend function
