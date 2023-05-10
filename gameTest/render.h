@@ -45,6 +45,9 @@ class Object3D{
       // r,g,b color
       glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(void*)(3*sizeof(GLfloat)));
       glEnableVertexAttribArray(1);
+      // texture
+      glVertexAttribPointer(2,2,GL_FLOAT, GL_FALSE,8*sizeof(GLfloat),(void*)(6*sizeof(GLfloat)));
+      glEnableVertexAttribArray(2);
 
       // clean up
       glBindVertexArray(0);
@@ -114,10 +117,14 @@ class Object3D{
     }
     // rend function
     void rend(){
+      if(texture != NULL){//if we added a texture bind it
+        glBindTexture(GL_TEXTURE_2D, texture); 
+      }
       // binds the vao, this holds the VAO and the EBO
       glBindVertexArray(VAO);
       glDrawElements(GL_TRIANGLES,amtT*3,GL_UNSIGNED_INT,0);// amount of points the render will draw, amtT is 2 times 3 points so 6
       glBindVertexArray(0); // unbind the VBO so if i use snowflake code latter it will not mess up as much
+      glBindTexture(GL_TEXTURE_2D,0);
     }
     // clean up
     void cleanUp(){
