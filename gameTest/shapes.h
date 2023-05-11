@@ -6,7 +6,7 @@
 #include "stb_image.h"      
 
 GLuint loadTexture(std::string text){
-  GLuint texture = 0;
+  GLuint texture;
   glBindTexture(GL_TEXTURE_2D, texture);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
