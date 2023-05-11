@@ -6,7 +6,7 @@
 #include "stb_image.h"      
 
 GLuint loadTexture(std::string text){
-  GLuint texture;
+  GLuint texture = 0;
   glBindTexture(GL_TEXTURE_2D, texture);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -23,19 +23,19 @@ GLuint loadTexture(std::string text){
   return texture;
 }
 
-Object3D genCube(std::string name,GLfloat x,GLfloat y,GLfloat z,GLfloat size){
+Object3D genCube(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size,GLfloat r,GLfloat g,GLfloat b){
   // add colors later
   // should be x,y,z, r,g,b, texture  
 
   GLfloat vert[] = {
-    x+size,y+size,z+size,  0.0f,0.0f,0.0f, 0.0f,0.0f,//0,1
-    x+size,y-size,z+size,  0.0f,0.0f,0.0f, 0.0f,0.0f,//0
-    x-size,y-size,z+size,  0.0f,0.0f,0.0f, 0.0f,0.0f,//0,1
-    x-size,y+size,z+size,  0.0f,0.0f,0.0f, 0.0f,0.0f,//1
-    x+size,y+size,z-size,  0.0f,0.0f,0.0f, 0.0f,0.0f,//2,3
-    x+size,y-size,z-size,  0.0f,0.0f,0.0f, 0.0f,0.0f,//2
-    x-size,y-size,z-size,  0.0f,0.0f,0.0f, 0.0f,0.0f, //2,3
-    x-size,y+size,z-size,  0.0f,0.0f,0.0f, 0.0f,0.0f//3
+    x+size,y+size,z+size,  r,g,b, 0.0f,0.0f,//0,1
+    x+size,y-size,z+size,  r,g,b,  0.0f,0.0f,//0
+    x-size,y-size,z+size,  r,g,b,  0.0f,0.0f,//0,1
+    x-size,y+size,z+size,  r,g,b, 0.0f,0.0f,//1
+    x+size,y+size,z-size,  r,g,b, 0.0f,0.0f,//2,3
+    x+size,y-size,z-size,  r,g,b, 0.0f,0.0f,//2
+    x-size,y-size,z-size,  r,g,b, 0.0f,0.0f, //2,3
+    x-size,y+size,z-size,  r,g,b, 0.0f,0.0f//3
   };
 
   GLuint t[] = {
@@ -57,10 +57,10 @@ Object3D genCube(std::string name,GLfloat x,GLfloat y,GLfloat z,GLfloat size){
 	  7,3,0,
 	  7,4,0
   };
-  return Object3D(name,vert,8,t,12,0);
+  return Object3D(name,vert,8,t,12,0,shad);
 }
 
-Object3D genSquare(std::string name,GLfloat x,GLfloat y,GLfloat z,GLfloat size){
+Object3D genSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size){
  // makes a 2d object 
   GLfloat vert[] = {
     x+size,y+size,z,  0.0f,0.0f,0.0f, 0.0f,0.0f, //0,1
@@ -73,23 +73,23 @@ Object3D genSquare(std::string name,GLfloat x,GLfloat y,GLfloat z,GLfloat size){
 	  0,1,2,
 	  0,2,3
   };
-  return Object3D(name,vert,4,t,2,0);
+  return Object3D(name,vert,4,t,2,0,shad);
 }
 
-Object3D genTextureSquare(std::string name,GLfloat x,GLfloat y,GLfloat z,GLfloat size,std::string text){
+Object3D genTextureSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size,std::string text){
   GLuint texture = loadTexture(text);
   GLfloat vert[] = {
-    x+size,y+size,z,  0.0f,0.0f,0.0f, 0.0f,0.0f, //0,1
-    x+size,y-size,z,  0.0f,0.0f,0.0f, 0.0f,0.0f, //0
+    x+size,y+size,z,  0.0f,0.0f,0.0f, 1.0f,1.0f, //0,1
+    x+size,y-size,z,  0.0f,0.0f,0.0f, 1.0f,0.0f, //0
     x-size,y-size,z,  0.0f,0.0f,0.0f, 0.0f,0.0f, //0,1
-    x-size,y+size,z, 0.0f,0.0f,0.0f, 0.0f,0.0f //1
+    x-size,y+size,z, 0.0f,0.0f,0.0f, 0.0f,1.0f //1
   };
 
   GLuint t[] = {
 	  0,1,2,
 	  0,2,3
   };
-  return Object3D(name,vert,4,t,2,texture);
+  return Object3D(name,vert,4,t,2,texture,shad);
 }
 
 

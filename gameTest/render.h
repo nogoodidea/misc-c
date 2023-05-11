@@ -13,18 +13,23 @@ class Object3D{
   public:
     std::string name;
     GLuint VBO,VAO,EBO;
-    GLfloat* vertP;
-    GLuint* vertT;
+    GLfloat* vertP=NULL;
+    GLuint* vertT=NULL;
     GLuint texture;
+    //refrance to the shader we want to use
+    Shader *shad=NULL;
+    
+
     GLfloat midPoint[3] = {0.0f,0.0f,0.0f}; // hold the mid point used for transform matrix
     int amtP,amtT; // amount vertexes, amout T 
     // int function
-    Object3D(std::string Iname,GLfloat* IvertP,int IamtP,GLuint* IvertT,int IamtT,GLuint Itexture){
+    Object3D(std::string Iname,GLfloat* IvertP,int IamtP,GLuint* IvertT,int IamtT,GLuint Itexture,Shader *Ishad){
       // save the vars so we can do MATH on them
       name = Iname;
       amtP = IamtP;
       amtT = IamtT;
       texture = Itexture;
+      shad = Ishad;
 
       // copys from the old buffer to the new one so the data is presurved
       vertT = (GLuint*) malloc(sizeof(GLuint)*amtT*3);
@@ -131,6 +136,7 @@ class Object3D{
       }
       // binds the vao, this holds the VAO and the EBO
       glBindVertexArray(VAO);
+      shad->use();
       glDrawElements(GL_TRIANGLES,amtT*3,GL_UNSIGNED_INT,0);// amount of points the render will draw, amtT is 2 times 3 points so 6
       glBindVertexArray(0); // unbind the VBO so if i use snowflake code latter it will not mess up as much
       glBindTexture(GL_TEXTURE_2D,0);
@@ -140,6 +146,8 @@ class Object3D{
       glDeleteVertexArrays(1,&VAO);
       glDeleteBuffers(1,&VBO);
       glDeleteBuffers(1,&EBO);
+      free(vertP);
+      free(vertT);
       // your going to want to del the object after this
     }
     
@@ -187,6 +195,10 @@ class Renderer{
 
     Object3D get(int i){
       return obj.at(i);
+    }
+
+    void use(Shader shad){
+
     }
     
     void rend(){

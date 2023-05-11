@@ -54,7 +54,7 @@ GLFWwindow* intGlfw(){
 }
 
 // OpenGl startup function
-Shader intOGL(){
+void intOGL(){
   //enables that anti-aliasing thingy
   glEnable(GL_MULTISAMPLE);
   // depth testing so shapes don't overlap
@@ -62,10 +62,6 @@ Shader intOGL(){
   glDepthFunc(GL_LESS);
   // needed for textureing
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  //refractoring shaders to an obj, following https://learnopengl.com/Getting-started/Shaders
-  Shader shad("vertShad.vs","fragShad.fs");
-
-  return shad;
 }
 
 
@@ -77,13 +73,19 @@ int main(int argc, char** argv){
     _Exit(1);}
 
   std::cout << "INFO::GLUT::STARTED" << std::endl;
-  Shader shadProg = intOGL();
+  intOGL();
+  // shaders used to render colored objects
+  Shader shadCol = Shader("shaders/vertCol.vs","shaders/fragCol.fs");
+  // shaders used with textured objects
+  Shader shadTex = Shader("shaders/vertTex.vs","shaders/fragTex.fs");
 
   // render obj
   Renderer rend;
   // loads the Object3D
-  rend.push(genCube("Test Cube",0.1f,0.1f,0.1f,0.5f));
-  
+  rend.push(genCube("Test Cube",&shadCol,0.1f,0.1f,0.1f,0.5f,2.5f,0.0f,0.0f));
+
+  rend.push(genCube("Test Cube2",&shadCol,0.0f,-0.5f,0.0f,0.1f,0.0f,2.0f,1.0f));
+
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
 
@@ -96,12 +98,8 @@ int main(int argc, char** argv){
    if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
       glfwSetWindowShouldClose(win,true);
    }if(glfwGetKey(win,GLFW_KEY_SPACE)){
-   if(keyPressed==false){keyPressed=true;rend.get(testObj).rot(1.0f,0.0f,0.0f,0.1f);}
+   if(keyPressed==false){keyPressed=true;rend.get(testObj).rot(1.0f,1.0f,0.0f,0.1f);}
    }else{keyPressed=false;}
-   //rend.get(testObj).roty(0.5f);
-   //rend.get(testObj).rotz(0.01f);
-
-   shadProg.use();
 
    rend.rend();
    
@@ -111,7 +109,8 @@ int main(int argc, char** argv){
    glfwPollEvents();
    }
   // cleanup
-  shadProg.cleanUp();
+  shadCol.cleanUp();
+  shadTex.cleanUp();
   rend.cleanUp(); 
 
   glfwTerminate();
