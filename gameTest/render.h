@@ -108,6 +108,39 @@ class Object3D{
       //maths that will need to be called a lot
       GLfloat ct = cosf(theta), st = sinf(theta);
       GLfloat t = 1.0 - ct;
+      for(v=0;v<amtP;v+=1){
+	      // 0-midpoint should work
+          ox=vertP[v*8]-(0-midPoint[0]); //v6 = x
+          oy=vertP[v*8+1]-(0-midPoint[1]); // v6+1 = y
+          oz=vertP[v*8+2]-(0-midPoint[2]); // v6+2 = z
+          // matrix is from
+          vertP[v*8]=((ct+rx*rx*t)*ox+(rx*ry*t-rz*st)*oy+(rx*rz*t+ry*st)*oz)+(0-midPoint[0]);
+          vertP[v*8+1]=((rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz)+(0-midPoint[1]);
+          vertP[v*8+2]=((rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz)+(0-midPoint[2]);
+          // update vbo
+          glNamedBufferSubData(VBO,(v*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8]);
+          glNamedBufferSubData(VBO,(v*8+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8+1]);
+          glNamedBufferSubData(VBO,(v*8+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8+2]);
+      }
+      findMidpoint(midPoint);
+    }
+    // rotate around the origin 0,0,0
+    void rotA(GLfloat rx,GLfloat ry,GLfloat rz,GLfloat theta){ //rotate
+      GLfloat ox,oy,oz;// old x,y,z
+      int v;
+      // turn thata in to radions
+      //theta *= (PI/180);
+      // normalise the rot vector
+      float len = sqrtf(rx*rx+ry*ry+rz*rz);
+      // 0 dev by len return nan we don't like nan
+      if(len!=0.0f){
+      if(rx!=0.0f){rx = rx/len;} 
+      if(ry!=0.0f){ry = ry/len;}
+      if(rz!=0.0f){rz = rz/len;}
+      }
+      //maths that will need to be called a lot
+      GLfloat ct = cosf(theta), st = sinf(theta);
+      GLfloat t = 1.0 - ct;
       // so ummm oh god basicly rewriteing someone elses code
       // https://rosettacode.org/wiki/Rodrigues%E2%80%99_rotation_formula#C
       
@@ -155,17 +188,17 @@ class Object3D{
     int i;
     GLfloat avg=0.f;
     for(i=0;i<amtP;i+=1){
-      avg+=vertP[i*6]; //x
+      avg+=vertP[i*8]; //x
       }
     out[0]=avg/amtP; //y
     avg=0.0f;
     for(i=0;i<amtP;i+=1){
-      avg+=vertP[(i*6)+1];
+      avg+=vertP[(i*8)+1];
       }
     out[1]=avg/amtP;
     avg=0.0f;
     for(i=0;i<amtP;i+=1){
-      avg+=vertP[(i*6)+2]; //z
+      avg+=vertP[(i*8)+2]; //z
       }
     out[2]=avg/amtP;
     }
