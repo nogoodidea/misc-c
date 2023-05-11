@@ -110,13 +110,13 @@ class Object3D{
       GLfloat t = 1.0 - ct;
       for(v=0;v<amtP;v+=1){
 	      // 0-midpoint should work
-          ox=vertP[v*8]-(0-midPoint[0]); //v6 = x
-          oy=vertP[v*8+1]-(0-midPoint[1]); // v6+1 = y
-          oz=vertP[v*8+2]-(0-midPoint[2]); // v6+2 = z
+          ox=vertP[v*8]+(0-midPoint[0]); //v6 = x
+          oy=vertP[v*8+1]+(0-midPoint[1]); // v6+1 = y
+          oz=vertP[v*8+2]+(0-midPoint[2]); // v6+2 = z
           // matrix is from
-          vertP[v*8]=((ct+rx*rx*t)*ox+(rx*ry*t-rz*st)*oy+(rx*rz*t+ry*st)*oz)+(0-midPoint[0]);
-          vertP[v*8+1]=((rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz)+(0-midPoint[1]);
-          vertP[v*8+2]=((rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz)+(0-midPoint[2]);
+          vertP[v*8]=((ct+rx*rx*t)*ox+(rx*ry*t-rz*st)*oy+(rx*rz*t+ry*st)*oz)-(0-midPoint[0]);
+          vertP[v*8+1]=((rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz)-(0-midPoint[1]);
+          vertP[v*8+2]=((rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz)-(0-midPoint[2]);
           // update vbo
           glNamedBufferSubData(VBO,(v*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8]);
           glNamedBufferSubData(VBO,(v*8+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8+1]);
