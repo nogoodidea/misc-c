@@ -24,9 +24,18 @@ class Object3D{
       name = Iname;
       amtP = IamtP;
       amtT = IamtT;
-      vertP = IvertP;
-      vertT = IvertT;
       texture = Itexture;
+
+      // copys from the old buffer to the new one so the data is presurved
+      vertT = (GLuint*) malloc(sizeof(GLuint)*amtT*3);
+      for(int i=0;i<amtT*3;i+=1){
+        vertT[i]=IvertT[i];
+      }
+
+      vertP = (GLfloat*) malloc(sizeof(GLfloat)*amtP*8);
+      for(int i=0;i<amtP*8;i+=1){
+        vertP[i]=IvertP[i];
+      }
 
       glGenVertexArrays(1,&VAO); // vertex array object
       glGenBuffers(1,&VBO); //Vertex Buffer
@@ -117,7 +126,7 @@ class Object3D{
     }
     // rend function
     void rend(){
-      if(texture != NULL){//if we added a texture bind it
+      if(texture!=0){//if we added a texture bind it
         glBindTexture(GL_TEXTURE_2D, texture); 
       }
       // binds the vao, this holds the VAO and the EBO

@@ -60,8 +60,8 @@ Shader intOGL(){
   // depth testing so shapes don't overlap
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
-
-  
+  // needed for textureing
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   //refractoring shaders to an obj, following https://learnopengl.com/Getting-started/Shaders
   Shader shad("vertShad.vs","fragShad.fs");
 
@@ -78,16 +78,6 @@ int main(int argc, char** argv){
 
   std::cout << "INFO::GLUT::STARTED" << std::endl;
   Shader shadProg = intOGL();
-
-  //https://stackoverflow.com/questions/5091570/most-basic-working-vbo-example
-  //https://learnopengl.com/Getting-started/Hello-Triangle
-  // now with ... PAIN
-  // 3 * 3, 3 points 
-
-  //virtex atrib 0, 3 vaules per vertix, floats,not normalized, mem size of vert, offset poniter of array????
-  //no del it works
-  // see above
- 
 
   // render obj
   Renderer rend;

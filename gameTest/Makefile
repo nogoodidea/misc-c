@@ -3,7 +3,7 @@ LDFLAGS= -lfreetype -lglfw	-lGL -Iinclude
 
 OGLTest:
 	echo "Building OGLTest"
-	$(CC) $(LDFLAGS) src/gl.c stbLoad.cpp OGLTest.cpp -o a.out
+	$(CC) $(LDFLAGS) src/gl.c OGLTest.cpp -o a.out
 
 glad:
 	echo "Running GLAD"
