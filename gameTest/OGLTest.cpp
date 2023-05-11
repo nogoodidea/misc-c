@@ -22,6 +22,7 @@
 #include "shader.h" // does shader things
 #include "render.h" // does obj mangment things
 #include "shapes.h" // helper functions to make shapes quicker
+#include "text.h"   // lets me write things
 
 
 // if the user resized update the screen
