@@ -122,7 +122,6 @@ class Object3D{
           vertP[v*8]=(ct+rx*rx*t)*ox+(rx*ry*t-rz*st)*oy+(rx*rz*t+ry*st)*oz;
           vertP[v*8+1]=(rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz;
           vertP[v*8+2]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz;
-          std::cerr<<"point: " << v << "x: " << vertP[v*8]<< "y: " << vertP[v*8+1]<< "z: " << vertP[v*8+2] << std::endl;
           // update vbo
           glNamedBufferSubData(VBO,(v*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8]);
           glNamedBufferSubData(VBO,(v*8+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8+1]);
