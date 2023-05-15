@@ -79,10 +79,10 @@ Object3D genSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,G
 Object3D genTextureSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size,std::string text){
   GLuint texture = loadTexture(text);
   GLfloat vert[] = {
-    x+size,y+size,z,  0.0f,0.0f,0.0f, 1.0f,1.0f, //0,1
-    x+size,y-size,z,  0.0f,0.0f,0.0f, 1.0f,0.0f, //0
-    x-size,y-size,z,  0.0f,0.0f,0.0f, 0.0f,0.0f, //0,1
-    x-size,y+size,z, 0.0f,0.0f,0.0f, 0.0f,1.0f //1
+    x+size,y+size,z,  1.0f,1.0f,1.0f, 1.0f,1.0f, //0,1
+    x+size,y-size,z,  1.0f,1.0f,1.0f, 1.0f,0.0f, //0
+    x-size,y-size,z,  1.0f,1.0f,1.0f, 0.0f,0.0f, //0,1
+    x-size,y+size,z, 1.0f,1.0f,1.0f, 0.0f,1.0f //1
   };
 
   GLuint t[] = {
