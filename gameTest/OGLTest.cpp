@@ -22,7 +22,7 @@
 #include "shader.h" // does shader things
 #include "render.h" // does obj mangment things
 #include "shapes.h" // helper functions to make shapes quicker
-#include "text.h"   // lets me write things
+//#include "text.h"   // lets me write things
 
 
 // if the user resized update the screen
@@ -50,7 +50,7 @@ GLFWwindow* intGlfw(){
   glfwSetFramebufferSizeCallback(win,fbResizeCallback);
 
   //R,G,B,A
-  glClearColor(1.1f,1.1f,1.1f,1.0f);
+  glClearColor(0.0f,0.0f,0.0f,1.0f);
   return win;
 }
 
@@ -61,8 +61,6 @@ void intOGL(){
   // depth testing so shapes don't overlap
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
-  // needed for textureing
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 }
 
 
@@ -87,7 +85,7 @@ int main(int argc, char** argv){
 
   rend.push(genCube("Test Cube2",&shadCol,0.0f,-0.5f,0.0f,0.1f,0.0f,2.0f,1.0f));
 
-  rend.push(genTextureSquare("Texture Box",&shadTex,0.0f,0.0f,0.0f,0.2f,"textures/testTexture.png"));
+  rend.push(genTextureSquare("Texture Box",&shadTex,0.0f,0.0f,0.0f,0.5f,"textures/testTexture.png"));
 
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
