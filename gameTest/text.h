@@ -9,8 +9,8 @@ struct Char {
   GLuint TID;
   GLuint sizeX;
   GLint sizeY;
-  GLint bearingX;
-  GLint bearingY;
+  GLint64 bearingX;
+  GLint64 bearingY;
   unsigned int adv; // next char
 };
 FT_Library intFT(){
@@ -41,7 +41,7 @@ std::map<char, Char> loadFTglyph(FT_Face face){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	Char character = {text,face->glyph->bitmap.width,face->glyph->bitmap.rows,face->glyph->bitmap_left,face->glyph->bitmap_top,face->glyph->advance.x};
-	Chars.insert(std::pair<char, Char> (c,Char));
+	Chars.insert(std::make_pair(c,character));
 		}
 	return Chars; // return the map of char/Char
 }
@@ -53,14 +53,16 @@ class objectText{
     GLfloat x = 0.0f;
     GLfloat y = 0.0f;
     GLfloat z = 0.0f;
+    Shader *shad=NULL;
     std::map<char, Char> font;
 
-    objectText(std::string istring,GLfloat ix,GLfloat iy, GLfloat iz,std::map<char,Char> ifont){
+    objectText(Shader *ishad,std::string istring,GLfloat ix,GLfloat iy, GLfloat iz,std::map<char,Char> ifont){
     	string = istring;
 	x = ix;
 	y = iy;
 	z = iz;
 	font = ifont;
+  shad = ishad;
     }
 
     void rend(){
@@ -83,14 +85,13 @@ class objectText{
             xpos + w, ypos,       1.0f, 1.0f,
             xpos + w, ypos + h,   1.0f, 0.0f          
         	};
-		glBindTexture(GL_TEXTURE_2D,ch.textureID);
+		glBindTexture(GL_TEXTURE_2D,ch.TID);
 		glBindBuffer(GL_ARRAY_BUFFER,VBO);
-		glBindBufferSubData(GL_ARRAY_BUFFER, 0,sizeof(GLfloat)*6*4,(void*)vert);
+		glBufferSubData(GL_ARRAY_BUFFER, 0,sizeof(GLfloat)*6*4,(void*)vert);
 		glBindBuffer(GL_ARRAY_BUFFER,0);
 
 		glDrawArrays(GL_TRIANGLES,0,6);
-		x += (ch.Advance >> 6) //????? majic code is majjic looks like bit shifting
-
+		x += (ch.adv >> 6); //????? majic code is majjic looks like bit shifting
        }
        glBindVertexArray(0);
     }
