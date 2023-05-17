@@ -77,17 +77,27 @@ class objectText{
 		GLfloat h = ch.sizeY;
 
 		GLfloat vert[] = {
-            xpos,     ypos + h,   0.0f, 0.0f,            
-            xpos,     ypos,       0.0f, 1.0f,
-            xpos + w, ypos,       1.0f, 1.0f,
+            xpos,     ypos + h, 1.0f,1.0f,1.0f,  0.0f, 0.0f,            
+            xpos,     ypos, 1.0f,1.0f,1.0f,      0.0f, 1.0f,
+            xpos + w, ypos, 1.0f,1.0f,1.0f,       1.0f, 1.0f,
 
-            xpos,     ypos + h,   0.0f, 0.0f,
-            xpos + w, ypos,       1.0f, 1.0f,
-            xpos + w, ypos + h,   1.0f, 0.0f          
+            xpos,     ypos + h, 1.0f,1.0f,1.0f,  0.0f, 0.0f,
+            xpos + w, ypos, 1.0f,1.0f,1.0f,      1.0f, 1.0f,
+            xpos + w, ypos + h, 1.0f,1.0f,1.0f,  1.0f, 0.0f          
         	};
 		glBindTexture(GL_TEXTURE_2D,ch.TID);
+
+    
+    glGenBuffers(1,&VBO);
 		glBindBuffer(GL_ARRAY_BUFFER,VBO);
-		glBufferSubData(GL_ARRAY_BUFFER, 0,sizeof(GLfloat)*6*4,(void*)vert);
+		
+    glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*6*7,(void*)vert,GL_STATIC_DRAW);
+    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,7*sizeof(GLfloat),(void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,7*sizeof(GLfloat),(void*)(2*sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2,2,GL_FLOAT, GL_FALSE,7*sizeof(GLfloat),(void*)(5*sizeof(GLfloat)));
+    glEnableVertexAttribArray(2);
 		glBindBuffer(GL_ARRAY_BUFFER,0);
 
 		glDrawArrays(GL_TRIANGLES,0,6);

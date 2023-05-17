@@ -22,7 +22,7 @@
 #include "shader.h" // does shader things
 #include "render.h" // does obj mangment things
 #include "shapes.h" // helper functions to make shapes quicker
-//#include "text.h"   // lets me write things
+#include "text.h"   // lets me write things
 
 
 // if the user resized update the screen
@@ -77,20 +77,32 @@ int main(int argc, char** argv){
   Shader shadCol = Shader("shaders/vertCol.vs","shaders/fragCol.fs");
   // shaders used with textured objects
   Shader shadTex = Shader("shaders/vertTex.vs","shaders/fragTex.fs");
+  //
+  Shader shadChar = Shader("shaders/vertChar.vs","shaders/fragChar.fs");
+  // freetype for fonts
+  FT_Library ftLib=intFT();
+
+  FT_Face ftFace=intFTFont(ftLib,"/usr/share/fonts/dejavu-sans-mono-fonts/DejaVuSansMono.ttf");
+
+  std::map<char,Char> font = loadFTglyph(ftFace);
+
+  // text object, TODO cleanup/ render text 1 time and update it if the string changes
+
+  objectText text(&shadChar,"THIS IS A TEST OF THE SYSTEM",0.0f,0.0f,0.0f,font);
 
   // render obj
-  Renderer rend;
+  Renderer rend3d;
   // loads the Object3D
-  rend.push(genCube("Test Cube",&shadCol,-0.91f,0.1f,0.0f,0.1f,2.5f,0.0f,0.0f));
+  rend3d.push(genCube("Test Cube",&shadCol,-0.91f,0.1f,0.0f,0.1f,2.5f,0.0f,0.0f));
 
-  rend.push(genCube("Test Cube2",&shadCol,0.0f,-0.5f,0.0f,0.1f,0.0f,2.0f,1.0f));
+  rend3d.push(genCube("Test Cube2",&shadCol,0.0f,-0.5f,0.0f,0.1f,0.0f,2.0f,1.0f));
 
-  rend.push(genTextureSquare("Texture Box",&shadTex,0.0f,0.0f,0.0f,0.5f,"textures/testTexture.png"));
+  rend3d.push(genTextureSquare("Texture Box",&shadTex,0.0f,0.0f,0.0f,0.5f,"textures/testTexture.png"));
 
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
 
-  int testObj = rend.search("Test Cube");
+  int testObj = rend3d.search("Test Cube");
   bool keyPressed = false; // key holding 
   while(!glfwWindowShouldClose(win)){
    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -99,10 +111,11 @@ int main(int argc, char** argv){
    if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
       glfwSetWindowShouldClose(win,true);
    }if(glfwGetKey(win,GLFW_KEY_SPACE)){
-   if(keyPressed==false){keyPressed=true;rend.get(testObj).rot(1.0f,1.0f,0.0f,0.1f);}
+   if(keyPressed==false){keyPressed=true;rend3d.get(testObj).rot(1.0f,1.0f,0.0f,0.1f);}
    }else{keyPressed=false;}
 
-   rend.rend();
+   rend3d.rend();
+   text.rend();
    
    glBindVertexArray(0);// see bind vao
    
@@ -112,7 +125,7 @@ int main(int argc, char** argv){
   // cleanup
   shadCol.cleanUp();
   shadTex.cleanUp();
-  rend.cleanUp(); 
+  rend3d.cleanUp(); 
 
   glfwTerminate();
   return 0;
