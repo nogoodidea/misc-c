@@ -1,5 +1,5 @@
 CC=g++ -Wall -g
-LDFLAGS= -lfreetype -lglfw	-lGL -Iinclude
+LDFLAGS= -lfreetype -lglfw	-lGL -Iinclude -I/usr/include/freetype2
 
 OGLTest:
 	echo "Building OGLTest"
@@ -7,4 +7,4 @@ OGLTest:
 
 glad:
 	echo "Running GLAD"
-	glad --api gl:core=3.3 --out-path . c
+	glad --api gl:core=3.1 --out-path . c
