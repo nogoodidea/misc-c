@@ -25,10 +25,9 @@
 #include "shapes.h" // helper functions to make shapes quicker
 #include "text.h"   // lets me write things
 
-
 // if the user resized update the screen
 void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);
-  glOrthro(w/2,w/2-0.0f,h/2,h/2-0.0f, 0.0f,4.0f);
+  glFrustum(w/2,w/2-0.0f,h/2,h/2-0.0f, 0.0f,4.0f);
 }
 
 // glfw startup function
@@ -39,8 +38,8 @@ GLFWwindow* intGlfw(){
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   
-  const int winW = 600;
-  const int winH = 600;
+  const int winW = 640;
+  const int winH = 480;
 
   GLFWwindow* win = glfwCreateWindow(winW,winH,"SUFFER",NULL,NULL);
   glfwMakeContextCurrent(win);
