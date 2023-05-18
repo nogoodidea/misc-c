@@ -8,6 +8,10 @@
 // pi
 #define PI 3.14159f
 
+// bitmasks for updating buffers
+#define UPDATE_NOTHING 0
+#define UPDATE_COLORS 1
+#define UPDATE_POINTS 2
 // keeps track of the VBO/VAO Points and Colors
 class Object3D{
   public:
@@ -18,7 +22,7 @@ class Object3D{
     GLuint texture;
     //refrance to the shader we want to use
     Shader *shad=NULL;
-    
+    char updateMask = UPDATE_NOTHING;
 
     GLfloat midPoint[3] = {0.0f,0.0f,0.0f}; // hold the mid point used for transform matrix
     int amtP,amtT; // amount vertexes, amout T 
@@ -77,9 +81,9 @@ class Object3D{
         for(i=0;i<3;i+=1){
           // does 2 things 1 updaes vertP to the new data,2 updates the VBO with new data
           vertP[i+v*8]+=transform[i];// v*6 because 1 verticy is 6 floats.
-          glNamedBufferSubData(VBO,(i+v*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*8]);
         }
       }
+      updateMask |= UPDATE_POINTS;
     }
 
     void scale(double transform[3]){// copy and past from above but =* 
@@ -87,9 +91,9 @@ class Object3D{
       for(v=0;v<amtP;v+=1){
         for(i=0;i<3;i+=1){
           vertP[i+v*8]*=transform[i];// v*6 because 1 verticy is 6 floats.
-          glNamedBufferSubData(VBO,(i+v*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i+v*8]);
         }
       }
+      updateMask |= UPDATE_POINTS;
     }
     // x y z
     void rot(GLfloat rx,GLfloat ry,GLfloat rz,GLfloat theta){ //rotate
@@ -118,11 +122,9 @@ class Object3D{
           vertP[v*8+1]=((rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz)-(0-midPoint[1]);
           vertP[v*8+2]=((rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz)-(0-midPoint[2]);
           // update vbo
-          glNamedBufferSubData(VBO,(v*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8]);
-          glNamedBufferSubData(VBO,(v*8+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8+1]);
-          glNamedBufferSubData(VBO,(v*8+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8+2]);
       }
       findMidpoint(midPoint);
+      updateMask |= UPDATE_POINTS;
     }
     // rotate around the origin 0,0,0
     void rotA(GLfloat rx,GLfloat ry,GLfloat rz,GLfloat theta){ //rotate
@@ -155,16 +157,45 @@ class Object3D{
           vertP[v*8]=(ct+rx*rx*t)*ox+(rx*ry*t-rz*st)*oy+(rx*rz*t+ry*st)*oz;
           vertP[v*8+1]=(rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz;
           vertP[v*8+2]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz;
-          // update vbo
-          glNamedBufferSubData(VBO,(v*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8]);
-          glNamedBufferSubData(VBO,(v*8+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8+1]);
-          glNamedBufferSubData(VBO,(v*8+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[v*8+2]);
       }
+      updateMask |= UPDATE_POINTS;
+    }
+    //updates the buffer, does ALL vaules
+    void upBuf(){
+	  for(int i=0;i>amtT*8;i+=1){
+	  glNamedBufferSubData(VBO,(i)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i]);
+	  }
+    }
+    void upBufPoint(){
+	for(int i=0;i>amtT;i+=1){
+		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8]);
+		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+1]);
+		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+2]);
+	}
+    }
+    void upBufColor(){
+	for(int i=0;i>amtT;i+=1){
+		glNamedBufferSubData(VBO,(i*8+3)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+3]);
+		glNamedBufferSubData(VBO,(i*8+4)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+4]);
+		glNamedBufferSubData(VBO,(i*8+5)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+5]);
+	}
+    }
+    // updates the point buffer
+    void glOrtho(){
+	
     }
     // rend function
     void rend(){
       if(texture!=0){//if we added a texture bind it
         glBindTexture(GL_TEXTURE_2D, texture); 
+      }
+      //updates colors
+      if((updateMask & UPDATE_COLORS)==UPDATE_COLORS){
+
+      }
+      //updates the points
+      if((updateMask & UPDATE_POINTS)==UPDATE_POINTS){
+
       }
       // binds the vao, this holds the VAO and the EBO
       glBindVertexArray(VAO);

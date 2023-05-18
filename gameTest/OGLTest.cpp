@@ -27,7 +27,6 @@
 
 // if the user resized update the screen
 void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);
-  glFrustum(w/2,w/2-0.0f,h/2,h/2-0.0f, 0.0f,4.0f);
 }
 
 // glfw startup function
@@ -35,7 +34,7 @@ GLFWwindow* intGlfw(){
   glfwInit();
   glfwWindowHint(GLFW_SAMPLES,4);//anti aliasing
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   
   const int winW = 640;
@@ -60,7 +59,6 @@ GLFWwindow* intGlfw(){
 
 // OpenGl startup function
 void intOGL(){
-  glMatrixMode(GL_PROJECTION);
   //enables that anti-aliasing thingy
   glEnable(GL_MULTISAMPLE);
   // depth testing so shapes don't overlap
