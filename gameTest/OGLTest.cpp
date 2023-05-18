@@ -25,8 +25,11 @@
 #include "shapes.h" // helper functions to make shapes quicker
 #include "text.h"   // lets me write things
 
+// one golobal bool so i can redraw the buffer if the window if moved
+bool reGenBuffer = false;
 // if the user resized update the screen
 void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);
+	reGenBuffer = true;
 }
 
 // glfw startup function
@@ -77,7 +80,7 @@ int main(int argc, char** argv){
   intOGL();
 
   // window size used for matrix stuff
-  int winW,winH;
+  int bufW,bufH;
 
   // shaders used to render colored objects
   Shader shadCol = Shader("shaders/vertCol.vs","shaders/fragCol.fs");
@@ -88,7 +91,7 @@ int main(int argc, char** argv){
   // freetype for fonts
   FT_Library ftLib=intFT();
 
-  FT_Face ftFace=intFTFont(ftLib,"/usr/share/fonts/dejavu-sans-mono-fonts/DejaVuSansMono.ttf");
+  FT_Face ftFace=intFTFont(ftLib,"/usr/share/fonts/TTF/DejaVuSansMono.ttf");
 
   std::map<char,Char> font = loadFTglyph(ftFace);
 
@@ -120,9 +123,13 @@ int main(int argc, char** argv){
    if(keyPressed==false){keyPressed=true;rend3d.get(testObj).rot(1.0f,1.0f,0.0f,0.1f);}
    }else{keyPressed=false;}
 
-   glfwGetWindowSize(win,&winW,&winH);
-   rend3d.rend((GLfloat)winW,(GLfloat)winH);
+   // use buffer size not window size 
+   glfwGetFramebufferSize(win,&bufW,&bufH);
+   rend3d.rend((GLfloat)bufW,(GLfloat)bufH,reGenBuffer);
    text.rend();
+   if(reGenBuffer == true){
+	reGenBuffer = false;
+   }
    
    glBindVertexArray(0);// see bind vao
    

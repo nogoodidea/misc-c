@@ -8,10 +8,6 @@
 // pi
 #define PI 3.14159f
 
-// bitmasks for updating buffers
-#define UPDATE_NOTHING 0
-#define UPDATE_COLORS 1
-#define UPDATE_POINTS 2
 // keeps track of the VBO/VAO Points and Colors
 class Object3D{
   public:
@@ -22,7 +18,10 @@ class Object3D{
     GLuint texture;
     //refrance to the shader we want to use
     Shader *shad=NULL;
-    char updateMask = UPDATE_NOTHING;
+
+    // bools for updateing stuff
+    bool upBufP;
+    bool upBufC;//P point C color
 
     GLfloat midPoint[3] = {0.0f,0.0f,0.0f}; // hold the mid point used for transform matrix
     int amtP,amtT; // amount vertexes, amout T 
@@ -34,6 +33,7 @@ class Object3D{
       amtT = IamtT;
       texture = Itexture;
       shad = Ishad;
+      upBufP=true;
 
       // copys from the old buffer to the new one so the data is presurved
       vertT = (GLuint*) malloc(sizeof(GLuint)*amtT*3);
@@ -83,7 +83,7 @@ class Object3D{
           vertP[i+v*8]+=transform[i];// v*6 because 1 verticy is 6 floats.
         }
       }
-      updateMask |= UPDATE_POINTS;
+      upBufP=true;
     }
 
     void scale(double transform[3]){// copy and past from above but =* 
@@ -93,7 +93,7 @@ class Object3D{
           vertP[i+v*8]*=transform[i];// v*6 because 1 verticy is 6 floats.
         }
       }
-      updateMask |= UPDATE_POINTS;
+      upBufP=true;
     }
     // x y z
     void rot(GLfloat rx,GLfloat ry,GLfloat rz,GLfloat theta){ //rotate
@@ -124,7 +124,7 @@ class Object3D{
           // update vbo
       }
       findMidpoint(midPoint);
-      updateMask |= UPDATE_POINTS;
+      upBufP=true;
     }
     // rotate around the origin 0,0,0
     void rotA(GLfloat rx,GLfloat ry,GLfloat rz,GLfloat theta){ //rotate
@@ -158,23 +158,23 @@ class Object3D{
           vertP[v*8+1]=(rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz;
           vertP[v*8+2]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz;
       }
-      updateMask |= UPDATE_POINTS;
+      upBufP=true;
     }
     //updates the buffer, does ALL vaules
     void upBuf(){
-	  for(int i=0;i>amtT*8;i+=1){
+	  for(int i=0;i<amtP*8;i+=1){
 	  glNamedBufferSubData(VBO,(i)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i]);
 	  }
     }
     void upBufPoint(){
-	for(int i=0;i>amtT;i+=1){
+	for(int i=0;i<amtP;i+=1){
 		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8]);
 		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+1]);
 		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+2]);
 	}
     }
     void upBufColor(){
-	for(int i=0;i>amtT;i+=1){
+	for(int i=0;i<amtP;i+=1){
 		glNamedBufferSubData(VBO,(i*8+3)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+3]);
 		glNamedBufferSubData(VBO,(i*8+4)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+4]);
 		glNamedBufferSubData(VBO,(i*8+5)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+5]);
@@ -182,35 +182,38 @@ class Object3D{
     }
     // updates the buffer with the matrix, translates
     void frustumMatrix(GLfloat w,GLfloat h){
-	for(int i=0;i>amtT;i+=1){
+	for(int i=0;i<amtP;i+=1){
 		//TODO
 	}
     }
     // updates the point buffer
     void orthoMatrix(GLfloat w, GLfloat h){
 	    GLfloat x,y,z;
-	for(int i=0;i>amtT;i+=1){
-		x=vertP[i*8]*(2.0f/((w/2.0f)-(w/2.0f)))+((w/2.0f)+(w/2.0f))/((w/2.0f)-(w/2.0f));
+	for(int i=0;i<amtP;i+=1){
+		x=vertP[i*8]*(2.0f/w);
 		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
-		y=vertP[i*8+1]*(2.0f/((h/2.0f)-(h/2.0f)))+(((h/2.0f)+(h/2.0f))/((h/2.0f)-(h/2.0f)));
+		y=vertP[i*8+1]*(2.0f/h);
 		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),(void*)&y);
-		z=vertP[i*8+2]*(-2.0f/(1-0))+((5+0)/(5-0));
+		z=vertP[i*8+2]*(-2.0f/1);
 		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),(void*)&z);
+		std::cout<<"point: "<<i<<" x: "<<x<<" y: "<<y<<" z: "<<z<<std::endl;
 	}
 	
     }
     // rend function
-    void rend(GLfloat w,GLfloat h){
+    void rend(GLfloat w,GLfloat h,bool reGenBuffer){
       if(texture!=0){//if we added a texture bind it
         glBindTexture(GL_TEXTURE_2D, texture); 
       }
       //updates colors
-      if((updateMask & UPDATE_COLORS)==UPDATE_COLORS){
+      if(upBufC){
 	upBufColor();
+	upBufC=false;
       }
       //updates the points
-      if((updateMask & UPDATE_POINTS)==UPDATE_POINTS){
-	upBufPoint();
+      if(upBufP||reGenBuffer){
+	orthoMatrix(w,h);
+	upBufP=false;
       }
       // binds the vao, this holds the VAO and the EBO
       glBindVertexArray(VAO);
@@ -279,10 +282,10 @@ class Renderer{
 
     }
     
-    void rend(GLfloat w,GLfloat h){
+    void rend(GLfloat w,GLfloat h,bool reGenBuffer){
      unsigned int i;
      for(i=0;i<obj.size();i+=1){
-        if(mask.at(i)==true){obj.at(i).rend(w,h);}
+        if(mask.at(i)==true){obj.at(i).rend(w,h,reGenBuffer);}
      }
     }
     
