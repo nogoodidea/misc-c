@@ -182,8 +182,14 @@ class Object3D{
     }
     // updates the buffer with the matrix, translates
     void frustumMatrix(GLfloat w,GLfloat h){
+	GLfloat x,y,z;
 	for(int i=0;i<amtP;i+=1){
-		//TODO
+		x=vertP[i*8]*((2.0f*1.0f)/h)+vertP[i*8+2];
+		y=vertP[i*8+1]*((2.0f*1.0f)/h)+vertP[i*8+2];
+		z=vertP[i*8+2]*(-1.0f*((100.0f+1.0f)/(100.0f-1.0f)))+-1.0f*((2.0f*100.0f*1.0f)/(100.0f-1.0f));
+		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
+		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),(void*)&y);
+		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),(void*)&z);
 	}
     }
     // updates the point buffer
@@ -194,7 +200,7 @@ class Object3D{
 		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
 		y=vertP[i*8+1]*(2.0f/h);
 		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),(void*)&y);
-		z=vertP[i*8+2]*(-2.0f/1);
+		z=vertP[i*8+2]*(-2.0f/(100.0f));
 		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),(void*)&z);
 		std::cout<<"point: "<<i<<" x: "<<x<<" y: "<<y<<" z: "<<z<<std::endl;
 	}
@@ -213,6 +219,8 @@ class Object3D{
       //updates the points
       if(upBufP||reGenBuffer){
 	orthoMatrix(w,h);
+	// not quite working
+	//frustumMatrix(w,h);
 	upBufP=false;
       }
       // binds the vao, this holds the VAO and the EBO

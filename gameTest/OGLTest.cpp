@@ -102,11 +102,11 @@ int main(int argc, char** argv){
   // render obj
   Renderer rend3d;
   // loads the Object3D
-  rend3d.push(genCube("Test Cube",&shadCol,-0.91f,0.1f,0.0f,0.1f,2.5f,0.0f,0.0f));
+  rend3d.push(genCube("Test Cube",&shadCol,0.0f,0.0f,0.0f,400.0f,2.5f,0.0f,0.0f));
 
-  rend3d.push(genCube("Test Cube2",&shadCol,0.0f,-0.5f,0.0f,0.1f,0.0f,2.0f,1.0f));
+  rend3d.push(genCube("Test Cube2",&shadCol,0.0f,-50.0f,0.0f,100.0f,0.0f,2.0f,1.0f));
 
-  rend3d.push(genTextureSquare("Texture Box",&shadTex,0.0f,0.0f,0.0f,0.5f,"textures/testTexture.png"));
+  rend3d.push(genTextureSquare("Texture Box",&shadTex,0.0f,0.0f,0.0f,50.0f,"textures/testTexture.png"));
 
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
