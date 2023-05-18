@@ -15,8 +15,9 @@
 // make glad.h might work, if i added it.
 // gl 3.3
 // good luck
-#include <glad/gl.h>
 
+
+#include <glad/gl.h>
 #include<GLFW/glfw3.h>
 
 #include "shader.h" // does shader things
@@ -26,7 +27,9 @@
 
 
 // if the user resized update the screen
-void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);}
+void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);
+  glOrthro(w/2,w/2-0.0f,h/2,h/2-0.0f, 0.0f,4.0f);
+}
 
 // glfw startup function
 GLFWwindow* intGlfw(){
@@ -42,9 +45,11 @@ GLFWwindow* intGlfw(){
   GLFWwindow* win = glfwCreateWindow(winW,winH,"SUFFER",NULL,NULL);
   glfwMakeContextCurrent(win);
   // glad
-  if (!gladLoadGL((GLADloadfunc)glfwGetProcAddress)){
+  int v;
+  if (!(v=gladLoadGL((GLADloadfunc)glfwGetProcAddress))){
      std::cerr<<"ERROR::GLAD::INIT_FAILED"<<std::endl;
      return NULL;}
+  std::cout<<"OpenGL Version " << GLAD_VERSION_MAJOR(v) <<"."<<GLAD_VERSION_MINOR(v) << " Loaded" << std::endl;
 
   // redgester the callback function
   glfwSetFramebufferSizeCallback(win,fbResizeCallback);
@@ -56,6 +61,7 @@ GLFWwindow* intGlfw(){
 
 // OpenGl startup function
 void intOGL(){
+  glMatrixMode(GL_PROJECTION);
   //enables that anti-aliasing thingy
   glEnable(GL_MULTISAMPLE);
   // depth testing so shapes don't overlap
@@ -71,7 +77,6 @@ int main(int argc, char** argv){
     glfwTerminate(); // can't recover from it
     _Exit(1);}
 
-  std::cout << "INFO::GLUT::STARTED" << std::endl;
   intOGL();
   // shaders used to render colored objects
   Shader shadCol = Shader("shaders/vertCol.vs","shaders/fragCol.fs");
