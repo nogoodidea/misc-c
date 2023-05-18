@@ -91,7 +91,7 @@ int main(int argc, char** argv){
   // freetype for fonts
   FT_Library ftLib=intFT();
 
-  FT_Face ftFace=intFTFont(ftLib,"/usr/share/fonts/TTF/DejaVuSansMono.ttf");
+  FT_Face ftFace=intFTFont(ftLib,"fonts/DejaVuSansMono.ttf");
 
   std::map<char,Char> font = loadFTglyph(ftFace);
 
