@@ -75,6 +75,10 @@ int main(int argc, char** argv){
     _Exit(1);}
 
   intOGL();
+
+  // window size used for matrix stuff
+  int winW,winH;
+
   // shaders used to render colored objects
   Shader shadCol = Shader("shaders/vertCol.vs","shaders/fragCol.fs");
   // shaders used with textured objects
@@ -116,7 +120,8 @@ int main(int argc, char** argv){
    if(keyPressed==false){keyPressed=true;rend3d.get(testObj).rot(1.0f,1.0f,0.0f,0.1f);}
    }else{keyPressed=false;}
 
-   rend3d.rend();
+   glfwGetWindowSize(win,&winW,&winH);
+   rend3d.rend((GLfloat)winW,(GLfloat)winH);
    text.rend();
    
    glBindVertexArray(0);// see bind vao

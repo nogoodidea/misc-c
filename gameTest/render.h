@@ -180,22 +180,37 @@ class Object3D{
 		glNamedBufferSubData(VBO,(i*8+5)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+5]);
 	}
     }
+    // updates the buffer with the matrix, translates
+    void frustumMatrix(GLfloat w,GLfloat h){
+	for(int i=0;i>amtT;i+=1){
+		//TODO
+	}
+    }
     // updates the point buffer
-    void glOrtho(){
+    void orthoMatrix(GLfloat w, GLfloat h){
+	    GLfloat x,y,z;
+	for(int i=0;i>amtT;i+=1){
+		x=vertP[i*8]*(2.0f/((w/2.0f)-(w/2.0f)))+((w/2.0f)+(w/2.0f))/((w/2.0f)-(w/2.0f));
+		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
+		y=vertP[i*8+1]*(2.0f/((h/2.0f)-(h/2.0f)))+(((h/2.0f)+(h/2.0f))/((h/2.0f)-(h/2.0f)));
+		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),(void*)&y);
+		z=vertP[i*8+2]*(-2.0f/(1-0))+((5+0)/(5-0));
+		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),(void*)&z);
+	}
 	
     }
     // rend function
-    void rend(){
+    void rend(GLfloat w,GLfloat h){
       if(texture!=0){//if we added a texture bind it
         glBindTexture(GL_TEXTURE_2D, texture); 
       }
       //updates colors
       if((updateMask & UPDATE_COLORS)==UPDATE_COLORS){
-
+	upBufColor();
       }
       //updates the points
       if((updateMask & UPDATE_POINTS)==UPDATE_POINTS){
-
+	upBufPoint();
       }
       // binds the vao, this holds the VAO and the EBO
       glBindVertexArray(VAO);
@@ -264,10 +279,10 @@ class Renderer{
 
     }
     
-    void rend(){
+    void rend(GLfloat w,GLfloat h){
      unsigned int i;
      for(i=0;i<obj.size();i+=1){
-        if(mask.at(i)==true){obj.at(i).rend();}
+        if(mask.at(i)==true){obj.at(i).rend(w,h);}
      }
     }
     
