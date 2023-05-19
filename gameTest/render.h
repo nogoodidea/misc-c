@@ -8,6 +8,14 @@
 // pi
 #define PI 3.14159f
 
+GLfloat getScaler(GLfloat w,GLfloat h){
+  GLfloat fw=floorf(w/21);
+  GLfloat fh=floorf(h/9);
+  std::cout<<"FW: " << fw << " FH: " << fh << std::endl;
+  if(fw>=fh){return fw;}
+  else{return fh;}
+}
+
 // keeps track of the VBO/VAO Points and Colors
 class Object3D{
   public:
@@ -218,6 +226,7 @@ class Object3D{
       }
       //updates the points
       if(upBufP||reGenBuffer){
+        //TODO proper scaleing
 	orthoMatrix(w,h);
 	// not quite working
 	//frustumMatrix(w,h);

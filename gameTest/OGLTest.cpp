@@ -126,8 +126,9 @@ int main(int argc, char** argv){
 
    // use buffer size not window size 
    glfwGetFramebufferSize(win,&bufW,&bufH);
-   scaler = roundf((bufW/bufH)*(21/9));
-   rend3d.rend((GLfloat)21*scaler,(GLfloat)9*scaler,reGenBuffer);
+   scaler = getScaler(bufW,bufH);
+   //times 2 + or minus
+   rend3d.rend((GLfloat)21.0f*scaler,(GLfloat)9.0f*scaler,reGenBuffer);
    text.rend();
    if(reGenBuffer == true){
 	reGenBuffer = false;
