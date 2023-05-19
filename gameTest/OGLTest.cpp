@@ -81,6 +81,7 @@ int main(int argc, char** argv){
 
   // window size used for matrix stuff
   int bufW,bufH;
+  GLfloat scaler;// round((h/w)*(21/9))
 
   // shaders used to render colored objects
   Shader shadCol = Shader("shaders/vertCol.vs","shaders/fragCol.fs");
@@ -102,11 +103,11 @@ int main(int argc, char** argv){
   // render obj
   Renderer rend3d;
   // loads the Object3D
-  rend3d.push(genCube("Test Cube",&shadCol,0.0f,0.0f,0.0f,400.0f,2.5f,0.0f,0.0f));
+  rend3d.push(genCube("Test Cube",&shadCol,0.0f,-1.0f,-4.0f,1.0f,2.5f,0.0f,0.0f));
 
-  rend3d.push(genCube("Test Cube2",&shadCol,0.0f,-50.0f,0.0f,100.0f,0.0f,2.0f,1.0f));
+  rend3d.push(genCube("Test Cube2",&shadCol,0.0f,-5.0f,0.0f,1.0f,0.0f,2.0f,1.0f));
 
-  rend3d.push(genTextureSquare("Texture Box",&shadTex,0.0f,0.0f,0.0f,50.0f,"textures/testTexture.png"));
+  rend3d.push(genTextureSquare("Texture Box",&shadTex,0.0f,0.0f,0.0f,10.0f,"textures/testTexture.png"));
 
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
@@ -125,13 +126,12 @@ int main(int argc, char** argv){
 
    // use buffer size not window size 
    glfwGetFramebufferSize(win,&bufW,&bufH);
-   rend3d.rend((GLfloat)bufW,(GLfloat)bufH,reGenBuffer);
+   scaler = roundf((bufW/bufH)*(21/9));
+   rend3d.rend((GLfloat)21*scaler,(GLfloat)9*scaler,reGenBuffer);
    text.rend();
    if(reGenBuffer == true){
 	reGenBuffer = false;
    }
-   
-   glBindVertexArray(0);// see bind vao
    
    glfwSwapBuffers(win);
    glfwPollEvents();

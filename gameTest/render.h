@@ -186,7 +186,7 @@ class Object3D{
 	for(int i=0;i<amtP;i+=1){
 		x=vertP[i*8]*((2.0f*1.0f)/h)+vertP[i*8+2];
 		y=vertP[i*8+1]*((2.0f*1.0f)/h)+vertP[i*8+2];
-		z=vertP[i*8+2]*(-1.0f*((100.0f+1.0f)/(100.0f-1.0f)))+-1.0f*((2.0f*100.0f*1.0f)/(100.0f-1.0f));
+		z=vertP[i*8+2]*(-1.0f*((w+1.0f)/(w-1.0f)))+-1.0f*((2.0f*w*1.0f)/(w-1.0f));
 		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
 		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),(void*)&y);
 		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),(void*)&z);
@@ -197,10 +197,10 @@ class Object3D{
 	    GLfloat x,y,z;
 	for(int i=0;i<amtP;i+=1){
 		x=vertP[i*8]*(2.0f/w);
-		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
 		y=vertP[i*8+1]*(2.0f/h);
+		z=vertP[i*8+2]*(-2.0f/(w));
+		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
 		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),(void*)&y);
-		z=vertP[i*8+2]*(-2.0f/(100.0f));
 		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),(void*)&z);
 		std::cout<<"point: "<<i<<" x: "<<x<<" y: "<<y<<" z: "<<z<<std::endl;
 	}
