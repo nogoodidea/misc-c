@@ -9,8 +9,8 @@
 #define PI 3.14159f
 
 GLfloat getScaler(GLfloat w,GLfloat h){
-  GLfloat fw=floorf(w/21);
-  GLfloat fh=floorf(h/9);
+  GLfloat fw=floorf(w/42);
+  GLfloat fh=floorf(h/18);
   if(fw>=fh){return fw;}
   else{return fh;}
 }
@@ -27,11 +27,11 @@ class Object3D{
     Shader *shad=NULL;
 
     // bools for updateing stuff
-    bool upBufP;
-    bool upBufC;//P point C color
+    bool upBuf[2]; //0 C 1 P
 
     GLfloat midPoint[3] = {0.0f,0.0f,0.0f}; // hold the mid point used for transform matrix
     int amtP,amtT; // amount vertexes, amout T 
+    
     // int function
     Object3D(std::string Iname,GLfloat* IvertP,int IamtP,GLuint* IvertT,int IamtT,GLuint Itexture,Shader *Ishad){
       // save the vars so we can do MATH on them
@@ -40,7 +40,8 @@ class Object3D{
       amtT = IamtT;
       texture = Itexture;
       shad = Ishad;
-      upBufP=true;
+      upBuf[1]=true;
+
 
       // copys from the old buffer to the new one so the data is presurved
       vertT = (GLuint*) malloc(sizeof(GLuint)*amtT*3);
@@ -90,8 +91,8 @@ class Object3D{
           vertP[i+v*8]+=transform[i];// v*6 because 1 verticy is 6 floats.
         }
       }
-      upBufP=true;
-    }
+      upBuf[1]=true;
+          }
 
     void scale(GLfloat x,GLfloat y,GLfloat z){// copy and past from above but =* 
       int v;
@@ -99,8 +100,7 @@ class Object3D{
           vertP[v*8]*=x;
           vertP[v*8+1]*=y;
           vertP[v*8+2]*=z;
-      }
-      upBufP=true;
+      }upBuf[1]=true;
     }
     // x y z
     void rot(GLfloat rx,GLfloat ry,GLfloat rz,GLfloat theta){ //rotate
@@ -131,7 +131,7 @@ class Object3D{
           // update vbo
       }
       findMidpoint(midPoint);
-      upBufP=true;
+      upBuf[1]=true;
     }
     // rotate around the origin 0,0,0
     void rotA(GLfloat rx,GLfloat ry,GLfloat rz,GLfloat theta){ //rotate
@@ -165,13 +165,13 @@ class Object3D{
           vertP[v*8+1]=(rx*ry*t+rz*st)*ox+(ct+ry*ry*t)*oy+(ry*rz*t-rx*st)*oz;
           vertP[v*8+2]=(rz*rx*t-ry*st)*ox+(rz*ry*t+rx*st)*oy+(ct+rz*rz*t)*oz;
       }
-      upBufP=true;
+      upBuf[1]=true;
     }
     //updates the buffer, does ALL vaules
-    void upBuf(){
+    void upBuffers(){
 	  for(int i=0;i<amtP*8;i+=1){
 	  glNamedBufferSubData(VBO,(i)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i]);
-	  }
+	    }
     }
     void upBufPoint(){
 	for(int i=0;i<amtP;i+=1){
@@ -209,27 +209,33 @@ class Object3D{
 		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
 		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),(void*)&y);
 		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),(void*)&z);
-		std::cout<<"point: "<<i<<" x: "<<x<<" y: "<<y<<" z: "<<z<<std::endl;
 	}
 	
     }
     // rend function
-    void rend(GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
+    void rend(int p,GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
       if(texture!=0){//if we added a texture bind it
         glBindTexture(GL_TEXTURE_2D, texture); 
       }
       //updates colors
-      if(upBufC){
-	upBufColor();
-	upBufC=false;
+      if(upBuf[0]){
+	      upBufColor();
+	      upBuf[0]=false;
       }
       //updates the points
-      if(upBufP||reGenBuffer){
-        //TODO function ponter
-	orthoMatrix(w,h,s);
-	// not quite working
-	//frustumMatrix(w,h,s);
-	upBufP=false;
+      if(upBuf[1]||reGenBuffer){
+        switch(p){
+          default:
+            upBufPoint();
+            break;
+          case 1:
+            orthoMatrix(w,h,s);
+            break;
+          case 2:
+            frustumMatrix(w,h,s);
+            break;
+        }
+	      upBuf[1]=false;
       }
       // binds the vao, this holds the VAO and the EBO
       glBindVertexArray(VAO);
@@ -298,10 +304,10 @@ class Renderer{
 
     }
     
-    void rend(GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
+    void rend(int p,GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
      unsigned int i;
      for(i=0;i<obj.size();i+=1){
-        if(mask.at(i)==true){obj.at(i).rend(w,h,s,reGenBuffer);}
+        if(mask.at(i)==true){obj.at(i).rend(p,w,h,s,reGenBuffer);}
      }
     }
     

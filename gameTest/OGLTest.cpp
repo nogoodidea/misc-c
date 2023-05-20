@@ -103,7 +103,7 @@ int main(int argc, char** argv){
   // render obj
   Renderer rend3d;
   // loads the Object3D
-  rend3d.push(genCube("Test Cube",&shadCol,0.0f,-1.0f,-4.0f,1.0f,2.5f,0.0f,0.0f));
+  rend3d.push(genCube("Test Cube",&shadCol,5.0f,-1.0f,4.0f,1.0f,2.5f,0.0f,0.0f));
 
   rend3d.push(genCube("Test Cube2",&shadCol,0.0f,-5.0f,0.0f,1.0f,0.0f,2.0f,1.0f));
 
@@ -128,7 +128,7 @@ int main(int argc, char** argv){
    glfwGetFramebufferSize(win,&bufW,&bufH);
    scaler = getScaler(bufW,bufH);
    //times 2 + or minus
-   rend3d.rend(bufW,bufH,scaler,reGenBuffer);
+   rend3d.rend(1,bufW,bufH,scaler,reGenBuffer);
    text.rend();
    if(reGenBuffer == true){
 	reGenBuffer = false;
