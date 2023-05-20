@@ -11,7 +11,6 @@
 GLfloat getScaler(GLfloat w,GLfloat h){
   GLfloat fw=floorf(w/21);
   GLfloat fh=floorf(h/9);
-  std::cout<<"FW: " << fw << " FH: " << fh << std::endl;
   if(fw>=fh){return fw;}
   else{return fh;}
 }
@@ -94,12 +93,12 @@ class Object3D{
       upBufP=true;
     }
 
-    void scale(double transform[3]){// copy and past from above but =* 
-      int v,i;
+    void scale(GLfloat x,GLfloat y,GLfloat z){// copy and past from above but =* 
+      int v;
       for(v=0;v<amtP;v+=1){
-        for(i=0;i<3;i+=1){
-          vertP[i+v*8]*=transform[i];// v*6 because 1 verticy is 6 floats.
-        }
+          vertP[v*8]*=x;
+          vertP[v*8+1]*=y;
+          vertP[v*8+2]*=z;
       }
       upBufP=true;
     }
@@ -189,24 +188,24 @@ class Object3D{
 	}
     }
     // updates the buffer with the matrix, translates
-    void frustumMatrix(GLfloat w,GLfloat h){
+    void frustumMatrix(GLfloat w,GLfloat h,GLfloat s){
 	GLfloat x,y,z;
 	for(int i=0;i<amtP;i+=1){
-		x=vertP[i*8]*((2.0f*1.0f)/h)+vertP[i*8+2];
-		y=vertP[i*8+1]*((2.0f*1.0f)/h)+vertP[i*8+2];
-		z=vertP[i*8+2]*(-1.0f*((w+1.0f)/(w-1.0f)))+-1.0f*((2.0f*w*1.0f)/(w-1.0f));
+		x=vertP[i*8]*s*((2.0f*1.0f)/h)+vertP[i*8+2];
+		y=vertP[i*8+1]*s*((2.0f*1.0f)/h)+vertP[i*8+2];
+		z=vertP[i*8+2]*s*(-1.0f*((w+1.0f)/(w-1.0f)))+-1.0f*((2.0f*w*1.0f)/(w-1.0f));
 		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
 		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),(void*)&y);
 		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),(void*)&z);
 	}
     }
     // updates the point buffer
-    void orthoMatrix(GLfloat w, GLfloat h){
+    void orthoMatrix(GLfloat w, GLfloat h,GLfloat s){
 	    GLfloat x,y,z;
 	for(int i=0;i<amtP;i+=1){
-		x=vertP[i*8]*(2.0f/w);
-		y=vertP[i*8+1]*(2.0f/h);
-		z=vertP[i*8+2]*(-2.0f/(w));
+		x=vertP[i*8]*s*(2.0f/w);
+		y=vertP[i*8+1]*s*(2.0f/h);
+		z=vertP[i*8+2]*s*(-2.0f/(w));
 		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
 		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),(void*)&y);
 		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),(void*)&z);
@@ -215,7 +214,7 @@ class Object3D{
 	
     }
     // rend function
-    void rend(GLfloat w,GLfloat h,bool reGenBuffer){
+    void rend(GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
       if(texture!=0){//if we added a texture bind it
         glBindTexture(GL_TEXTURE_2D, texture); 
       }
@@ -226,10 +225,10 @@ class Object3D{
       }
       //updates the points
       if(upBufP||reGenBuffer){
-        //TODO proper scaleing
-	orthoMatrix(w,h);
+        //TODO function ponter
+	orthoMatrix(w,h,s);
 	// not quite working
-	//frustumMatrix(w,h);
+	//frustumMatrix(w,h,s);
 	upBufP=false;
       }
       // binds the vao, this holds the VAO and the EBO
@@ -299,10 +298,10 @@ class Renderer{
 
     }
     
-    void rend(GLfloat w,GLfloat h,bool reGenBuffer){
+    void rend(GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
      unsigned int i;
      for(i=0;i<obj.size();i+=1){
-        if(mask.at(i)==true){obj.at(i).rend(w,h,reGenBuffer);}
+        if(mask.at(i)==true){obj.at(i).rend(w,h,s,reGenBuffer);}
      }
     }
     

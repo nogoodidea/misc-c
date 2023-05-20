@@ -107,7 +107,7 @@ int main(int argc, char** argv){
 
   rend3d.push(genCube("Test Cube2",&shadCol,0.0f,-5.0f,0.0f,1.0f,0.0f,2.0f,1.0f));
 
-  rend3d.push(genTextureSquare("Texture Box",&shadTex,0.0f,0.0f,0.0f,10.0f,"textures/testTexture.png"));
+  rend3d.push(genTextureSquare("Texture Box",&shadTex,0.0f,0.0f,0.0f,4.0f,"textures/testTexture.png"));
 
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
@@ -128,7 +128,7 @@ int main(int argc, char** argv){
    glfwGetFramebufferSize(win,&bufW,&bufH);
    scaler = getScaler(bufW,bufH);
    //times 2 + or minus
-   rend3d.rend((GLfloat)21.0f*scaler,(GLfloat)9.0f*scaler,reGenBuffer);
+   rend3d.rend(bufW,bufH,scaler,reGenBuffer);
    text.rend();
    if(reGenBuffer == true){
 	reGenBuffer = false;
