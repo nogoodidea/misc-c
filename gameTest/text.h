@@ -57,26 +57,27 @@ class objectText{
     std::map<char, Char> font;
 
     objectText(Shader *ishad,std::string istring,GLfloat ix,GLfloat iy, GLfloat iz,std::map<char,Char> ifont){
-    	string = istring;
-	x = ix;
-	y = iy;
-	z = iz;
-	font = ifont;
-  shad = ishad;
+    	string = istring; // apparently this works 
+      std::cout << "ptr0: " << &string << " ptr1: " << &istring << std::endl;
+	    x = ix;
+	    y = iy;
+	    z = iz;
+	    font = ifont;
+      shad = ishad;
     }
 
-    void rend(){
+    void rend(GLfloat scale){
        GLuint VBO; //TODO come up with a better system then regenarating every textUre every frame
        std::string::const_iterator c;
-       for(c=string.begin();c!=string.end();c+=1){
+       for(c=string.begin();c!=string.end();c++){
+
 	        Char ch = font[*c];
-		GLfloat xpos = x + ch.bearingX;
-                GLfloat ypos = y + ch.bearingY;
+		      GLfloat xpos = x + ch.bearingX;
+          GLfloat ypos = y + ch.bearingY;
+		      GLfloat w = ch.sizeX*scale;
+		      GLfloat h = ch.sizeY*scale;
 
-		GLfloat w = ch.sizeX;
-		GLfloat h = ch.sizeY;
-
-		GLfloat vert[] = {
+		      GLfloat vert[] = {
             xpos,     ypos + h, 1.0f,1.0f,1.0f,  0.0f, 0.0f,            
             xpos,     ypos, 1.0f,1.0f,1.0f,      0.0f, 1.0f,
             xpos + w, ypos, 1.0f,1.0f,1.0f,       1.0f, 1.0f,
@@ -85,25 +86,25 @@ class objectText{
             xpos + w, ypos, 1.0f,1.0f,1.0f,      1.0f, 1.0f,
             xpos + w, ypos + h, 1.0f,1.0f,1.0f,  1.0f, 0.0f          
         	};
-		glBindTexture(GL_TEXTURE_2D,ch.TID);
-
+		    glBindTexture(GL_TEXTURE_2D,ch.TID);
     
-    glGenBuffers(1,&VBO);
-		glBindBuffer(GL_ARRAY_BUFFER,VBO);
+        glGenBuffers(1,&VBO);
+		    glBindBuffer(GL_ARRAY_BUFFER,VBO);
 		
-    glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*6*7,(void*)vert,GL_STATIC_DRAW);
-    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,7*sizeof(GLfloat),(void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,7*sizeof(GLfloat),(void*)(2*sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2,2,GL_FLOAT, GL_FALSE,7*sizeof(GLfloat),(void*)(5*sizeof(GLfloat)));
-    glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER,0);
+        glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*6*7,(void*)vert,GL_STATIC_DRAW);
+        glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,7*sizeof(GLfloat),(void*)0);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,7*sizeof(GLfloat),(void*)(2*sizeof(GLfloat)));
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(2,2,GL_FLOAT, GL_FALSE,7*sizeof(GLfloat),(void*)(5*sizeof(GLfloat)));
+        glEnableVertexAttribArray(2);
+		    glBindBuffer(GL_ARRAY_BUFFER,0);
 
-		glDrawArrays(GL_TRIANGLES,0,6);
-		x += (ch.adv >> 6); //????? majic code is majjic looks like bit shifting
+		    glDrawArrays(GL_TRIANGLES,0,6);
+		    x += (ch.adv >> 6)*scale; //????? majic code is majjic looks like bit shifting
        }
        glBindVertexArray(0);
+       glBindTexture(GL_TEXTURE_2D, 0);
     }
 };
 

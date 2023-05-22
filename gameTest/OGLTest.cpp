@@ -56,7 +56,7 @@ GLFWwindow* intGlfw(){
   glfwSetFramebufferSizeCallback(win,fbResizeCallback);
 
   //R,G,B,A
-  glClearColor(0.0f,0.0f,0.0f,1.0f);
+  glClearColor(1.0f,1.0f,1.0f,1.0f);
   return win;
 }
 
@@ -129,7 +129,7 @@ int main(int argc, char** argv){
    scaler = getScaler(bufW,bufH);
    //times 2 + or minus
    rend3d.rend(1,bufW,bufH,scaler,reGenBuffer);
-   text.rend();
+   text.rend(1.0f);
    if(reGenBuffer == true){
 	reGenBuffer = false;
    }
