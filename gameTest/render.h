@@ -279,6 +279,12 @@ class Object3D{
       }
     out[2]=avg/amtP;
     }
+    //TODO, find the normal vector from a plan defined for each trinagle in a shape and get the sin of the cross product 
+    //https://learnopengl.com/Lighting/Basic-Lighting
+    void upColor(){
+	void *TODO = NULL;
+	    return TODO;
+    }
 };
 
 // render object
