@@ -175,10 +175,14 @@ class Object3D{
 	    }
     }
     void upBufPoint(){
+	GLfloat x,y,z;
 	for(int i=0;i<amtP;i+=1){
-		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8]);
-		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+1]);
-		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),&vertP[i*8+2]);
+		x=vertP[i*8]/21;
+		y=vertP[i*8+1]/9;
+		z=vertP[i*8+2]/21;
+		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),&x);
+		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),&y);
+		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),&z);
 	}
     }
     void upBufColor(){
@@ -192,8 +196,8 @@ class Object3D{
     void frustumMatrix(GLfloat w,GLfloat h,GLfloat s){
 	GLfloat x,y,z;
 	for(int i=0;i<amtP;i+=1){
-		x=vertP[i*8]*s*((2.0f*1.0f)/h)+vertP[i*8+2];
-		y=vertP[i*8+1]*s*((2.0f*1.0f)/h)+vertP[i*8+2];
+		x=vertP[i*8]*s*((2.0f*1.0f)/(h))+vertP[i*8+2];
+		y=vertP[i*8+1]*s*((2.0f*1.0f)/(h))+vertP[i*8+2];
 		z=vertP[i*8+2]*s*(-1.0f*((w+1.0f)/(w-1.0f)))+-1.0f*((2.0f*w*1.0f)/(w-1.0f));
 		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
 		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),(void*)&y);
@@ -206,7 +210,7 @@ class Object3D{
 	for(int i=0;i<amtP;i+=1){
 		x=vertP[i*8]*s*(2.0f/w);
 		y=vertP[i*8+1]*s*(2.0f/h);
-		z=vertP[i*8+2]*s*(-2.0f/(w));
+		z=vertP[i*8+2]*s*(-2.0f/w);
 		glNamedBufferSubData(VBO,(i*8)*sizeof(GLfloat),sizeof(GLfloat),(void*)&x);
 		glNamedBufferSubData(VBO,(i*8+1)*sizeof(GLfloat),sizeof(GLfloat),(void*)&y);
 		glNamedBufferSubData(VBO,(i*8+2)*sizeof(GLfloat),sizeof(GLfloat),(void*)&z);

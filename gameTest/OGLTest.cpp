@@ -56,7 +56,7 @@ GLFWwindow* intGlfw(){
   glfwSetFramebufferSizeCallback(win,fbResizeCallback);
 
   //R,G,B,A
-  glClearColor(1.0f,1.0f,1.0f,1.0f);
+  glClearColor(0.0f,0.0f,0.0f,1.0f);
   return win;
 }
 
@@ -67,6 +67,9 @@ void intOGL(){
   // depth testing so shapes don't overlap
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
+  // blending so textures look ok
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 
@@ -83,6 +86,8 @@ int main(int argc, char** argv){
   int bufW,bufH;
   GLfloat scaler;// round((h/w)*(21/9))
 
+  //slide number
+  unsigned int slide = 0;
   // shaders used to render colored objects
   Shader shadCol = Shader("shaders/vertCol.vs","shaders/fragCol.fs");
   // shaders used with textured objects
@@ -90,12 +95,13 @@ int main(int argc, char** argv){
 
   // render obj
   Renderer rend3d;
+  Renderer rend3dt; // transperent objects need to be rendered after
   // loads the Object3D
-  rend3d.push(genCube("Test Cube",&shadCol,5.0f,-1.0f,4.0f,1.0f,2.5f,0.0f,0.0f));
+  rend3d.push(genCube("Test Cube",&shadCol,10.0f,-7.0f,0.0f,8.4f,2.0f,0.0f,1.0f));
 
   rend3d.push(genCube("Test Cube2",&shadCol,0.0f,-5.0f,0.0f,1.0f,0.0f,2.0f,1.0f));
 
-  rend3d.push(genTextureSquare("Texture Box",&shadTex,0.0f,0.0f,0.0f,4.0f,"textures/testTexture.png"));
+  rend3dt.push(genTextureRect("Slide0",&shadTex,21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f,"textures/SlideText0.png"));
 
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
@@ -109,14 +115,18 @@ int main(int argc, char** argv){
    if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
       glfwSetWindowShouldClose(win,true);
    }if(glfwGetKey(win,GLFW_KEY_SPACE)){
-   if(keyPressed==false){keyPressed=true;rend3d.get(testObj).rot(1.0f,1.0f,0.0f,0.1f);}
+   if(keyPressed==false){keyPressed=true;slide+=1;}
    }else{keyPressed=false;}
 
+   rend3d.get(testObj).rot(1.0f,0.0f,0.0f,0.01f);
+   
    // use buffer size not window size 
    glfwGetFramebufferSize(win,&bufW,&bufH);
    scaler = getScaler(bufW,bufH);
-   //times 2 + or minus
+   //1 means ortho, 2 might work
    rend3d.rend(1,bufW,bufH,scaler,reGenBuffer);
+   rend3dt.rend(1,bufW,bufH,scaler,reGenBuffer);// transparent objects need to be rendered after
+						// also ... lets me call diffrent matrixes for both
    if(reGenBuffer == true){
 	reGenBuffer = false;
    }
@@ -127,6 +137,7 @@ int main(int argc, char** argv){
   // cleanup
   shadCol.cleanUp();
   rend3d.cleanUp(); 
+  rend3dt.cleanUp();
 
   glfwTerminate();
   return 0;

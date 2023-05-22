@@ -79,7 +79,7 @@ Object3D genSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,G
   return Object3D(name,vert,4,t,2,0,shad);
 }
 
-Object3D genTextureSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size,std::string text){
+Object3D genTextureSqu(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size,std::string text){
   GLuint texture = loadTexture(text);
   GLfloat vert[] = {
     x+size,y+size,z,  1.0f,1.0f,1.0f, 1.0f,1.0f, //0,1
@@ -95,4 +95,37 @@ Object3D genTextureSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfl
   return Object3D(name,vert,4,t,2,texture,shad);
 }
 
+Object3D genTextureRect(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloat z0,GLfloat x1,GLfloat y1,GLfloat z1,std::string text){
+  GLuint texture = loadTexture(text);
+  GLfloat vert[] = {
+    x0,y0,z0,  1.0f,1.0f,1.0f, 1.0f,1.0f,//0,1
+    x0,y1,z0,  1.0f,1.0f,1.0f, 1.0f,0.0f,//0
+    x1,y1,z0,  1.0f,1.0f,1.0f, 0.0f,0.0f,//0,1
+    x1,y0,z0,  1.0f,1.0f,1.0f, 0.0f,1.0f,//1
+    x0,y0,z1,  1.0f,1.0f,1.0f, 1.0f,0.0f,//2,3
+    x0,y1,z1,  1.0f,1.0f,1.0f, 0.0f,1.0f,//2
+    x1,y1,z1,  1.0f,1.0f,1.0f, 0.0f,0.0f, //2,3
+    x1,y0,z1,  1.0f,1.0f,1.0f, 1.0f,1.0f//3
+  };
 
+  GLuint t[] = {
+	  0,1,2,
+	  0,2,3,
+	  
+	  4,5,6,
+	  4,6,7,
+	   
+	  4,0,1,
+	  4,5,1,
+
+	  5,1,2,
+	  5,6,2,
+
+	  6,2,3,
+	  6,7,3,
+
+	  7,3,0,
+	  7,4,0
+  };
+  return Object3D(name,vert,8,t,12,texture,shad);
+}
