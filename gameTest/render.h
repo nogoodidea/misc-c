@@ -11,7 +11,7 @@
 GLfloat getScaler(GLfloat w,GLfloat h){
   GLfloat fw=floorf(w/42);
   GLfloat fh=floorf(h/18);
-  if(fw>=fh){return fw;}
+  if(fw<=fh){return fw;}
   else{return fh;}
 }
 
@@ -27,7 +27,7 @@ class Object3D{
     Shader *shad=NULL;
 
     // bools for updateing stuff
-    bool upBuf[2]; //0 C 1 P
+    bool *upBuf; //0 C 1 P
 
     GLfloat midPoint[3] = {0.0f,0.0f,0.0f}; // hold the mid point used for transform matrix
     int amtP,amtT; // amount vertexes, amout T 
@@ -40,6 +40,7 @@ class Object3D{
       amtT = IamtT;
       texture = Itexture;
       shad = Ishad;
+      upBuf = (bool*)malloc(sizeof(bool)*2);// do i use this to much?
       upBuf[1]=true;
 
 
@@ -223,19 +224,19 @@ class Object3D{
 	      upBuf[0]=false;
       }
       //updates the points
-      if(upBuf[1]||reGenBuffer){
-        switch(p){
-          default:
-            upBufPoint();
-            break;
-          case 1:
-            orthoMatrix(w,h,s);
-            break;
-          case 2:
-            frustumMatrix(w,h,s);
-            break;
+        if(upBuf[1]||reGenBuffer){
+          switch(p){
+            default:
+              upBufPoint();
+              break;
+            case 1:
+              orthoMatrix(w,h,s);
+              break;
+            case 2:
+              frustumMatrix(w,h,s);
+              break;
         }
-	      upBuf[1]=false;
+	upBuf[1]=false;
       }
       // binds the vao, this holds the VAO and the EBO
       glBindVertexArray(VAO);
@@ -249,6 +250,7 @@ class Object3D{
       glDeleteVertexArrays(1,&VAO);
       glDeleteBuffers(1,&VBO);
       glDeleteBuffers(1,&EBO);
+      free(upBuf);
       free(vertP);
       free(vertT);
       // your going to want to del the object after this
