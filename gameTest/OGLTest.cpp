@@ -23,7 +23,7 @@
 #include "shader.h" // does shader things
 #include "render.h" // does obj mangment things
 #include "shapes.h" // helper functions to make shapes quicker
-#include "text.h"   // lets me write things
+//#include "text.h"   // lets me write things
 
 // one golobal bool so i can redraw the buffer if the window if moved
 bool reGenBuffer = false;
@@ -87,18 +87,6 @@ int main(int argc, char** argv){
   Shader shadCol = Shader("shaders/vertCol.vs","shaders/fragCol.fs");
   // shaders used with textured objects
   Shader shadTex = Shader("shaders/vertTex.vs","shaders/fragTex.fs");
-  //
-  Shader shadChar = Shader("shaders/vertChar.vs","shaders/fragChar.fs");
-  // freetype for fonts
-  FT_Library ftLib=intFT();
-
-  FT_Face ftFace=intFTFont(ftLib,"fonts/DejaVuSansMono.ttf");
-
-  std::map<char,Char> font = loadFTglyph(ftFace);
-
-  // text object, TODO cleanup/ render text 1 time and update it if the string changes
-
-  objectText text(&shadChar,"THIS IS A TEST OF THE SYSTEM",0.0f,0.0f,0.0f,font);
 
   // render obj
   Renderer rend3d;
@@ -129,7 +117,6 @@ int main(int argc, char** argv){
    scaler = getScaler(bufW,bufH);
    //times 2 + or minus
    rend3d.rend(1,bufW,bufH,scaler,reGenBuffer);
-   text.rend(1.0f);
    if(reGenBuffer == true){
 	reGenBuffer = false;
    }
@@ -139,7 +126,6 @@ int main(int argc, char** argv){
    }
   // cleanup
   shadCol.cleanUp();
-  shadTex.cleanUp();
   rend3d.cleanUp(); 
 
   glfwTerminate();

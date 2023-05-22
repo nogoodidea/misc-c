@@ -41,6 +41,8 @@ std::map<char, Char> loadFTglyph(FT_Face face){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	Char character = {text,face->glyph->bitmap.width,face->glyph->bitmap.rows,face->glyph->bitmap_left,face->glyph->bitmap_top,face->glyph->advance.x};
+	std::cout << (unsigned char) text << character.sizeX << character.sizeY << character.bearingX << character.bearingY << std::endl;
+
 	Chars.insert(std::make_pair(c,character));
 		}
 	return Chars; // return the map of char/Char
@@ -70,10 +72,9 @@ class objectText{
        GLuint VBO; //TODO come up with a better system then regenarating every textUre every frame
        std::string::const_iterator c;
        for(c=string.begin();c!=string.end();c++){
-
 	        Char ch = font[*c];
 		      GLfloat xpos = x + ch.bearingX;
-          GLfloat ypos = y + ch.bearingY;
+          		GLfloat ypos = y + ch.bearingY;
 		      GLfloat w = ch.sizeX*scale;
 		      GLfloat h = ch.sizeY*scale;
 
