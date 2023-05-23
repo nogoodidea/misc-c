@@ -120,7 +120,7 @@ int main(int argc, char** argv){
    if(keyPressed==false){keyPressed=true;slide+=1;}
    }else{keyPressed=false;}
 
-   rend3d.get(testObj).rot(1.0f,0.0f,0.0f,0.01f);
+   //rend3d.get(testObj).rot(1.0f,0.0f,0.0f,0.01f);
    
    //uniforms for ambient lighting TODO shader array
    //if you need to to it twice you can use an array
