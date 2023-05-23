@@ -17,17 +17,18 @@ class Shader{
     Shader(std::string vertPath,std::string geomPath,std::string fragPath){
       // onto compiling
       GLuint vert,frag,geom;
-      char *vertCode=NULL,*geomCode=NULL,*fragCode=NULL;
       
       //Vertix Shader
-      readFile(vertPath,vertCode);
+      std::string vertStr = readFile(vertPath);
+      const char *vertCode = vertStr.c_str();
       vert = glCreateShader(GL_VERTEX_SHADER);
       glShaderSource(vert,1,&vertCode,NULL);
       glCompileShader(vert);
       checkError(vert,"VERT");
 
       //Geometry Shader
-      readFile(geomPath,geomCode);
+      std::string geomStr = readFile(geomPath);
+      const char *geomCode = geomStr.c_str();
       if(geomCode!=NULL){// if the string is null it will output 0 chars + the null terminator
       geom = glCreateShader(GL_GEOMETRY_SHADER);
       glShaderSource(geom,1,&geomCode,NULL);
@@ -36,7 +37,8 @@ class Shader{
       }
 
       //Fragment Shader
-      readFile(fragPath,fragCode);
+      std::string fragStr = readFile(fragPath);
+      const char *fragCode = fragStr.c_str();
       frag = glCreateShader(GL_FRAGMENT_SHADER);
       glShaderSource(frag,1,&fragCode,NULL);
       glCompileShader(frag);
@@ -69,7 +71,7 @@ class Shader{
       glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
     }
   private:
-    void readFile(std::string fileName,char *out){
+    std::string readFile(std::string fileName){
       std::string str;
       std::ifstream file;
       std::stringstream stream;
@@ -84,9 +86,7 @@ class Shader{
       }catch (std::ifstream::failure& e){
         std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
         }
-      out = str.c_str();
-      //strcpy(out,str.c_str());
-      std::cout << "GOT HERE" << std::endl;
+      return str;
     }
     void checkError(GLuint shad,std::string type){
       GLint error;
