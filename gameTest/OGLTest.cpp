@@ -89,9 +89,9 @@ int main(int argc, char** argv){
   //slide number
   unsigned int slide = 0;
   // shaders used to render colored objects
-  Shader shadCol = Shader("shaders/vertCol.vs","shaders/fragCol.fs");
+  Shader shadCol = Shader("shaders/vertCol.vs","shaders/normal.gio","shaders/fragCol.fs");
   // shaders used with textured objects
-  Shader shadTex = Shader("shaders/vertTex.vs","shaders/fragTex.fs");
+  Shader shadTex = Shader("shaders/vertTex.vs",NULL,"shaders/fragTex.fs");
 
   // render obj
   Renderer rend3d;
