@@ -281,6 +281,8 @@ class Object3D{
     }
     //TODO, find the normal vector from a plan defined for each trinagle in a shape and get the sin of the cross product 
     //https://learnopengl.com/Lighting/Basic-Lighting
+    //https://learnopengl.com/Advanced-OpenGL/Geometry-Shader 
+    //might be helpfull and it will be, SHADER POWERS GO
     void upColor(){
 	void *TODO = NULL;
 	    return TODO;
