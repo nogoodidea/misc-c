@@ -13,41 +13,28 @@ class Shader{
   public:
     // compiled program id
     GLuint ID;
-    Shader(const char* vertPath,const char* fragPath){
-      // read the path
-      std::string vertStr,fragStr;
-      std::ifstream vertFile,fragFile;
-      std::stringstream vertStream,fragStream;
-    
-      //trying out c++ error catching
-      vertFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-      fragFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-      try{
-        vertFile.open(vertPath); // read
-        fragFile.open(fragPath); // read
-        vertStream << vertFile.rdbuf();
-        fragStream << fragFile.rdbuf();
-        // closeing files
-        vertFile.close();
-        fragFile.close();
-        vertStr = vertStream.str();
-        fragStr = fragStream.str();
-      }catch (std::ifstream::failure& e){
-        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
-        }
-      const char* vertCode = vertStr.c_str();
-      const char* fragCode = fragStr.c_str();
-
+    Shader(std::string vertPath,std::string geomPath,std::string fragPath){
       // onto compiling
-      GLuint vert,frag;
+      GLuint vert,frag,geom;
       
       //Vertix Shader
+      const char *vertCode = readFile(vertPath);
       vert = glCreateShader(GL_VERTEX_SHADER);
       glShaderSource(vert,1,&vertCode,NULL);
       glCompileShader(vert);
       checkError(vert,"VERT");
 
+      //Geometry Shader
+      const char *geomCode = readFile(geomPath);
+      if(geomCode!=NULL){// if the string is null it will output 0 chars + the null terminator
+      geom = glCreateShader(GL_GEOMETRY_SHADER);
+      glShaderSource(geom,1,&geomCode,NULL);
+      glCompileShader(geom);
+      checkError(geom,"GEOM");
+      }
+
       //Fragment Shader
+      const char *fragCode = readFile(fragPath);
       frag = glCreateShader(GL_FRAGMENT_SHADER);
       glShaderSource(frag,1,&fragCode,NULL);
       glCompileShader(frag);
@@ -80,6 +67,24 @@ class Shader{
       glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
     }
   private:
+    const char *readFile(std::string fileName){
+      std::string str;
+      std::ifstream file;
+      std::stringstream stream;
+    
+      file.exceptions (std::ifstream::failbit | std::ifstream::badbit);
+      try{
+        file.open(fileName); // read
+        stream << file.rdbuf();
+        // closeing files
+        file.close();
+        str = stream.str();
+      }catch (std::ifstream::failure& e){
+        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
+        }
+      return str.c_str();
+
+    }
     void checkError(GLuint shad,std::string type){
       GLint error;
       char log[1024];
