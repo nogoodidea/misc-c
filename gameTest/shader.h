@@ -27,9 +27,10 @@ class Shader{
       checkError(vert,"VERT");
 
       //Geometry Shader
+      if(geomPath.size()==0){
       std::string geomStr = readFile(geomPath);
       const char *geomCode = geomStr.c_str();
-      if(geomCode!=NULL){// if the string is null it will output 0 chars + the null terminator
+      // if the string is null it will output 0 chars + the null terminator
       geom = glCreateShader(GL_GEOMETRY_SHADER);
       glShaderSource(geom,1,&geomCode,NULL);
       glCompileShader(geom);
@@ -70,9 +71,12 @@ class Shader{
     void setFloat(const std::string &name,float value){
       glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
     }
+    void setVec3(const std::string &name,GLfloat x,GLfloat y,GLfloat z){
+	glUniform3f(glGetUniformLocation(ID,name.c_str()),x,y,z);
+    }
   private:
     std::string readFile(std::string fileName){
-      std::string str;
+      std::string str="";
       std::ifstream file;
       std::stringstream stream;
     

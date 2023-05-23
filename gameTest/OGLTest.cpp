@@ -38,6 +38,8 @@ GLFWwindow* intGlfw(){
   glfwWindowHint(GLFW_SAMPLES,4);//anti aliasing
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+  // debuging stuff
+  glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   
   const int winW = 640;
@@ -91,7 +93,7 @@ int main(int argc, char** argv){
   // shaders used to render colored objects
   Shader shadCol = Shader("shaders/vertCol.vs","shaders/normal.gio","shaders/fragCol.fs");
   // shaders used with textured objects
-  Shader shadTex = Shader("shaders/vertTex.vs",NULL,"shaders/fragTex.fs");
+  Shader shadTex = Shader("shaders/vertTex.vs","shaders/normal.gio","shaders/fragTex.fs");
 
   // render obj
   Renderer rend3d;
@@ -120,9 +122,22 @@ int main(int argc, char** argv){
 
    rend3d.get(testObj).rot(1.0f,0.0f,0.0f,0.01f);
    
+   //uniforms for ambient lighting TODO shader array
+   //if you need to to it twice you can use an array
+   shadCol.setVec3("ambColor",1.0f,1.0f,1.0f);
+   shadCol.setFloat("ambStr",0.1f);
+   shadTex.setVec3("ambColor",1.0f,1.0f,1.0f);
+   shadTex.setFloat("ambStr",0.1f);
+
    // use buffer size not window size 
    glfwGetFramebufferSize(win,&bufW,&bufH);
    scaler = getScaler(bufW,bufH);
+
+   shadCol.setFloat("width",bufW);
+   shadCol.setFloat("hight",bufH);
+   shadTex.setFloat("width",bufW);
+   shadTex.setFloat("hight",bufH);
+
    //1 means ortho, 2 might work
    rend3d.rend(1,bufW,bufH,scaler,reGenBuffer);
    rend3dt.rend(1,bufW,bufH,scaler,reGenBuffer);// transparent objects need to be rendered after

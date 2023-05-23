@@ -1,15 +1,13 @@
 #version 330 core
+out vec3 pos;
+out vec3 normal;
 
 vec3 GetNor(){
-  vec3 a = vec3(gl_in[0].gl_Pos) - vec3(gl_in[1].gl_Pos);
-  vec3 b = vec3(gl_in[2].gl_Pos) - vec3(gl_in[1].gl_Pos);
+  vec3 a = vec3(gl_in[0].gl_Position) - vec3(gl_in[1].gl_Position);
+  vec3 b = vec3(gl_in[2].gl_Position) - vec3(gl_in[1].gl_Position);
   return normalize(cross(a,b));
 }
-
-out GS_OUT{
-  vec3 normal;
-} gs_out;
-
 void main(){
-  gs_out.normal = GetNor();
+  normal = GetNor();
+  pos = vec3(gl_in[1].gl_Position);
 }
