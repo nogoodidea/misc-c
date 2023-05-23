@@ -36,8 +36,8 @@ void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);
 GLFWwindow* intGlfw(){
   glfwInit();
   glfwWindowHint(GLFW_SAMPLES,4);//anti aliasing
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   
   const int winW = 640;
