@@ -285,7 +285,7 @@ class Object3D{
     //might be helpfull and it will be, SHADER POWERS GO
     void upColor(){
 	void *TODO = NULL;
-	    return TODO;
+	    //return TODO;
     }
 };
 
