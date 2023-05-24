@@ -31,22 +31,22 @@ Object3D genCube(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLf
   // should be x,y,z, r,g,b, texture  
 
   GLfloat vert[] = {
-    x+size,y+size,z+size,  r,g,b, 0.0f,0.0f,//0,1
-    x+size,y-size,z+size,  r,g,b,  0.0f,0.0f,//0
-    x-size,y-size,z+size,  r,g,b,  0.0f,0.0f,//0,1
-    x-size,y+size,z+size,  r,g,b, 0.0f,0.0f,//1
-    x+size,y+size,z-size,  r,g,b, 0.0f,0.0f,//2,3
-    x+size,y-size,z-size,  r,g,b, 0.0f,0.0f,//2
-    x-size,y-size,z-size,  r,g,b, 0.0f,0.0f, //2,3
-    x-size,y+size,z-size,  r,g,b, 0.0f,0.0f//3
+    x+size,y+size,z+size,  r,g,b, 0.0f,0.0f,//0
+    x+size,y-size,z+size,  r,g,b,  0.0f,0.0f,//1
+    x-size,y-size,z+size,  r,g,b,  0.0f,0.0f,//2
+    x-size,y+size,z+size,  r,g,b, 0.0f,0.0f,//3
+    x+size,y+size,z-size,  r,g,b, 0.0f,0.0f,//4
+    x+size,y-size,z-size,  r,g,b, 0.0f,0.0f,//5
+    x-size,y-size,z-size,  r,g,b, 0.0f,0.0f,//6
+    x-size,y+size,z-size,  r,g,b, 0.0f,0.0f//7
   };
 
   GLuint t[] = {
 	  0,1,2,
-	  0,2,3,
+	  0,3,2,
 	  
 	  4,5,6,
-	  4,6,7,
+	  4,7,6,
 	   
 	  4,0,1,
 	  4,5,1,
