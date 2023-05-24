@@ -48,6 +48,7 @@ class Shader{
       //Shader Program
       ID = glCreateProgram();
       glAttachShader(ID,vert);
+      if(geomPath.size()=!0){glAttachShader(ID,geom);}
       glAttachShader(ID,frag);
       glLinkProgram(ID);
       checkError(ID,"PROG");
