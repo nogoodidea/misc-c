@@ -1,5 +1,4 @@
 #version 330 core
-out vec3 pos;
 out vec3 normal;
 
 vec3 GetNor(){
@@ -9,5 +8,4 @@ vec3 GetNor(){
 }
 void main(){
   normal = GetNor();
-  pos = vec3((gl_in[0].gl_Position+gl_in[1].gl_Position+gl_in[2].gl_Position)/3);
 }
