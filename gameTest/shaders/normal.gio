@@ -1,11 +1,14 @@
 #version 330 core
+layout (triangles) in;
+
 out vec3 normal;
 
 vec3 GetNor(){
-  vec3 a = vec3(gl_in[0].gl_Position) - vec3(gl_in[1].gl_Position);
-  vec3 b = vec3(gl_in[2].gl_Position) - vec3(gl_in[1].gl_Position);
+  vec3 a = gl_in[0].gl_Position.xyz - gl_in[1].gl_Position.xyz;
+  vec3 b = gl_in[2].gl_Position.xyz - gl_in[1].gl_Position.xyz;
   return normalize(cross(a,b));
 }
 void main(){
-  normal = GetNor();
+  //normal = GetNor();
+  normal = gl_in[1].xyz
 }
