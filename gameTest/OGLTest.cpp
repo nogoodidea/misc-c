@@ -25,10 +25,43 @@
 #include "shapes.h" // helper functions to make shapes quicker
 //#include "text.h"   // lets me write things
 
+// enum for knowing what shape gen function to call
+enum shape_func {sq,sqTx,recTx,cu,tri};
+
+#define MAX_SLIDES 6
+// consts for each slide
+struct SlideObject {
+	const std::string name; // name to be appened
+	const std::string texPath;
+	const enum shape_func shape; // function to run
+	const GLfloat points[10];
+};
+
+struct Slide {
+	unsigned int amt;
+	struct SlideObject obj[];
+};
+
+struct Slide slide0 = {.amt = 1, .obj = {
+	{.name = "slideText",.shape=recTx,.points={21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f},.texPath="textures/SlideText2.png"},
+	{.name = "testCube",.shape=cu,.points={5.0f,-7.0f,0.0f,2.0f}}
+};
+void loadSlide(unsigned int i){
+
+}
+
+
+void unloadSlide(unsigned int i){
+
+}
+// END OF LOADING FUNCTIONS
+
+
 // one golobal bool so i can redraw the buffer if the window if moved
 bool reGenBuffer = false;
 // if the user resized update the screen
-void fbResizeCallback(GLFWwindow* win,int w,int h){glViewport(0,0,w,h);
+void fbResizeCallback(GLFWwindow* win,int w,int h){
+	glViewport(0,0,w,h);
 	reGenBuffer = true;
 }
 
@@ -103,7 +136,7 @@ int main(int argc, char** argv){
 
   rend3d.push(genCube("Test Cube2",&shadCol,0.0f,-5.0f,0.0f,1.0f,0.0f,2.0f,1.0f));
 
-  rend3dt.push(genTextureRect("Slide0",&shadTex,21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f,"textures/SlideText0.png"));
+  rend3dt.push(genTextureRect("Slide0",&shadTex,21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f,"textures/SlideText2.png"));
 
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
