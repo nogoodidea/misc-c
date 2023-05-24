@@ -129,3 +129,12 @@ Object3D genTextureRect(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfl
   };
   return Object3D(name,vert,8,t,12,texture,shad);
 }
+Object3D genTriangle(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloat z0,GLfloat x1,GLfloat y1,GLfloat z1,GLfloat x2,GLfloat y2,GLfloat z2){
+	GLfloat vert[] = {
+    	x0,y0,z0,  1.0f,1.0f,1.0f, 0.0f,0.0f,//0,1
+    	x1,y1,z1,  1.0f,1.0f,1.0f, 0.0f,0.0f,//0
+    	x2,y2,z2,  1.0f,1.0f,1.0f, 0.0f,0.0f//0,1
+	};
+	GLuint t[] ={0,1,2};
+	return Object3D(name,vert,8,t,12,0,shad);
+}
