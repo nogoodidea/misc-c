@@ -4,8 +4,6 @@ out vec4 FragColor;
 in vec3 pos;
 in vec3 ourColor;
 in vec3 normal;
-//debug
-in vec4 gl_FragCoord;
 
 uniform vec3 lCol = vec3(1.0,1.0,1.0);
 uniform vec3 lightPos = vec3(0.0,0.0,1.0);
@@ -22,7 +20,6 @@ void main()
     vec3 diffuse = vec3(diff*lCol);
 
     //light out
-    vec3 light = (ambient + diffuse);
-    //FragColor = vec4(, 1.0);
-    FragColor = vec4(pos*vec3(1.0,0.0,0.0),1.0);
+    vec3 light = (ambient + diffuse)*ourColor;
+    FragColor = vec4(light, 1.0);
 }
