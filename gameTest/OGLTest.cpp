@@ -37,7 +37,7 @@ struct SlideObject {
 	enum shape_func shape; // function to run
 	char *name; // name to be appened
 	char *texPath;
-	float *points;
+	GLfloat *points;
 };
 
 struct Slide {
@@ -54,8 +54,8 @@ char* mallocStr(char *in){
 	return out;
 }
 
-float* mallocFloat(float *in,const unsigned int len){
-	float *out = (float*) malloc(sizeof(float)*len);
+GLfloat* mallocFloat(GLfloat *in,const unsigned int len){
+	GLfloat *out = (GLfloat*) malloc(sizeof(GLfloat)*len);
 	for(unsigned int i=0;i<len;i+=1){
 		out[i] = in[i];
 	}
@@ -74,7 +74,7 @@ struct Slide *returnSlide0(){
   slide->obj[0].name =  mallocStr(name0);
   char path0[] = "textures/SlideText2.png";
   slide->obj[0].texPath = mallocStr(path0);
-  float point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
   slide->obj[0].points = mallocFloat(point0,6);
   //object 1 
   slide->obj[1].shape = sq;
@@ -82,7 +82,7 @@ struct Slide *returnSlide0(){
   slide->obj[1].name =  mallocStr(name1);
   char path1[] = "";
   slide->obj[1].texPath = mallocStr(path1);
-  float point1[] ={5.0f,-7.0f,0.0f,2.0f};
+  GLfloat point1[] ={5.0f,-7.0f,0.0f,2.0f};
   slide->obj[1].points = mallocFloat(point1,4); 
   return slide;
 }
@@ -104,8 +104,62 @@ struct Slide **intSlides(){
 	return slides;
 }
 // data setting
-void loadSlide(unsigned int i){
-	
+void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *shadTx,Renderer *rend, Renderer *rendTx){
+	// max number of objects
+	const unsigned lim = slides[slide]->amt;
+	for(unsigned int i = 0; i < lim; i+=1){
+		switch (slides[slide]->obj[i].shape){
+			case sq:
+				rend->push(genSquare(slides[slide]->obj[i].name,shad,
+				slides[slide]->obj[i].points[0],
+				slides[slide]->obj[i].points[1],
+				slides[slide]->obj[i].points[2],
+				slides[slide]->obj[i].points[3]));
+				break;
+			case sqTx:
+				rendTx->push(genTextureSqu(slides[slide]->obj[i].name,shadTx,
+				slides[slide]->obj[i].points[0],
+				slides[slide]->obj[i].points[1],
+				slides[slide]->obj[i].points[2],
+				slides[slide]->obj[i].points[3],
+				slides[slide]->obj[i].texPath));
+				break;
+			case recTx:
+				rendTx->push(genTextureRect(
+				slides[slide]->obj[i].name,shadTx,
+				slides[slide]->obj[i].points[0],
+				slides[slide]->obj[i].points[1],
+				slides[slide]->obj[i].points[2],
+				slides[slide]->obj[i].points[3],
+				slides[slide]->obj[i].points[4],
+				slides[slide]->obj[i].points[5],
+				slides[slide]->obj[i].texPath));
+				break;
+			case cu:
+				rend->push(genCube(slides[slide]->obj[i].name,shad,
+				slides[slide]->obj[i].points[0],
+				slides[slide]->obj[i].points[1],
+				slides[slide]->obj[i].points[2],
+				slides[slide]->obj[i].points[3],
+				slides[slide]->obj[i].points[4],
+				slides[slide]->obj[i].points[5],
+				slides[slide]->obj[i].points[6]));
+				break;
+			case tri:
+				rend->push(genTriangle(slides[slide]->obj[i].name,shad,
+				slides[slide]->obj[i].points[0],
+				slides[slide]->obj[i].points[1],
+				slides[slide]->obj[i].points[2],
+				slides[slide]->obj[i].points[3],
+				slides[slide]->obj[i].points[4],
+				slides[slide]->obj[i].points[5],
+				slides[slide]->obj[i].points[6],
+				slides[slide]->obj[i].points[7],
+				slides[slide]->obj[i].points[8]));
+				break;
+
+		}
+	}
 }
 
 
