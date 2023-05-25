@@ -32,11 +32,6 @@
 enum shape_func {sq,sqTx,recTx,cu,tri};
 
 #define MAX_SLIDES 6
-
-// enum for knowing what shape gen function to call
-enum shape_func {sq,sqTx,recTx,cu,tri};
-
-#define MAX_SLIDES 6
 // consts for each slide
 struct SlideObject {
 	enum shape_func shape; // function to run
@@ -75,14 +70,18 @@ struct Slide *returnSlide0(){
   slide->amt = 2;
   slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt+1));
   slide->obj[0].shape = recTx;
-  slide->obj[0].name =  mallocStr("slideText");
-  slide->obj[0].texPath = mallocStr("textures/SlideText2.png");
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/SlideText2.png";
+  slide->obj[0].texPath = mallocStr(path0);
   float point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
   slide->obj[0].points = mallocFloat(point0,6);
   //object 1 
-   slide->obj[1].shape = sq;
-  slide->obj[1].name =  mallocStr("testCube");
-  slide->obj[1].texPath = mallocStr("");
+  slide->obj[1].shape = sq;
+  char name1[] = "testCube";
+  slide->obj[1].name =  mallocStr(name1);
+  char path1[] = "";
+  slide->obj[1].texPath = mallocStr(path1);
   float point1[] ={5.0f,-7.0f,0.0f,2.0f};
   slide->obj[1].points = mallocFloat(point1,4); 
   return slide;
@@ -98,10 +97,15 @@ void freeSlide(struct Slide *slide){
 	free(slide->obj);
 	free(slide);
 }
-
+// placeholders are more painfull than a config file said no one ever
+struct Slide **intSlides(){
+	struct Slide **slides = (struct Slide**) malloc(sizeof(struct Slide*)*MAX_SLIDES);
+	slides[0] = returnSlide0();
+	return slides;
+}
 // data setting
 void loadSlide(unsigned int i){
-
+	
 }
 
 
@@ -198,7 +202,6 @@ int main(int argc, char** argv){
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0); // rebound at render loop	
 
-  int testObj = rend3d.search("Test Cube");
   bool keyPressed = false; // key holding 
   while(!glfwWindowShouldClose(win)){
    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
