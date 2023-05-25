@@ -25,35 +25,79 @@
 #include "shapes.h" // helper functions to make shapes quicker
 //#include "text.h"   // lets me write things
 
+//cstring
+#include<cstring> // for all of your suffering needs
+
+// enum for knowing what shape gen function to call
+enum shape_func {sq,sqTx,recTx,cu,tri};
+
+#define MAX_SLIDES 6
+
 // enum for knowing what shape gen function to call
 enum shape_func {sq,sqTx,recTx,cu,tri};
 
 #define MAX_SLIDES 6
 // consts for each slide
 struct SlideObject {
-	const std::string name; // name to be appened
-	const std::string texPath;
-	const enum shape_func shape; // function to run
-	const GLfloat points[];
+	enum shape_func shape; // function to run
+	char *name; // name to be appened
+	char *texPath;
+	float *points;
 };
 
 struct Slide {
 	unsigned int amt;
-	struct SlideObject obj[];
+	struct SlideObject *obj;
 };
 
-struct Slide returnSlide0(){
+
+//mallocs an array the size of the c_string 
+char* mallocStr(char *in){
+	const unsigned int len = strlen(in)+1;
+	char *out = (char*) malloc(sizeof(char)*len);
+	strcpy(out,in);
+	return out;
+}
+
+float* mallocFloat(float *in,const unsigned int len){
+	float *out = (float*) malloc(sizeof(float)*len);
+	for(unsigned int i=0;i<len;i+=1){
+		out[i] = in[i];
+	}
+	return out;
+}
+
+struct Slide *returnSlide0(){
   // bad way to do this but it works
   // your going to need to free this
   // https://stackoverflow.com/questions/53970133/non-static-initialization-of-a-flexible-array-member
-  struct Slide slide = malloc(sizeof(struct Slide));
-  slide.amt = 2;
-  slide.obj = malloc(sizeof(struct *SlideObject)*amt);
-  slide.obj[0] = {.name = "slideText",.texPath="textures/SlideText2.png",.shape=recTx,.points={21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
-  slide.obj[1] = {.name = "testCube",.texPath="",.shape=cu,.points={5.0f,-7.0f,0.0f,2.0f}};
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 2;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt+1));
+  slide->obj[0].shape = recTx;
+  slide->obj[0].name =  mallocStr("slideText");
+  slide->obj[0].texPath = mallocStr("textures/SlideText2.png");
+  float point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  //object 1 
+   slide->obj[1].shape = sq;
+  slide->obj[1].name =  mallocStr("testCube");
+  slide->obj[1].texPath = mallocStr("");
+  float point1[] ={5.0f,-7.0f,0.0f,2.0f};
+  slide->obj[1].points = mallocFloat(point1,4); 
   return slide;
 }
 
+// function to FREE US ALL BE SAVED BE FREE POINTERS
+void freeSlide(struct Slide *slide){
+	for(unsigned int i=0;i<slide->amt;i+=1){
+		free(slide->obj[i].name);
+		free(slide->obj[i].texPath);
+		free(slide->obj[i].points);
+	}	
+	free(slide->obj);
+	free(slide);
+}
 
 // data setting
 void loadSlide(unsigned int i){
@@ -124,6 +168,11 @@ int main(int argc, char** argv){
     _Exit(1);}
 
   intOGL();
+
+  struct Slide *slideobj = returnSlide0();
+
+  std::cout << slideobj->obj[0].name << std::endl;
+  std::cout << slideobj->obj[1].name << std::endl;
 
   // window size used for matrix stuff
   int bufW,bufH;
