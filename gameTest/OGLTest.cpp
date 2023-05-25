@@ -34,7 +34,7 @@ struct SlideObject {
 	const std::string name; // name to be appened
 	const std::string texPath;
 	const enum shape_func shape; // function to run
-	const GLfloat points[10];
+	const GLfloat points[];
 };
 
 struct Slide {
@@ -42,10 +42,19 @@ struct Slide {
 	struct SlideObject obj[];
 };
 
-struct Slide slide0 = {.amt = 1, .obj = {
-	{.name = "slideText",.shape=recTx,.points={21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f},.texPath="textures/SlideText2.png"},
-	{.name = "testCube",.shape=cu,.points={5.0f,-7.0f,0.0f,2.0f}}
-};
+struct Slide returnSlide0(){
+  // bad way to do this but it works
+  // your going to need to free this
+  struct Slide slide = malloc(sizeof(struct Slide));
+  slide.amt = 2;
+  slide.obj = malloc(sizeof(struct *SlideObject)*amt);
+  slide.obj[0] = {.name = "slideText",.texPath="textures/SlideText2.png",.shape=recTx,.points={21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide.obj[1] = {.name = "testCube",.texPath="",.shape=cu,.points={5.0f,-7.0f,0.0f,2.0f}};
+  return slide;
+}
+
+
+// data setting
 void loadSlide(unsigned int i){
 
 }
@@ -55,8 +64,6 @@ void unloadSlide(unsigned int i){
 
 }
 // END OF LOADING FUNCTIONS
-
-
 // one golobal bool so i can redraw the buffer if the window if moved
 bool reGenBuffer = false;
 // if the user resized update the screen
