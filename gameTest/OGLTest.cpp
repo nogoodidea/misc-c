@@ -108,7 +108,7 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 	// max number of objects
 	const unsigned int lim = slides[slide]->amt;
 	for(unsigned int i = 0; i < lim; i+=1){
-		std::cout << "Loading Object: "<< slides[slide]->obj[i].name << std::endl;
+		std::cout << "Loading Object: "<< slides[slide]->obj[i].name << " " << slides[slide]->obj[i].shape<< std::endl;
 		switch (slides[slide]->obj[i].shape){
 			case sq:
 				rend->push(genSquare(slides[slide]->obj[i].name,shad,
@@ -158,6 +158,8 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 				slides[slide]->obj[i].points[7],
 				slides[slide]->obj[i].points[8]));
 				break;
+			default: 
+				std::cerr << "ERROR::SLIDE:LOADING_FAILED"<<std::endl; 
 
 		}
 	}
