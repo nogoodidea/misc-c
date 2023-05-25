@@ -106,8 +106,9 @@ struct Slide **intSlides(){
 // data setting
 void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *shadTx,Renderer *rend, Renderer *rendTx){
 	// max number of objects
-	const unsigned lim = slides[slide]->amt;
+	const unsigned int lim = slides[slide]->amt;
 	for(unsigned int i = 0; i < lim; i+=1){
+		std::cout << "Loading Object: "<< slides[slide]->obj[i].name << std::endl;
 		switch (slides[slide]->obj[i].shape){
 			case sq:
 				rend->push(genSquare(slides[slide]->obj[i].name,shad,
@@ -227,10 +228,8 @@ int main(int argc, char** argv){
 
   intOGL();
 
-  struct Slide *slideobj = returnSlide0();
-
-  std::cout << slideobj->obj[0].name << std::endl;
-  std::cout << slideobj->obj[1].name << std::endl;
+  // loads all the slides into ram
+  struct Slide **slideobj = intSlides();
 
   // window size used for matrix stuff
   int bufW,bufH;
@@ -246,15 +245,8 @@ int main(int argc, char** argv){
   // render obj
   Renderer rend3d;
   Renderer rend3dt; // transperent objects need to be rendered after
-  // loads the Object3D
-  rend3d.push(genCube("Test Cube",&shadCol,10.0f,-7.0f,0.0f,8.4f,2.0f,0.0f,1.0f));
 
-  rend3d.push(genCube("Test Cube2",&shadCol,0.0f,-5.0f,0.0f,1.0f,0.0f,2.0f,1.0f));
-
-  rend3dt.push(genTextureRect("Slide0",&shadTex,21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f,"textures/SlideText2.png"));
-
-  glBindBuffer(GL_ARRAY_BUFFER,0);
-  glBindVertexArray(0); // rebound at render loop	
+  loadSlide(slideobj,0,&shadCol,&shadTex,&rend3d,&rend3dt);
 
   bool keyPressed = false; // key holding 
   while(!glfwWindowShouldClose(win)){

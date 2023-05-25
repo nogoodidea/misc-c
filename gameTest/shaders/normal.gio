@@ -9,6 +9,6 @@ vec3 GetNor(){
   return normalize(cross(a,b));
 }
 void main(){
-  //normal = GetNor();
-  normal = gl_in[1].xyz
+  normal = GetNor();
+  //normal = gl_in[1].xyz
 }
