@@ -45,6 +45,7 @@ struct Slide {
 struct Slide returnSlide0(){
   // bad way to do this but it works
   // your going to need to free this
+  // https://stackoverflow.com/questions/53970133/non-static-initialization-of-a-flexible-array-member
   struct Slide slide = malloc(sizeof(struct Slide));
   slide.amt = 2;
   slide.obj = malloc(sizeof(struct *SlideObject)*amt);
