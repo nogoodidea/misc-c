@@ -126,7 +126,12 @@ void freeSlide(struct Slide *slide){
 		free(slide->obj[i].texPath);
 		free(slide->obj[i].points);
 	}	
+	for(i=0;i<slide->funcAmt;i+=1){
+		free(slide->func[i].name);
+		free(slide->obj[i].points);
+	}
 	free(slide->obj);
+	free(slide->func);
 	free(slide);
 }
 // placeholders are more painfull than a config file said no one ever
@@ -238,7 +243,6 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 
 
 void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
-	// i give up this works
 	rend.cleanUp();
 	rendTx.cleanUp();
 	std::cout << "Slide: " << slide << " unloaded" << std::endl;
