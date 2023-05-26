@@ -96,7 +96,8 @@ struct Slide *returnSlide0(){
   // function section
   slide->funcAmt = 1;
   slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->amt+1));
-  slide->func[0].name = mallocStr(name1);
+  char name2[] = "testCube";
+  slide->func[0].name = mallocStr(name2);
   slide->func[0].func = rot;
   GLfloat point2[] = {0.1f,0.1f,1.0f,0.001f};
   slide->func[0].points = mallocFloat(point2,4);
@@ -115,6 +116,7 @@ struct Slide *returnSlide1(){
   slide->obj[0].points = mallocFloat(point0,6);
   // function section
   slide->funcAmt = 0;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->amt+1));
   return slide;
 }
 // function to FREE US ALL BE SAVED BE FREE POINTERS
@@ -206,26 +208,26 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 	  //{rot,rotA,tran,scal};
 	  switch(slides[slide]->func[i].func){
 		  case rot:
-			  rendArr[rendArrI].get(obj).rot(
+			  rendArr[rendArrI].get(obj)->rot(
 				slides[slide]->func[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2],
 				slides[slide]->func[i].points[3]);
 				break;
 		  case rotA:
-			  rendArr[rendArrI].get(obj).rotA(
+			  rendArr[rendArrI].get(obj)->rotA(
 				slides[slide]->func[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2],
 				slides[slide]->func[i].points[3]);
 				break;
 		  case tran:
-			rendArr[rendArrI].get(obj).trans(slides[slide]->obj[i].points[0],
+			rendArr[rendArrI].get(obj)->trans(slides[slide]->obj[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2]);
 				break;
 		  case scal:
-			rendArr[rendArrI].get(obj).scale(
+			rendArr[rendArrI].get(obj)->scale(
 				slides[slide]->func[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2]);
@@ -237,11 +239,12 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 
 void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
 	const unsigned int lim = slides[slide]->amt;
-	int rendArrI=2;
+	int rendArrI=3;
     	int obj;
 	Renderer rendArr[] = {rend,rendTx};
 	for(unsigned int i = 0; i < lim; i+=1){
-	  rendArrI=2;
+	  rendArrI=3;
+	  std::cout << "DEL: " << slides[slide]->obj[i].name << std::endl;
 	  obj = rend.search(slides[slide]->obj[i].name);
     	  if(obj != -1){rendArrI=0;}
 	  else{obj = rendTx.search(slides[slide]->obj[i].name);rendArrI=1;}
@@ -343,18 +346,14 @@ int main(int argc, char** argv){
    
    if(glfwGetKey(win,GLFW_KEY_SPACE)){
    	if(keyPressed==false){keyPressed=true;
-		//unloadSlide(slideobj,slide,rend3d,rend3dt);
+		unloadSlide(slideobj,slide,rend3d,rend3dt);
 		slide+=1;
 		loadSlide(slideobj,slide,&shadCol,&shadTex,&rend3d,&rend3dt);
-		std::cout << "returning to main loop from slide add if statment" << std::endl;
    		}
    	}else{keyPressed=false;}
 
 
    runSlide(slideobj,slide,rend3d,rend3dt);
-
-   //rend3d.get(testObj).rot(1.0f,0.0f,0.0f,0.01f);
-   
 
    // use buffer size not window size 
    glfwGetFramebufferSize(win,&bufW,&bufH);

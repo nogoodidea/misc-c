@@ -286,35 +286,34 @@ class Object3D{
 class Renderer{
   public:
     // mask might not be needed 
-    std::vector<Object3D> obj;
+    std::vector<Object3D*> obj;
 
-    void push(Object3D item){
+    void push(Object3D *item){
     obj.push_back(item);
     }
 
     void del(unsigned int i){
-	std::cout << "DEL: " << obj.at(i).name << std::endl;
-        obj.at(i).cleanUp();
+	std::cout << "DEL: " << obj.at(i)->name << std::endl;
+        obj.at(i)->cleanUp();
+	delete obj.at(i);
         obj.erase(obj.begin()+i);
     }
 
-    Object3D get(int i){
+    Object3D *get(int i){
       return obj.at(i);
     }
 
     void rend(int p,GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
      unsigned int i;
      for(i=0;i<obj.size();i+=1){
-	     std::cout << i << " ";
-        obj.at(i).rend(p,w,h,s,reGenBuffer);
+        obj.at(i)->rend(p,w,h,s,reGenBuffer);
      }
-     std::cout << std::endl;
     }
     
     int search(std::string name){
       int i;
       for(i=0;i<obj.size();i+=1){
-        if(obj.at(i).name.compare(name)==0){return i;}
+        if(obj.at(i)->name.compare(name)==0){return i;}
       }
       return -1; // return -1 to error out
     }
@@ -322,7 +321,8 @@ class Renderer{
     void cleanUp(){//del all
      unsigned int i;
      for(i=0;i<obj.size();i+=1){
-        obj.at(i).cleanUp();
+        obj.at(i)->cleanUp();
+	delete obj.at(i);
     }
      obj.clear();
      obj.shrink_to_fit();
