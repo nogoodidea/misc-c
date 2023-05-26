@@ -318,11 +318,11 @@ class Renderer{
     }
     
     int search(std::string name){
-      unsigned int i;
+      int i;
       for(i=0;i<obj.size();i+=1){
         if(obj.at(i).name.compare(name)==0){return i;}
       }
-     throw std::invalid_argument("loop hit the end of the vector without finding the title");
+      return -1; // return -1 to error out
     }
 
     void cleanUp(){//del all
@@ -336,3 +336,4 @@ class Renderer{
      mask.shrink_to_fit();
     }
 };
+

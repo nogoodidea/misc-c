@@ -72,18 +72,18 @@ struct Slide *returnSlide0(){
   slide->obj[0].shape = recTx;
   char name0[] = "slideText";
   slide->obj[0].name =  mallocStr(name0);
-  char path0[] = "textures/SlideText2.png";
+  char path0[] = "textures/SlideText3.png";
   slide->obj[0].texPath = mallocStr(path0);
   GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
   slide->obj[0].points = mallocFloat(point0,6);
   //object 1 
-  slide->obj[1].shape = sq;
+  slide->obj[1].shape = cu;
   char name1[] = "testCube";
   slide->obj[1].name =  mallocStr(name1);
   char path1[] = "";
   slide->obj[1].texPath = mallocStr(path1);
-  GLfloat point1[] ={5.0f,-7.0f,0.0f,2.0f};
-  slide->obj[1].points = mallocFloat(point1,4); 
+  GLfloat point1[] ={10.0f,-7.0f,0.0f,4.0f,1.0f,0.5f,0.0f};
+  slide->obj[1].points = mallocFloat(point1,7); 
   return slide;
 }
 
@@ -108,7 +108,6 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 	// max number of objects
 	const unsigned int lim = slides[slide]->amt;
 	for(unsigned int i = 0; i < lim; i+=1){
-		std::cout << "Loading Object: "<< slides[slide]->obj[i].name << " " << slides[slide]->obj[i].shape<< std::endl;
 		switch (slides[slide]->obj[i].shape){
 			case sq:
 				rend->push(genSquare(slides[slide]->obj[i].name,shad,
@@ -166,8 +165,14 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 }
 
 
-void unloadSlide(unsigned int i){
 
+void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
+	const unsigned int lim = slides[slide]->amt;
+	for(unsigned int i = 0; i < lim; i+=1){
+    int obj = rend.search(slides[slide]->obj[i].name);
+    if(obj == -1){ obj = rendTx.search(slides[slide]->obj[i].name);}
+    rend.del(obj);
+  }  
 }
 // END OF LOADING FUNCTIONS
 // one golobal bool so i can redraw the buffer if the window if moved
