@@ -83,14 +83,12 @@ class Object3D{
       findMidpoint(midPoint); // zero + something is something
     }
     // does all the transforms and matrix *
-    void trans(GLfloat transform[3]){ // in the form of x,y,z , r,g,b is an other function
+    void trans(GLfloat x,GLfloat y,GLfloat z){ // in the form of x,y,z , r,g,b is an other function
       // transfroms the shape by the vertex transform, does not change the colors
-      int v,i;
-      for(v=0;v<amtP;v+=1){
-        for(i=0;i<3;i+=1){
-          // does 2 things 1 updaes vertP to the new data,2 updates the VBO with new data
-          vertP[i+v*8]+=transform[i];// v*6 because 1 verticy is 6 floats.
-        }
+      for(int v=0;v<amtP;v+=1){
+        vertP[v*8+0]+=x;
+	vertP[v*8+1]+=y;
+	vertP[v*8+2]+=z;
       }
       upBuf[1]=true;
           }

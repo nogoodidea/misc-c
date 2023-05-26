@@ -42,7 +42,7 @@ struct SlideObject {
 };
 
 struct FuncObject {
-	enum tran_func shape; // function to run
+	enum tran_func func; // function to run
 	char *name; // name to be checked
 	GLfloat *points; // points as args
 };
@@ -93,6 +93,13 @@ struct Slide *returnSlide0(){
   slide->obj[1].texPath = mallocStr(path1);
   GLfloat point1[] ={10.0f,-7.0f,0.0f,4.0f,1.0f,0.5f,0.0f};
   slide->obj[1].points = mallocFloat(point1,7); 
+  // function section
+  slide->funcAmt = 1;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->amt+1));
+  slide->func[0].name = mallocStr(name1);
+  slide->func[0].func = rot;
+  GLfloat point2[] = {0.0f,0.3f,0.5f,0.01f};
+  slide->func[0].points = mallocFloat(point2,4);
   return slide;
 }
 
@@ -172,15 +179,53 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 		}
 	}
 }
-
+void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
+	const unsigned int lim = slides[slide]->funcAmt;
+	int rendArrI=0;
+    	int obj;
+	Renderer rendArr[] = {rend,rendTx};
+	for(unsigned int i = 0; i < lim; i+=1){
+	  rendArrI=0;
+	  obj = rend.search(slides[slide]->func[i].name);
+    	  if(obj == -1){ obj = rendTx.search(slides[slide]->func[i].name);rendArrI=1;}
+	  //{rot,rotA,tran,scal};
+	  switch(slides[slide]->func[i].func){
+		  case rot:
+			  rendArr[rendArrI].get(obj).rot(
+				slides[slide]->obj[i].points[0],
+				slides[slide]->obj[i].points[1],
+				slides[slide]->obj[i].points[2],
+				slides[slide]->obj[i].points[3]);
+				break;
+		  case rotA:
+			  rendArr[rendArrI].get(obj).rotA(
+				slides[slide]->obj[i].points[0],
+				slides[slide]->obj[i].points[1],
+				slides[slide]->obj[i].points[2],
+				slides[slide]->obj[i].points[3]);
+				break;
+		  case tran:
+			rendArr[rendArrI].get(obj).trans(slides[slide]->obj[i].points[0],
+				slides[slide]->obj[i].points[1],
+				slides[slide]->obj[i].points[2]);
+				break;
+		  case scal:
+			rendArr[rendArrI].get(obj).scale(
+				slides[slide]->obj[i].points[0],
+				slides[slide]->obj[i].points[1],
+				slides[slide]->obj[i].points[2]);
+				break;
+	  	}
+	  }
+}
 
 
 void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
-	const unsigned int lim = slides[slide]->amt;
-	for(unsigned int i = 0; i < lim; i+=1){
+  const unsigned int lim = slides[slide]->amt;
+  for(unsigned int i = 0; i < lim; i+=1){
     int obj = rend.search(slides[slide]->obj[i].name);
-    if(obj == -1){ obj = rendTx.search(slides[slide]->obj[i].name);}
-    rend.del(obj);
+    if(obj == -1){ obj = rendTx.search(slides[slide]->obj[i].name);rendTx.del(obj);}
+    else{rend.del(obj);}
   }  
 }
 // END OF LOADING FUNCTIONS
@@ -262,7 +307,7 @@ int main(int argc, char** argv){
   Renderer rend3d;
   Renderer rend3dt; // transperent objects need to be rendered after
 
-  loadSlide(slideobj,0,&shadCol,&shadTex,&rend3d,&rend3dt);
+  loadSlide(slideobj,slide,&shadCol,&shadTex,&rend3d,&rend3dt);
 
   bool keyPressed = false; // key holding 
   while(!glfwWindowShouldClose(win)){
@@ -272,17 +317,16 @@ int main(int argc, char** argv){
    if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
       glfwSetWindowShouldClose(win,true);
    }if(glfwGetKey(win,GLFW_KEY_SPACE)){
-   if(keyPressed==false){keyPressed=true;slide+=1;}
+   if(keyPressed==false){keyPressed=true;unloadSlide(slideobj,slide,rend3d,rend3dt);slide+=1;
+	loadSlide(slideobj,slide,&shadCol,&shadTex,&rend3d,&rend3dt);
+   }
    }else{keyPressed=false;}
+
+
+   runSlide(slideobj,slide,rend3d,rend3dt);
 
    //rend3d.get(testObj).rot(1.0f,0.0f,0.0f,0.01f);
    
-   //uniforms for ambient lighting TODO shader array
-   //if you need to to it twice you can use an array
-   shadCol.setVec3("ambColor",1.0f,1.0f,1.0f);
-   shadCol.setFloat("ambStr",0.1f);
-   shadTex.setVec3("ambColor",1.0f,1.0f,1.0f);
-   shadTex.setFloat("ambStr",0.1f);
 
    // use buffer size not window size 
    glfwGetFramebufferSize(win,&bufW,&bufH);
