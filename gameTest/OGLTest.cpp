@@ -30,6 +30,7 @@
 
 // enum for knowing what shape gen function to call
 enum shape_func {sq,sqTx,recTx,cu,tri};
+enum tran_func {rot,rotA,tran,scal};
 
 #define MAX_SLIDES 6
 // consts for each slide
@@ -40,9 +41,17 @@ struct SlideObject {
 	GLfloat *points;
 };
 
+struct FuncObject {
+	enum tran_func shape; // function to run
+	char *name; // name to be checked
+	GLfloat *points; // points as args
+};
+
 struct Slide {
 	unsigned int amt;
+  unsigned int funcAmt;
 	struct SlideObject *obj;
+  struct FuncObject *func;
 };
 
 
