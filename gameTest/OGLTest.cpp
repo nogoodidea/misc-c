@@ -81,7 +81,7 @@ struct Slide *returnSlide0(){
   slide->obj[0].shape = recTx;
   char name0[] = "slideText";
   slide->obj[0].name =  mallocStr(name0);
-  char path0[] = "textures/SlideText3.png";
+  char path0[] = "textures/SlideText0.png";
   slide->obj[0].texPath = mallocStr(path0);
   GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
   slide->obj[0].points = mallocFloat(point0,6);
@@ -98,11 +98,25 @@ struct Slide *returnSlide0(){
   slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->amt+1));
   slide->func[0].name = mallocStr(name1);
   slide->func[0].func = rot;
-  GLfloat point2[] = {0.0f,0.3f,0.5f,0.01f};
+  GLfloat point2[] = {0.1f,0.1f,1.0f,0.001f};
   slide->func[0].points = mallocFloat(point2,4);
   return slide;
 }
-
+struct Slide *returnSlide1(){
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 1;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt+1));
+  slide->obj[0].shape = recTx;
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/SlideText1.png";
+  slide->obj[0].texPath = mallocStr(path0);
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  // function section
+  slide->funcAmt = 0;
+  return slide;
+}
 // function to FREE US ALL BE SAVED BE FREE POINTERS
 void freeSlide(struct Slide *slide){
 	for(unsigned int i=0;i<slide->amt;i+=1){
@@ -117,6 +131,7 @@ void freeSlide(struct Slide *slide){
 struct Slide **intSlides(){
 	struct Slide **slides = (struct Slide**) malloc(sizeof(struct Slide*)*MAX_SLIDES);
 	slides[0] = returnSlide0();
+	slides[1] = returnSlide1();
 	return slides;
 }
 // data setting
@@ -124,6 +139,7 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 	// max number of objects
 	const unsigned int lim = slides[slide]->amt;
 	for(unsigned int i = 0; i < lim; i+=1){
+		std::cout << "ADD: " << slides[slide]->obj[i].name << std::endl;
 		switch (slides[slide]->obj[i].shape){
 			case sq:
 				rend->push(genSquare(slides[slide]->obj[i].name,shad,
@@ -173,11 +189,10 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 				slides[slide]->obj[i].points[7],
 				slides[slide]->obj[i].points[8]));
 				break;
-			default: 
-				std::cerr << "ERROR::SLIDE:LOADING_FAILED"<<std::endl; 
-
 		}
 	}
+
+	std::cout << "Slide: " << slide << " loaded" << std::endl;
 }
 void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
 	const unsigned int lim = slides[slide]->funcAmt;
@@ -192,28 +207,28 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 	  switch(slides[slide]->func[i].func){
 		  case rot:
 			  rendArr[rendArrI].get(obj).rot(
-				slides[slide]->obj[i].points[0],
-				slides[slide]->obj[i].points[1],
-				slides[slide]->obj[i].points[2],
-				slides[slide]->obj[i].points[3]);
+				slides[slide]->func[i].points[0],
+				slides[slide]->func[i].points[1],
+				slides[slide]->func[i].points[2],
+				slides[slide]->func[i].points[3]);
 				break;
 		  case rotA:
 			  rendArr[rendArrI].get(obj).rotA(
-				slides[slide]->obj[i].points[0],
-				slides[slide]->obj[i].points[1],
-				slides[slide]->obj[i].points[2],
-				slides[slide]->obj[i].points[3]);
+				slides[slide]->func[i].points[0],
+				slides[slide]->func[i].points[1],
+				slides[slide]->func[i].points[2],
+				slides[slide]->func[i].points[3]);
 				break;
 		  case tran:
 			rendArr[rendArrI].get(obj).trans(slides[slide]->obj[i].points[0],
-				slides[slide]->obj[i].points[1],
-				slides[slide]->obj[i].points[2]);
+				slides[slide]->func[i].points[1],
+				slides[slide]->func[i].points[2]);
 				break;
 		  case scal:
 			rendArr[rendArrI].get(obj).scale(
-				slides[slide]->obj[i].points[0],
-				slides[slide]->obj[i].points[1],
-				slides[slide]->obj[i].points[2]);
+				slides[slide]->func[i].points[0],
+				slides[slide]->func[i].points[1],
+				slides[slide]->func[i].points[2]);
 				break;
 	  	}
 	  }
@@ -221,13 +236,21 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 
 
 void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
-  const unsigned int lim = slides[slide]->amt;
-  for(unsigned int i = 0; i < lim; i+=1){
-    int obj = rend.search(slides[slide]->obj[i].name);
-    if(obj == -1){ obj = rendTx.search(slides[slide]->obj[i].name);rendTx.del(obj);}
-    else{rend.del(obj);}
+	const unsigned int lim = slides[slide]->amt;
+	int rendArrI=2;
+    	int obj;
+	Renderer rendArr[] = {rend,rendTx};
+	for(unsigned int i = 0; i < lim; i+=1){
+	  rendArrI=2;
+	  obj = rend.search(slides[slide]->obj[i].name);
+    	  if(obj != -1){rendArrI=0;}
+	  else{obj = rendTx.search(slides[slide]->obj[i].name);rendArrI=1;}
+	  if(rendArrI!=3){rendArr[rendArrI].del(obj);}
   }  
+	std::cout << "Slide: " << slide << " unloaded" << std::endl;
 }
+
+
 // END OF LOADING FUNCTIONS
 // one golobal bool so i can redraw the buffer if the window if moved
 bool reGenBuffer = false;
@@ -316,11 +339,16 @@ int main(int argc, char** argv){
    // window inputs
    if(glfwGetKey(win,GLFW_KEY_ESCAPE)==GLFW_PRESS){
       glfwSetWindowShouldClose(win,true);
-   }if(glfwGetKey(win,GLFW_KEY_SPACE)){
-   if(keyPressed==false){keyPressed=true;unloadSlide(slideobj,slide,rend3d,rend3dt);slide+=1;
-	loadSlide(slideobj,slide,&shadCol,&shadTex,&rend3d,&rend3dt);
    }
-   }else{keyPressed=false;}
+   
+   if(glfwGetKey(win,GLFW_KEY_SPACE)){
+   	if(keyPressed==false){keyPressed=true;
+		//unloadSlide(slideobj,slide,rend3d,rend3dt);
+		slide+=1;
+		loadSlide(slideobj,slide,&shadCol,&shadTex,&rend3d,&rend3dt);
+		std::cout << "returning to main loop from slide add if statment" << std::endl;
+   		}
+   	}else{keyPressed=false;}
 
 
    runSlide(slideobj,slide,rend3d,rend3dt);
@@ -331,11 +359,6 @@ int main(int argc, char** argv){
    // use buffer size not window size 
    glfwGetFramebufferSize(win,&bufW,&bufH);
    scaler = getScaler(bufW,bufH);
-
-   shadCol.setFloat("width",bufW);
-   shadCol.setFloat("hight",bufH);
-   shadTex.setFloat("width",bufW);
-   shadTex.setFloat("hight",bufH);
 
    //1 means ortho, 2 might work
    rend3d.rend(1,bufW,bufH,scaler,reGenBuffer);

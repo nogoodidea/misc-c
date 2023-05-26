@@ -287,32 +287,28 @@ class Renderer{
   public:
     // mask might not be needed 
     std::vector<Object3D> obj;
-    std::vector<bool> mask;
 
     void push(Object3D item){
     obj.push_back(item);
-    mask.push_back(true);
     }
 
     void del(unsigned int i){
+	std::cout << "DEL: " << obj.at(i).name << std::endl;
         obj.at(i).cleanUp();
         obj.erase(obj.begin()+i);
-        mask.erase(mask.begin()+i);
     }
 
     Object3D get(int i){
       return obj.at(i);
     }
 
-    void use(Shader shad){
-
-    }
-    
     void rend(int p,GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
      unsigned int i;
      for(i=0;i<obj.size();i+=1){
-        if(mask.at(i)==true){obj.at(i).rend(p,w,h,s,reGenBuffer);}
+	     std::cout << i << " ";
+        obj.at(i).rend(p,w,h,s,reGenBuffer);
      }
+     std::cout << std::endl;
     }
     
     int search(std::string name){
@@ -330,8 +326,6 @@ class Renderer{
     }
      obj.clear();
      obj.shrink_to_fit();
-     mask.clear();
-     mask.shrink_to_fit();
     }
 };
 
