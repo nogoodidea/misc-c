@@ -289,14 +289,8 @@ class Renderer{
     std::vector<Object3D*> obj;
 
     void push(Object3D *item){
-    obj.push_back(item);
-    }
-
-    void del(unsigned int i){
-	std::cout << "DEL: " << obj.at(i)->name << std::endl;
-        obj.at(i)->cleanUp();
-	delete obj.at(i);
-        obj.erase(obj.begin()+i);
+	    std::cout << "rend/rendTx added: "<< item->name << std::endl;
+    obj.insert(obj.end(),item);
     }
 
     Object3D *get(int i){
@@ -304,8 +298,8 @@ class Renderer{
     }
 
     void rend(int p,GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
-     unsigned int i;
-     for(i=0;i<obj.size();i+=1){
+     for(unsigned int i=0;i<obj.size();i+=1){
+	if(obj.at(i) == NULL){std::cerr << "Rend loop tryed to read a NULLed section of the rend array" << std::endl;}
         obj.at(i)->rend(p,w,h,s,reGenBuffer);
      }
     }
@@ -319,8 +313,7 @@ class Renderer{
     }
 
     void cleanUp(){//del all
-     unsigned int i;
-     for(i=0;i<obj.size();i+=1){
+     for(unsigned int i=0;i<obj.size();i+=1){
         obj.at(i)->cleanUp();
 	delete obj.at(i);
     }

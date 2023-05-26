@@ -238,18 +238,9 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 
 
 void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
-	const unsigned int lim = slides[slide]->amt;
-	int rendArrI=3;
-    	int obj;
-	Renderer rendArr[] = {rend,rendTx};
-	for(unsigned int i = 0; i < lim; i+=1){
-	  rendArrI=3;
-	  std::cout << "DEL: " << slides[slide]->obj[i].name << std::endl;
-	  obj = rend.search(slides[slide]->obj[i].name);
-    	  if(obj != -1){rendArrI=0;}
-	  else{obj = rendTx.search(slides[slide]->obj[i].name);rendArrI=1;}
-	  if(rendArrI!=3){rendArr[rendArrI].del(obj);}
-  }  
+	// i give up this works
+	rend.cleanUp();
+	rendTx.cleanUp();
 	std::cout << "Slide: " << slide << " unloaded" << std::endl;
 }
 
