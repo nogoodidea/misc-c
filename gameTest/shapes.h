@@ -60,7 +60,7 @@ Object3D genCube(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLf
 	  7,3,0,
 	  7,4,0
   };
-  return Object3D(name,vert,8,t,12,0,shad);
+  return new Object3D(name,vert,8,t,12,0,shad);
 }
 
 Object3D genSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size){
@@ -76,7 +76,7 @@ Object3D genSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,G
 	  0,1,2,
 	  0,2,3
   };
-  return Object3D(name,vert,4,t,2,0,shad);
+  return new Object3D(name,vert,4,t,2,0,shad);
 }
 
 Object3D genTextureSqu(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size,std::string text){
@@ -92,7 +92,7 @@ Object3D genTextureSqu(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat
 	  0,1,2,
 	  0,2,3
   };
-  return Object3D(name,vert,4,t,2,texture,shad);
+  return new Object3D(name,vert,4,t,2,texture,shad);
 }
 
 Object3D genTextureRect(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloat z0,GLfloat x1,GLfloat y1,GLfloat z1,std::string text){
@@ -127,7 +127,7 @@ Object3D genTextureRect(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfl
 	  7,3,0,
 	  7,4,0
   };
-  return Object3D(name,vert,8,t,12,texture,shad);
+  return new Object3D(name,vert,8,t,12,texture,shad);
 }
 Object3D genTriangle(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloat z0,GLfloat x1,GLfloat y1,GLfloat z1,GLfloat x2,GLfloat y2,GLfloat z2){
 	GLfloat vert[] = {
@@ -136,5 +136,5 @@ Object3D genTriangle(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloat
     	x2,y2,z2,  1.0f,1.0f,1.0f, 0.0f,0.0f//0,1
 	};
 	GLuint t[] ={0,1,2};
-	return Object3D(name,vert,8,t,12,0,shad);
+	return new Object3D(name,vert,8,t,12,0,shad);
 }
