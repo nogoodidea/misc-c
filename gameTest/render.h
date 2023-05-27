@@ -301,12 +301,15 @@ class Renderer{
       }
       return -1; // return -1 to error out
     }
-
+    void del(unsigned int i){
+      obj.at(i)->cleanUp();
+      delete obj.at(i);
+    }
     void cleanUp(){//del all
      for(unsigned int i=0;i<obj.size();i+=1){
         obj.at(i)->cleanUp();
-	delete obj.at(i);
-    }
+	      delete obj.at(i);
+      }
      obj.clear();
      obj.shrink_to_fit();
     }

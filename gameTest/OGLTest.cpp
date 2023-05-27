@@ -138,7 +138,8 @@ void freeSlide(struct Slide *slide){
 struct Slide **intSlides(){
 	struct Slide **slides = (struct Slide**) malloc(sizeof(struct Slide*)*MAX_SLIDES);
 	slides[0] = returnSlide0();
-	slides[1] = returnSlide1();
+	slides[1] = returnSlide0();
+  slides[2] = returnSlide0();
 	return slides;
 }
 // data setting
@@ -198,13 +199,12 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 				break;
 		}
 	}
-
 	std::cout << "Slide: " << slide << " loaded" << std::endl;
 }
 void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
 	const unsigned int lim = slides[slide]->funcAmt;
 	int rendArrI=0;
-    	int obj;
+  int obj;
 	Renderer rendArr[] = {rend,rendTx};
 	for(unsigned int i = 0; i < lim; i+=1){
 	  rendArrI=0;
@@ -243,8 +243,23 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 
 
 void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
-	rend.cleanUp();
-	rendTx.cleanUp();
+  const unsigned int lim = slides[slide]->amt;
+  int rendArrI=2;
+  int obj;
+	Renderer rendArr[] = {rend,rendTx};
+  for(unsigned int i = 0; i < lim; i+=1){
+	  rendArrI=2;
+
+	  obj = rend.search(slides[slide]->func[i].name);	  
+    if(obj == -1){obj = rendTx.search(slides[slide]->func[i].name);
+      if(obj != -1){rendArrI=1;}
+    }
+    else{rendArrI=0;}
+
+    if(rendArrI != 2){
+    rendArr[i].del(obj);
+    }
+  }
 	std::cout << "Slide: " << slide << " unloaded" << std::endl;
 }
 
