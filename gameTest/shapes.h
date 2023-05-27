@@ -30,7 +30,7 @@ Object3D *genCube(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GL
   // add colors later
   // should be x,y,z, r,g,b, texture  
 
-  GLfloat vert[] = {
+  GLfloat* vert = new GLfloat[] {
     x+size,y+size,z+size,  r,g,b, 0.0f,0.0f,//0
     x+size,y-size,z+size,  r,g,b,  0.0f,0.0f,//1
     x-size,y-size,z+size,  r,g,b,  0.0f,0.0f,//2
@@ -41,7 +41,7 @@ Object3D *genCube(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GL
     x-size,y+size,z-size,  r,g,b, 0.0f,0.0f//7
   };
 
-  GLuint t[] = {
+  GLuint* t = new GLuint[] {
 	  0,1,2,
 	  0,3,2,
 	  
@@ -65,14 +65,14 @@ Object3D *genCube(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GL
 
 Object3D *genSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size){
  // makes a 2d object 
-  GLfloat vert[] = {
+  GLfloat* vert = new GLfloat[] {
     x+size,y+size,z,  0.0f,0.0f,0.0f, 0.0f,0.0f, //0,1
     x+size,y-size,z,  0.0f,0.0f,0.0f, 0.0f,0.0f, //0
     x-size,y-size,z,  0.0f,0.0f,0.0f, 0.0f,0.0f, //0,1
     x-size,y+size,z,  0.0f,0.0f,0.0f, 0.0f,0.0f //1
   };
 
-  GLuint t[] = {
+   GLuint* t = new GLuint[] {
 	  0,1,2,
 	  0,2,3
   };
@@ -81,14 +81,14 @@ Object3D *genSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,
 
 Object3D *genTextureSqu(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size,std::string text){
   GLuint texture = loadTexture(text);
-  GLfloat vert[] = {
+  GLfloat* vert = new GLfloat[] {
     x+size,y+size,z,  1.0f,1.0f,1.0f, 1.0f,1.0f, //0,1
     x+size,y-size,z,  1.0f,1.0f,1.0f, 1.0f,0.0f, //0
     x-size,y-size,z,  1.0f,1.0f,1.0f, 0.0f,0.0f, //0,1
     x-size,y+size,z, 1.0f,1.0f,1.0f, 0.0f,1.0f //1
   };
 
-  GLuint t[] = {
+  GLuint* t = new GLuint[] {
 	  0,1,2,
 	  0,2,3
   };
@@ -97,7 +97,7 @@ Object3D *genTextureSqu(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloa
 
 Object3D *genTextureRect(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloat z0,GLfloat x1,GLfloat y1,GLfloat z1,std::string text){
   GLuint texture = loadTexture(text);
-  GLfloat vert[] = {
+  GLfloat* vert = new GLfloat[] {
     x0,y0,z0,  1.0f,1.0f,1.0f, 1.0f,1.0f,//0,1
     x0,y1,z0,  1.0f,1.0f,1.0f, 1.0f,0.0f,//0
     x1,y1,z0,  1.0f,1.0f,1.0f, 0.0f,0.0f,//0,1
@@ -108,7 +108,7 @@ Object3D *genTextureRect(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLf
     x1,y0,z1,  1.0f,1.0f,1.0f, 1.0f,1.0f//3
   };
 
-  GLuint t[] = {
+  GLuint* t = new GLuint[] {
 	  0,1,2,
 	  0,2,3,
 	  
@@ -130,11 +130,11 @@ Object3D *genTextureRect(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLf
   return new Object3D(name,vert,8,t,12,texture,shad);
 }
 Object3D *genTriangle(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloat z0,GLfloat x1,GLfloat y1,GLfloat z1,GLfloat x2,GLfloat y2,GLfloat z2){
-	GLfloat vert[] = {
+	GLfloat* vert = new GLfloat[] {
     	x0,y0,z0,  1.0f,1.0f,1.0f, 0.0f,0.0f,//0,1
     	x1,y1,z1,  1.0f,1.0f,1.0f, 0.0f,0.0f,//0
     	x2,y2,z2,  1.0f,1.0f,1.0f, 0.0f,0.0f//0,1
 	};
-	GLuint t[] ={0,1,2};
+	GLuint* t = new GLuint[] {0,1,2};
 	return new Object3D(name,vert,8,t,12,0,shad);
 }

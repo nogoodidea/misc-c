@@ -38,22 +38,12 @@ class Object3D{
       name = Iname;
       amtP = IamtP;
       amtT = IamtT;
+      vertT = IvertT;
+      vertP = IvertP;
       texture = Itexture;
       shad = Ishad;
-      upBuf = (bool*)malloc(sizeof(bool)*2);// do i use this to much?
-      upBuf[1]=true;
+      upBuf = new bool[2] {false,true} ;// do i use this to much?
 
-
-      // copys from the old buffer to the new one so the data is presurved
-      vertT = (GLuint*) malloc(sizeof(GLuint)*amtT*3);
-      for(int i=0;i<amtT*3;i+=1){
-        vertT[i]=IvertT[i];
-      }
-
-      vertP = (GLfloat*) malloc(sizeof(GLfloat)*amtP*8);
-      for(int i=0;i<amtP*8;i+=1){
-        vertP[i]=IvertP[i];
-      }
 
       glGenVertexArrays(1,&VAO); // vertex array object
       glGenBuffers(1,&VBO); //Vertex Buffer
@@ -252,9 +242,9 @@ class Object3D{
       glDeleteVertexArrays(1,&VAO);
       glDeleteBuffers(1,&VBO);
       glDeleteBuffers(1,&EBO);
-      free(upBuf);
-      free(vertP);
-      free(vertT);
+      delete upBuf;
+      delete vertP;
+      delete vertT;
       // your going to want to del the object after this
     }
     
