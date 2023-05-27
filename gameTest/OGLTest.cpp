@@ -126,7 +126,7 @@ void freeSlide(struct Slide *slide){
 		free(slide->obj[i].texPath);
 		free(slide->obj[i].points);
 	}	
-	for(i=0;i<slide->funcAmt;i+=1){
+	for(unsigned int i=0;i<slide->funcAmt;i+=1){
 		free(slide->func[i].name);
 		free(slide->obj[i].points);
 	}

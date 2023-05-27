@@ -26,7 +26,7 @@ GLuint loadTexture(std::string text){
   return texture;
 }
 
-Object3D genCube(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size,GLfloat r,GLfloat g,GLfloat b){
+Object3D *genCube(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size,GLfloat r,GLfloat g,GLfloat b){
   // add colors later
   // should be x,y,z, r,g,b, texture  
 
@@ -63,7 +63,7 @@ Object3D genCube(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLf
   return new Object3D(name,vert,8,t,12,0,shad);
 }
 
-Object3D genSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size){
+Object3D *genSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size){
  // makes a 2d object 
   GLfloat vert[] = {
     x+size,y+size,z,  0.0f,0.0f,0.0f, 0.0f,0.0f, //0,1
@@ -79,7 +79,7 @@ Object3D genSquare(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,G
   return new Object3D(name,vert,4,t,2,0,shad);
 }
 
-Object3D genTextureSqu(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size,std::string text){
+Object3D *genTextureSqu(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat z,GLfloat size,std::string text){
   GLuint texture = loadTexture(text);
   GLfloat vert[] = {
     x+size,y+size,z,  1.0f,1.0f,1.0f, 1.0f,1.0f, //0,1
@@ -95,7 +95,7 @@ Object3D genTextureSqu(std::string name,Shader *shad,GLfloat x,GLfloat y,GLfloat
   return new Object3D(name,vert,4,t,2,texture,shad);
 }
 
-Object3D genTextureRect(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloat z0,GLfloat x1,GLfloat y1,GLfloat z1,std::string text){
+Object3D *genTextureRect(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloat z0,GLfloat x1,GLfloat y1,GLfloat z1,std::string text){
   GLuint texture = loadTexture(text);
   GLfloat vert[] = {
     x0,y0,z0,  1.0f,1.0f,1.0f, 1.0f,1.0f,//0,1
@@ -129,7 +129,7 @@ Object3D genTextureRect(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfl
   };
   return new Object3D(name,vert,8,t,12,texture,shad);
 }
-Object3D genTriangle(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloat z0,GLfloat x1,GLfloat y1,GLfloat z1,GLfloat x2,GLfloat y2,GLfloat z2){
+Object3D *genTriangle(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloat z0,GLfloat x1,GLfloat y1,GLfloat z1,GLfloat x2,GLfloat y2,GLfloat z2){
 	GLfloat vert[] = {
     	x0,y0,z0,  1.0f,1.0f,1.0f, 0.0f,0.0f,//0,1
     	x1,y1,z1,  1.0f,1.0f,1.0f, 0.0f,0.0f,//0
