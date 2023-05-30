@@ -117,7 +117,7 @@ struct Slide *returnSlide1(){
   slide->obj[0].points = mallocFloat(point0,6);
   // function section
   slide->funcAmt = 0;
-  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->amt+1));
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt+1));
   return slide;
 }
 // function to FREE US ALL BE SAVED BE FREE POINTERS
@@ -250,13 +250,11 @@ void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer
 	Renderer rendArr[] = {rend,rendTx};
   for(unsigned int i = 0; i < lim; i+=1){
 	  rendArrI=2;
-
-	  obj = rend.search(slides[slide]->func[i].name);	  
-    if(obj == -1){obj = rendTx.search(slides[slide]->func[i].name);
+	  obj = rend.search(slides[slide]->obj[i].name);	  
+    if(obj == -1){obj = rendTx.search(slides[slide]->obj[i].name);
       if(obj != -1){rendArrI=1;}
     }
     else{rendArrI=0;}
-
     if(rendArrI != 2){
     rendArr[i].del(obj);
     }
