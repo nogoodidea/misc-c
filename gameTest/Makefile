@@ -1,7 +1,7 @@
 CC=g++ -Wall -g
 LDFLAGS= -lfreetype -lglfw	-lGL -Iinclude -I/usr/include/freetype2
 
-OGLTest:
+OGLTest: OGLTest.cpp
 	echo "Building OGLTest"
 	$(CC) $(LDFLAGS) src/gl.c OGLTest.cpp -o OGLTest
 

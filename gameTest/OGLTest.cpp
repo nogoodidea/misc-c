@@ -95,7 +95,7 @@ struct Slide *returnSlide0(){
   slide->obj[1].points = mallocFloat(point1,7); 
   // function section
   slide->funcAmt = 1;
-  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->amt+1));
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->FuncAmt+1));
   char name2[] = "testCube";
   slide->func[0].name = mallocStr(name2);
   slide->func[0].func = rot;
