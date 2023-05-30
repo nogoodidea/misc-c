@@ -57,9 +57,10 @@ struct Slide {
 
 //mallocs an array the size of the c_string 
 char* mallocStr(char *in){
-	const unsigned int len = strlen(in)+1;
-	char *out = (char*) malloc(sizeof(char)*len);
-	strncpy(out,in,len+1);
+	const unsigned int len = strlen(in);
+	char *out = (char*) malloc(sizeof(char)*(len+1));
+	strncpy(out,in,len);
+  out[len] = '\0';
 	return out;
 }
 
@@ -95,7 +96,7 @@ struct Slide *returnSlide0(){
   slide->obj[1].points = mallocFloat(point1,7); 
   // function section
   slide->funcAmt = 1;
-  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->FuncAmt+1));
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt+1));
   char name2[] = "testCube";
   slide->func[0].name = mallocStr(name2);
   slide->func[0].func = rot;
