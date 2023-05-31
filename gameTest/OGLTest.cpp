@@ -58,7 +58,7 @@ struct Slide {
 //mallocs an array the size of the c_string 
 char* mallocStr(char *in){
 	const unsigned int len = strlen(in);
-	char *out = (char*) malloc(sizeof(char)*(len+1));
+	char *out = (char*) malloc(sizeof(char)*len+1);
 	for(unsigned int i=0;i<len;i+=1){
 		out[i] = in[i];
 	}
@@ -130,7 +130,7 @@ void freeSlide(struct Slide *slide){
 	}	
 	for(unsigned int i=0;i<slide->funcAmt;i+=1){
 		free(slide->func[i].name);
-		free(slide->obj[i].points);
+		free(slide->func[i].points);
 	}
 	free(slide->obj);
 	free(slide->func);
@@ -142,6 +142,7 @@ struct Slide **intSlides(){
 	slides[0] = returnSlide0();
 	slides[1] = returnSlide0();
   slides[2] = returnSlide0();
+  freeSlide(slides[2]);
 	return slides;
 }
 // data setting

@@ -289,7 +289,7 @@ class Renderer{
 
     void rend(int p,GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
      for(unsigned int i=0;i<obj.size();i+=1){
-	if(obj.at(i) == NULL){std::cerr << "Rend loop tryed to read a NULLed section of the rend array" << std::endl;}
+	      if(obj.at(i) == NULL){std::cerr << "Rend loop tryed to read a NULLed section of the rend array" << std::endl;}
         obj.at(i)->rend(p,w,h,s,reGenBuffer);
      }
     }
