@@ -59,8 +59,9 @@ struct Slide {
 char* mallocStr(char *in){
 	const unsigned int len = strlen(in);
 	char *out = (char*) malloc(sizeof(char)*(len+1));
-	strncpy(out,in,len);
-  out[len] = '\0';
+	for(unsigned int i=0;i<len;i+=1){
+		out[i] = in[i];
+	}
 	return out;
 }
 
