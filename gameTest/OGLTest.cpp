@@ -204,41 +204,40 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 	}
 	std::cout << "Slide: " << slide << " loaded" << std::endl;
 }
+
 void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
 	const size_t lim = slides[slide]->funcAmt;
-	int rendArrI=0;
-  	size_t obj;
-	Renderer rendArr[] = {rend,rendTx};
+  	Object3D *obj;
 	for(size_t i = 0; i < lim; i+=1){
-	  rendArrI=0;
-	  obj = rend.search(slides[slide]->func[i].name);
-    	  if(obj != rend.obj.max_size()){rendArrI=0;}
-        else{obj = rendTx.search(slides[slide]->func[i].name);
-          if(obj != rendTx.obj.max_size()){rendArrI=1;}else{continue;}
-        }
-	  //{rot,rotA,tran,scal};
+	obj = rend.search(slides[slide]->func[i].name);
+    	if(obj == NULL){
+	  obj = rendTx.search(slides[slide]->func[i].name);
+	  if(obj == NULL){continue;}
+			
+	}
+    		  //{rot,rotA,tran,scal};
 	  switch(slides[slide]->func[i].func){
 		  case rot:
-			  rendArr[rendArrI].get(obj)->rot(
+			  obj->rot(
 				slides[slide]->func[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2],
 				slides[slide]->func[i].points[3]);
 				break;
 		  case rotA:
-			  rendArr[rendArrI].get(obj)->rotA(
+			  obj->rotA(
 				slides[slide]->func[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2],
 				slides[slide]->func[i].points[3]);
 				break;
 		  case tran:
-			rendArr[rendArrI].get(obj)->trans(slides[slide]->obj[i].points[0],
+			obj->trans(slides[slide]->obj[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2]);
 				break;
 		  case scal:
-			rendArr[rendArrI].get(obj)->scale(
+			obj->scale(
 				slides[slide]->func[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2]);
@@ -250,18 +249,15 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
   std::cout << "Slide: " << slide << " try unload" << std::endl;
   const size_t lim = slides[slide]->amt;
-  int rendArrI=2;
-  size_t obj;
-  Renderer rendArr[] = {rend,rendTx};
+  Object3D *obj;
   for(size_t i = 0; i < lim; i+=1){
     obj = rend.search(slides[slide]->obj[i].name);
-    if(obj != rend.obj.max_size()){rendArrI=0;}
-    else{obj = rendTx.search(slides[slide]->obj[i].name);
-      if(obj != rendTx.obj.max_size()){rendArrI=1;}else{continue;}
-    }
-    rendArr[rendArrI].del(obj);
-    }
-  std::cout << "Slide: " << slide << " unloaded" << std::endl;
+    if(obj == NULL){
+      obj = rendTx.search(slides[slide]->obj[i].name);
+      if(obj == NULL){continue;}
+      else{rendTx.del(obj);}      
+    }else{rend.del(obj);}
+  }  std::cout << "Slide: " << slide << " unloaded" << std::endl;
 }
 
 
@@ -363,7 +359,6 @@ int main(int argc, char** argv){
    		}
    	}else{keyPressed=false;}
 
-
    runSlide(slideobj,slide,rend3d,rend3dt);
 
    // use buffer size not window size 
@@ -373,7 +368,7 @@ int main(int argc, char** argv){
    //1 means ortho, 2 might work
    rend3d.rend(1,bufW,bufH,scaler,reGenBuffer);
    rend3dt.rend(1,bufW,bufH,scaler,reGenBuffer);// transparent objects need to be rendered after
-						// also ... lets me call diffrent matrixes for both
+   
    if(reGenBuffer == true){
 	reGenBuffer = false;
    }

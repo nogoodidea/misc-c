@@ -282,36 +282,35 @@ class Renderer{
       obj.insert(obj.end(),item);
     }
 
-    Object3D *get(int i){
-      return obj.at(i);
-    }
-
     void rend(int p,GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
-     for(size_t i=0;i<obj.size();i+=1){
-	      if(obj.at(i) == NULL){std::cerr << "Rend loop tryed to read a NULLed section of the rend array" << std::endl;}
-        obj.at(i)->rend(p,w,h,s,reGenBuffer);
-     }
+     for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
+      	 (*i)->rend(p,w,h,s,reGenBuffer);
+      }
     }
     
-    size_t search(std::string name){
-      size_t i;
-      for(i=0;i<obj.size();i+=1){
-        if(obj.at(i)->name.compare(name)==0){return i;}
+    Object3D* search(std::string name){
+      for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
+        if(name.compare((*i)->name)==0){return (*i);}
       }
-      return obj.max_size(); 
+      return NULL;// return null if unfound 
     }
 
-    void del(size_t i){
-      std::cout << "rend/rendTx removed: "<< obj.at(i)->name << std::endl;
-      std::cout << obj.at(i)->name << std::endl;
-      obj.at(i)->cleanUp();
-      delete obj.at(i);
-      obj.erase(obj.begin()+i);
+    void del(Object3D *item){
+      std::cout << "rend/rendTx removed: "<< item->name << std::endl;
+      for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
+	if((*i) == item){
+      	  (*i)->cleanUp();
+      	  delete (*i);
+      	  obj.erase(i,i);
+        }
+      }
     }
+
     void cleanUp(){//del all
-     for(size_t i=0;i<obj.size();i+=1){
-        obj.at(i)->cleanUp();
-	delete obj.at(i);
+     for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
+        (*i)->cleanUp();
+	delete (*i);
+	obj.erase(i);
       }
      obj.clear();
      obj.shrink_to_fit();
