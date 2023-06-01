@@ -294,16 +294,18 @@ class Renderer{
      }
     }
     
-    int search(std::string name){
-      int i;
+    unsigned int search(std::string name){
+      unsigned int i;
       for(i=0;i<obj.size();i+=1){
         if(obj.at(i)->name.compare(name)==0){return i;}
       }
-      return -1; // return -1 to error out
+      return obj.size(); 
     }
     void del(unsigned int i){
+      std::cout << obj.at(i)->name << std::endl;
       obj.at(i)->cleanUp();
       delete obj.at(i);
+      obj.erase(obj.begin()+i);
     }
     void cleanUp(){//del all
      for(unsigned int i=0;i<obj.size();i+=1){

@@ -58,7 +58,7 @@ struct Slide {
 //mallocs an array the size of the c_string 
 char* mallocStr(char *in){
 	const unsigned int len = strlen(in);
-	char *out = (char*) malloc(sizeof(char)*len+1);
+	char *out = (char*) malloc(sizeof(char)*(len+1));
 	for(unsigned int i=0;i<len;i+=1){
 		out[i] = in[i];
 	}
@@ -74,12 +74,11 @@ GLfloat* mallocFloat(GLfloat *in,const unsigned int len){
 }
 
 struct Slide *returnSlide0(){
-  // bad way to do this but it works
+  // bad way to do this but it does not work
   // your going to need to free this
-  // https://stackoverflow.com/questions/53970133/non-static-initialization-of-a-flexible-array-member
   struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
   slide->amt = 2;
-  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt+1));
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
   slide->obj[0].shape = recTx;
   char name0[] = "slideText";
   slide->obj[0].name =  mallocStr(name0);
@@ -97,7 +96,7 @@ struct Slide *returnSlide0(){
   slide->obj[1].points = mallocFloat(point1,7); 
   // function section
   slide->funcAmt = 1;
-  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt+1));
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
   char name2[] = "testCube";
   slide->func[0].name = mallocStr(name2);
   slide->func[0].func = rot;
@@ -207,12 +206,12 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
 	const unsigned int lim = slides[slide]->funcAmt;
 	int rendArrI=0;
-  int obj;
+  long unsigned int obj;
 	Renderer rendArr[] = {rend,rendTx};
 	for(unsigned int i = 0; i < lim; i+=1){
 	  rendArrI=0;
 	  obj = rend.search(slides[slide]->func[i].name);
-    	  if(obj == -1){ obj = rendTx.search(slides[slide]->func[i].name);rendArrI=1;}
+    	  if(obj == rend.obj.size()){ obj = rendTx.search(slides[slide]->func[i].name);rendArrI=1;}
 	  //{rot,rotA,tran,scal};
 	  switch(slides[slide]->func[i].func){
 		  case rot:
@@ -248,13 +247,13 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
   const unsigned int lim = slides[slide]->amt;
   int rendArrI=2;
-  int obj;
+  long unsigned int obj;
 	Renderer rendArr[] = {rend,rendTx};
   for(unsigned int i = 0; i < lim; i+=1){
 	  rendArrI=2;
 	  obj = rend.search(slides[slide]->obj[i].name);	  
-    if(obj == -1){obj = rendTx.search(slides[slide]->obj[i].name);
-      if(obj != -1){rendArrI=1;}
+    if(obj == rend.obj.size()){obj = rendTx.search(slides[slide]->obj[i].name);
+      if(obj != rendTx.obj.size()){rendArrI=1;}
     }
     else{rendArrI=0;}
     if(rendArrI != 2){
