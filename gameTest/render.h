@@ -246,6 +246,7 @@ class Object3D{
       delete [] vertP;
       delete [] vertT;
       // your going to want to del the object after this
+      // names are not removed as they are malloced in an other place
     }
     
     void findMidpoint(GLfloat *out){
