@@ -4,6 +4,7 @@
 
 #include <cmath> // math
 #include <vector>
+#include <algorithm>
 #include <iostream> // string comp 
 // pi
 #define PI 3.14159f
@@ -297,20 +298,22 @@ class Renderer{
     }
 
     void del(Object3D *item){
-      std::cout << "rend/rendTx removed: "<< item->name << std::endl;
       for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
 	if((*i) == item){
       	  (*i)->cleanUp();
       	  delete (*i);
-      	  obj.erase(i);
+	  //how is this understandable 
         }
       }
+      obj.erase(std::remove(obj.begin(),obj.end(),item),obj.end());
+      std::cout << "rend/rendTx removed: "<< item->name << std::endl;
     }
 
     void cleanUp(){//del all
      for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
         (*i)->cleanUp();
 	delete (*i);
+	(*i) = NULL;
 	obj.erase(i);
       }
      obj.clear();
