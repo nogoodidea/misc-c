@@ -301,7 +301,7 @@ class Renderer{
 	if((*i) == item){
       	  (*i)->cleanUp();
       	  delete (*i);
-      	  obj.erase(i,i);
+      	  obj.erase(i);
         }
       }
     }
