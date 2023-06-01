@@ -48,8 +48,8 @@ struct FuncObject {
 };
 
 struct Slide {
-	unsigned int amt;
-  unsigned int funcAmt;
+	size_t amt;
+  	size_t funcAmt;
 	struct SlideObject *obj;
   struct FuncObject *func;
 };
@@ -122,12 +122,12 @@ struct Slide *returnSlide1(){
 }
 // function to FREE US ALL BE SAVED BE FREE POINTERS
 void freeSlide(struct Slide *slide){
-	for(unsigned int i=0;i<slide->amt;i+=1){
+	for(size_t i=0;i<slide->amt;i+=1){
 		free(slide->obj[i].name);
 		free(slide->obj[i].texPath);
 		free(slide->obj[i].points);
 	}	
-	for(unsigned int i=0;i<slide->funcAmt;i+=1){
+	for(size_t i=0;i<slide->funcAmt;i+=1){
 		free(slide->func[i].name);
 		free(slide->func[i].points);
 	}
@@ -147,8 +147,8 @@ struct Slide **intSlides(){
 // data setting
 void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *shadTx,Renderer *rend, Renderer *rendTx){
 	// max number of objects
-	const unsigned int lim = slides[slide]->amt;
-	for(unsigned int i = 0; i < lim; i+=1){
+	const size_t lim = slides[slide]->amt;
+	for(size_t i = 0; i < lim; i+=1){
 		std::cout << "ADD: " << slides[slide]->obj[i].name << std::endl;
 		switch (slides[slide]->obj[i].shape){
 			case sq:
@@ -204,16 +204,16 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 	std::cout << "Slide: " << slide << " loaded" << std::endl;
 }
 void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
-	const unsigned int lim = slides[slide]->funcAmt;
+	const size_t lim = slides[slide]->funcAmt;
 	int rendArrI=0;
-  long unsigned int obj;
+  	size_t obj;
 	Renderer rendArr[] = {rend,rendTx};
-	for(unsigned int i = 0; i < lim; i+=1){
+	for(size_t i = 0; i < lim; i+=1){
 	  rendArrI=0;
 	  obj = rend.search(slides[slide]->func[i].name);
-    	  if(obj != rend.obj.size()){rendArrI=0;}
+    	  if(obj != rend.obj.max_size()){rendArrI=0;}
         else{obj = rendTx.search(slides[slide]->func[i].name);
-          if(obj != rendTx.obj.size()){rendArrI=1;}else{continue;}
+          if(obj != rendTx.obj.max_size()){rendArrI=1;}else{continue;}
         }
 	  //{rot,rotA,tran,scal};
 	  switch(slides[slide]->func[i].func){
@@ -248,15 +248,15 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 
 
 void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
-  const unsigned int lim = slides[slide]->amt;
+  const size_t lim = slides[slide]->amt;
   int rendArrI=2;
-  long unsigned int obj;
+  size_t obj;
 	Renderer rendArr[] = {rend,rendTx};
-  for(unsigned int i = 0; i < lim; i+=1){
+  for(size_t i = 0; i < lim; i+=1){
 	  obj = rend.search(slides[slide]->func[i].name);
-    	  if(obj != rend.obj.size()){rendArrI=0;}
+    	  if(obj != rend.obj.max_size()){rendArrI=0;}
         else{obj = rendTx.search(slides[slide]->func[i].name);
-          if(obj != rendTx.obj.size()){rendArrI=1;}else{continue;}
+          if(obj != rendTx.obj.max_size()){rendArrI=1;}else{continue;}
         }
     std::cout << rendArr[rendArrI].get(i)->name << std::endl;
     rendArr[rendArrI].del(obj);
