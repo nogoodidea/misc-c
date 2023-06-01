@@ -62,11 +62,12 @@ char* mallocStr(char *in){
 	for(unsigned int i=0;i<len;i+=1){
 		out[i] = in[i];
 	}
+	out[len] = '\0';
 	return out;
 }
 
 GLfloat* mallocFloat(GLfloat *in,const unsigned int len){
-	GLfloat *out = (GLfloat*) malloc(sizeof(GLfloat)*len);
+	GLfloat *out = (GLfloat*) malloc(sizeof(GLfloat)*(len+1));
 	for(unsigned int i=0;i<len;i+=1){
 		out[i] = in[i];
 	}
@@ -97,7 +98,7 @@ struct Slide *returnSlide0(){
   // function section
   slide->funcAmt = 1;
   slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
-  char name2[] = "testCube";
+  char name2[] = "slideText";
   slide->func[0].name = mallocStr(name2);
   slide->func[0].func = rot;
   GLfloat point2[] = {0.1f,0.1f,1.0f,0.001f};
@@ -107,7 +108,7 @@ struct Slide *returnSlide0(){
 struct Slide *returnSlide1(){
   struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
   slide->amt = 1;
-  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt+1));
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
   slide->obj[0].shape = recTx;
   char name0[] = "slideText";
   slide->obj[0].name =  mallocStr(name0);
@@ -117,7 +118,7 @@ struct Slide *returnSlide1(){
   slide->obj[0].points = mallocFloat(point0,6);
   // function section
   slide->funcAmt = 0;
-  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt+1));
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
   return slide;
 }
 // function to FREE US ALL BE SAVED BE FREE POINTERS
@@ -246,22 +247,21 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 	  }
 }
 
-
 void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
+  std::cout << "Slide: " << slide << " try unload" << std::endl;
   const size_t lim = slides[slide]->amt;
   int rendArrI=2;
   size_t obj;
-	Renderer rendArr[] = {rend,rendTx};
+  Renderer rendArr[] = {rend,rendTx};
   for(size_t i = 0; i < lim; i+=1){
-	  obj = rend.search(slides[slide]->func[i].name);
-    	  if(obj != rend.obj.max_size()){rendArrI=0;}
-        else{obj = rendTx.search(slides[slide]->func[i].name);
-          if(obj != rendTx.obj.max_size()){rendArrI=1;}else{continue;}
-        }
-    std::cout << rendArr[rendArrI].get(i)->name << std::endl;
+    obj = rend.search(slides[slide]->obj[i].name);
+    if(obj != rend.obj.max_size()){rendArrI=0;}
+    else{obj = rendTx.search(slides[slide]->obj[i].name);
+      if(obj != rendTx.obj.max_size()){rendArrI=1;}else{continue;}
+    }
     rendArr[rendArrI].del(obj);
     }
-	std::cout << "Slide: " << slide << " unloaded" << std::endl;
+  std::cout << "Slide: " << slide << " unloaded" << std::endl;
 }
 
 

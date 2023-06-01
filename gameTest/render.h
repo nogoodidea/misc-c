@@ -242,9 +242,9 @@ class Object3D{
       glDeleteVertexArrays(1,&VAO);
       glDeleteBuffers(1,&VBO);
       glDeleteBuffers(1,&EBO);
-      delete upBuf;
-      delete vertP;
-      delete vertT;
+      delete [] upBuf;
+      delete [] vertP;
+      delete [] vertT;
       // your going to want to del the object after this
     }
     
