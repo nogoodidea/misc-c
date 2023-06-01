@@ -258,6 +258,7 @@ void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer
         else{obj = rendTx.search(slides[slide]->func[i].name);
           if(obj != rendTx.obj.size()){rendArrI=1;}else{continue;}
         }
+    std::cout << rendArr[rendArrI].get(i)->name << std::endl;
     rendArr[rendArrI].del(obj);
     }
 	std::cout << "Slide: " << slide << " unloaded" << std::endl;
