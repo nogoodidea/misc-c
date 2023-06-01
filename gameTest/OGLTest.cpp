@@ -360,7 +360,7 @@ int main(int argc, char** argv){
    		}
    	}else{keyPressed=false;}
 
-   //runSlide(slideobj,slide,rend3d,rend3dt);
+   runSlide(slideobj,slide,rend3d,rend3dt);
 
    // use buffer size not window size 
    glfwGetFramebufferSize(win,&bufW,&bufH);

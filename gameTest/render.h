@@ -302,11 +302,11 @@ class Renderer{
 	if((*i) == item){
       	  (*i)->cleanUp();
       	  delete (*i);
-	  //how is this understandable 
+	  (*i)=NULL;
         }
       }
       obj.erase(std::remove(obj.begin(),obj.end(),item),obj.end());
-      std::cout << "rend/rendTx removed: "<< item->name << std::endl;
+      obj.shrink_to_fit();
     }
 
     void cleanUp(){//del all
