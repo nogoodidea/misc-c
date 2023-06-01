@@ -211,7 +211,10 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 	for(unsigned int i = 0; i < lim; i+=1){
 	  rendArrI=0;
 	  obj = rend.search(slides[slide]->func[i].name);
-    	  if(obj == rend.obj.size()){ obj = rendTx.search(slides[slide]->func[i].name);rendArrI=1;}
+    	  if(obj != rend.obj.size()){rendArrI=0;}
+        else{obj = rendTx.search(slides[slide]->func[i].name);
+          if(obj != rendTx.obj.size()){rendArrI=1;}else{continue;}
+        }
 	  //{rot,rotA,tran,scal};
 	  switch(slides[slide]->func[i].func){
 		  case rot:
@@ -250,16 +253,13 @@ void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer
   long unsigned int obj;
 	Renderer rendArr[] = {rend,rendTx};
   for(unsigned int i = 0; i < lim; i+=1){
-	  rendArrI=2;
-	  obj = rend.search(slides[slide]->obj[i].name);	  
-    if(obj == rend.obj.size()){obj = rendTx.search(slides[slide]->obj[i].name);
-      if(obj != rendTx.obj.size()){rendArrI=1;}
+	  obj = rend.search(slides[slide]->func[i].name);
+    	  if(obj != rend.obj.size()){rendArrI=0;}
+        else{obj = rendTx.search(slides[slide]->func[i].name);
+          if(obj != rendTx.obj.size()){rendArrI=1;}else{continue;}
+        }
+    rendArr[rendArrI].del(obj);
     }
-    else{rendArrI=0;}
-    if(rendArrI != 2){
-    rendArr[i].del(obj);
-    }
-  }
 	std::cout << "Slide: " << slide << " unloaded" << std::endl;
 }
 
