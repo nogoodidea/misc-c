@@ -1,5 +1,5 @@
 CC=g++ -Wall -g
-LDFLAGS= -fsanitize=address -lglfw -lGL -Iinclude -I/usr/include/freetype2
+LDFLAGS= -fsanitize=address -lglfw -lGL -Iinclude 
 
 OGLTest: OGLTest.cpp
 	echo "Building OGLTest"

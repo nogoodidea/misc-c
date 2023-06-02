@@ -28,7 +28,7 @@ class Object3D{
     Shader *shad=NULL;
 
     // bools for updateing stuff
-    bool *upBuf; //0 C 1 P
+    bool *upBuf = new bool[2] {true,true}; //0 C 1 P
 
     GLfloat midPoint[3] = {0.0f,0.0f,0.0f}; // hold the mid point used for transform matrix
     int amtP,amtT; // amount vertexes, amout T 
@@ -43,7 +43,7 @@ class Object3D{
       vertP = IvertP;
       texture = Itexture;
       shad = Ishad;
-      upBuf = new bool[2] {false,true} ;// do i use this to much?
+      //upBuf = new bool[2] {false,true} ;// do i use this to much?
 
 
       glGenVertexArrays(1,&VAO); // vertex array object
@@ -281,17 +281,19 @@ class Renderer{
     
     void push(Object3D *item){
       std::cout << "rend/rendTx added: "<< item->name << std::endl;
-      obj.insert(obj.end(),item);
+      obj.insert(obj.begin(),item);
     }
 
     void rend(int p,GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
      for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
+         if((*i)==NULL){continue;}
       	 (*i)->rend(p,w,h,s,reGenBuffer);
       }
     }
     
     Object3D* search(std::string name){
       for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
+        if((*i)==NULL){continue;}
         if(name.compare((*i)->name)==0){return (*i);}
       }
       return NULL;// return null if unfound 
@@ -299,22 +301,20 @@ class Renderer{
 
     void del(Object3D *item){
       for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
-	if((*i) == item){
+	      if((*i) == item){
       	  (*i)->cleanUp();
-      	  delete (*i);
-	  (*i)=NULL;
+          (*i)=NULL;
         }
       }
-      obj.erase(std::remove(obj.begin(),obj.end(),item),obj.end());
-      obj.shrink_to_fit();
+    obj.erase(std::remove(obj.begin(),obj.end(),item),obj.end());
     }
 
     void cleanUp(){//del all
-     for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
+      for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
         (*i)->cleanUp();
-	delete (*i);
-	(*i) = NULL;
-	obj.erase(i);
+	      delete (*i);
+	      (*i) = NULL;
+        obj.erase(i);
       }
      obj.clear();
      obj.shrink_to_fit();
