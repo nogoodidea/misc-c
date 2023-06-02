@@ -61,6 +61,9 @@ node_t *nodeSearch(node_t *head,int value){
 //genrates a node with malloc
 node_t *nodeGenerate(int in){
   node_t *node = malloc(sizeof(node_t));
+  if(node == NULL){// malloc checker
+    fprintf(stderr,"ERROR:Malloc returned null");
+  }
   node->next=NULL;
   node->prev=NULL;
   node->value=in;
