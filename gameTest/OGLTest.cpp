@@ -24,6 +24,7 @@
 #include "render.h" // does obj mangment things
 #include "shapes.h" // helper functions to make shapes quicker
 //#include "text.h"   // lets me write things
+#include "linked.h" // linked list, reused from llTest.c
 
 //cstring
 #include<cstring> // for all of your suffering needs
@@ -146,29 +147,29 @@ struct Slide **intSlides(){
 	return slides;
 }
 // data setting
-void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *shadTx,Renderer *rend, Renderer *rendTx){
+void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *shadTx,node_t **rend, node_t **rendTx){
 	// max number of objects
 	const size_t lim = slides[slide]->amt;
 	for(size_t i = 0; i < lim; i+=1){
 		std::cout << "ADD: " << slides[slide]->obj[i].name << std::endl;
 		switch (slides[slide]->obj[i].shape){
 			case sq:
-				rend->push(genSquare(slides[slide]->obj[i].name,shad,
+				nodeAppendTail(rend,nodeGenerate(genSquare(slides[slide]->obj[i].name,shad,
 				slides[slide]->obj[i].points[0],
 				slides[slide]->obj[i].points[1],
 				slides[slide]->obj[i].points[2],
-				slides[slide]->obj[i].points[3]));
+				slides[slide]->obj[i].points[3])));
 				break;
 			case sqTx:
-				rendTx->push(genTextureSqu(slides[slide]->obj[i].name,shadTx,
+				nodeAppendTail(rendTx,nodeGenerate(genTextureSqu(slides[slide]->obj[i].name,shadTx,
 				slides[slide]->obj[i].points[0],
 				slides[slide]->obj[i].points[1],
 				slides[slide]->obj[i].points[2],
 				slides[slide]->obj[i].points[3],
-				slides[slide]->obj[i].texPath));
+				slides[slide]->obj[i].texPath)));
 				break;
 			case recTx:
-				rendTx->push(genTextureRect(
+				nodeAppendTail(rendTx,nodeGenerate(genTextureRect(
 				slides[slide]->obj[i].name,shadTx,
 				slides[slide]->obj[i].points[0],
 				slides[slide]->obj[i].points[1],
@@ -176,20 +177,20 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 				slides[slide]->obj[i].points[3],
 				slides[slide]->obj[i].points[4],
 				slides[slide]->obj[i].points[5],
-				slides[slide]->obj[i].texPath));
+				slides[slide]->obj[i].texPath)));
 				break;
 			case cu:
-				rend->push(genCube(slides[slide]->obj[i].name,shad,
+				nodeAppendTail(rend,nodeGenerate(genCube(slides[slide]->obj[i].name,shad,
 				slides[slide]->obj[i].points[0],
 				slides[slide]->obj[i].points[1],
 				slides[slide]->obj[i].points[2],
 				slides[slide]->obj[i].points[3],
 				slides[slide]->obj[i].points[4],
 				slides[slide]->obj[i].points[5],
-				slides[slide]->obj[i].points[6]));
+				slides[slide]->obj[i].points[6])));
 				break;
 			case tri:
-				rend->push(genTriangle(slides[slide]->obj[i].name,shad,
+				nodeAppendTail(rend,nodeGenerate(genTriangle(slides[slide]->obj[i].name,shad,
 				slides[slide]->obj[i].points[0],
 				slides[slide]->obj[i].points[1],
 				slides[slide]->obj[i].points[2],
@@ -198,46 +199,46 @@ void loadSlide(struct Slide **slides,unsigned int slide,Shader *shad,Shader *sha
 				slides[slide]->obj[i].points[5],
 				slides[slide]->obj[i].points[6],
 				slides[slide]->obj[i].points[7],
-				slides[slide]->obj[i].points[8]));
+				slides[slide]->obj[i].points[8])));
 				break;
 		}
 	}
 	std::cout << "Slide: " << slide << " loaded" << std::endl;
 }
 
-void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
+void runSlide(struct Slide **slides,unsigned int slide,node_t **rend,node_t **rendTx){
 	const size_t lim = slides[slide]->funcAmt;
-  	Object3D *obj;
+  node_t *obj;
 	for(size_t i = 0; i < lim; i+=1){
-	obj = rend.search(slides[slide]->func[i].name);
+	obj = nodeSearch((*rend),slides[slide]->func[i].name);
     	if(obj == NULL){
-	  obj = rendTx.search(slides[slide]->func[i].name);
+	  obj = nodeSearch((*rendTx),slides[slide]->func[i].name);
 	  if(obj == NULL){continue;}
 			
 	}
     		  //{rot,rotA,tran,scal};
 	  switch(slides[slide]->func[i].func){
 		  case rot:
-			  obj->rot(
+			  obj->value->rot(
 				slides[slide]->func[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2],
 				slides[slide]->func[i].points[3]);
 				break;
 		  case rotA:
-			  obj->rotA(
+			  obj->value->rotA(
 				slides[slide]->func[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2],
 				slides[slide]->func[i].points[3]);
 				break;
 		  case tran:
-			obj->trans(slides[slide]->obj[i].points[0],
+			obj->value->trans(slides[slide]->obj[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2]);
 				break;
 		  case scal:
-			obj->scale(
+			obj->value->scale(
 				slides[slide]->func[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2]);
@@ -246,17 +247,17 @@ void runSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer re
 	  }
 }
 
-void unloadSlide(struct Slide **slides,unsigned int slide,Renderer rend,Renderer rendTx){
+void unloadSlide(struct Slide **slides,unsigned int slide,node_t **rend,node_t **rendTx){
   std::cout << "Slide: " << slide << " try unload" << std::endl;
   const size_t lim = slides[slide]->amt;
-  Object3D *obj;
+  node_t *obj;
   for(size_t i = 0; i < lim; i+=1){
-    obj = rend.search(slides[slide]->obj[i].name);
+    obj = nodeSearch((*rend),slides[slide]->obj[i].name);
     if(obj == NULL){
-      obj = rendTx.search(slides[slide]->obj[i].name);
+      obj = nodeSearch((*rendTx),slides[slide]->obj[i].name);
       if(obj == NULL){continue;}
-      else{rendTx.del(obj);}      
-    }else{rend.del(obj);}
+      else{nodeFree(rend,obj);}      
+    }else{nodeFree(rendTx,obj);}
   }
   std::cout << "Slide: " << slide << " unloaded" << std::endl;
 }
@@ -313,6 +314,13 @@ void intOGL(){
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+//Gens Scaler for screen size scaleing
+GLfloat getScaler(GLfloat w,GLfloat h){
+  GLfloat fw=floorf(w/42);
+  GLfloat fh=floorf(h/18);
+  if(fw<=fh){return fw;}
+  else{return fh;}
+}
 
 int main(int argc, char** argv){
   // int GLFW/GLAD
@@ -338,8 +346,8 @@ int main(int argc, char** argv){
   Shader shadTex = Shader("shaders/vertTex.vs","shaders/normal.gio","shaders/fragTex.fs");
 
   // render obj
-  Renderer rend3d;
-  Renderer rend3dt; // transperent objects need to be rendered after
+  node_t *rend3d = NULL;
+  node_t *rend3dt = NULL; // transperent objects need to be rendered after
 
   loadSlide(slideobj,slide,&shadCol,&shadTex,&rend3d,&rend3dt);
 
@@ -354,21 +362,21 @@ int main(int argc, char** argv){
    
    if(glfwGetKey(win,GLFW_KEY_SPACE)){
    	if(keyPressed==false){keyPressed=true;
-		unloadSlide(slideobj,slide,rend3d,rend3dt);
+		unloadSlide(slideobj,slide,&rend3d,&rend3dt);
 		slide+=1;
 		loadSlide(slideobj,slide,&shadCol,&shadTex,&rend3d,&rend3dt);
    		}
    	}else{keyPressed=false;}
 
-   runSlide(slideobj,slide,rend3d,rend3dt);
+   runSlide(slideobj,slide,&rend3d,&rend3dt);
 
    // use buffer size not window size 
    glfwGetFramebufferSize(win,&bufW,&bufH);
    scaler = getScaler(bufW,bufH);
 
    //1 means ortho, 2 might work
-   rend3d.rend(1,bufW,bufH,scaler,reGenBuffer);
-   rend3dt.rend(1,bufW,bufH,scaler,reGenBuffer);// transparent objects need to be rendered after
+   nodeRender(rend3d,1,bufW,bufH,scaler,reGenBuffer);
+   nodeRender(rend3dt,1,bufW,bufH,scaler,reGenBuffer);// transparent objects need to be rendered after
    
    if(reGenBuffer == true){
 	reGenBuffer = false;
@@ -379,8 +387,9 @@ int main(int argc, char** argv){
    }
   // cleanup
   shadCol.cleanUp();
-  rend3d.cleanUp(); 
-  rend3dt.cleanUp();
+  shadTex.cleanUp();
+  nodeFreeAll(rend3d); 
+  nodeFreeAll(rend3dt);
 
   glfwTerminate();
   return 0;

@@ -1,6 +1,11 @@
+#ifndef RENDER_H
+#define RENDER_H
+
 // Holds the class for rendering and objects
 
 #include <glad/gl.h>
+#include "shader.h"
+
 
 #include <cmath> // math
 #include <vector>
@@ -9,12 +14,7 @@
 // pi
 #define PI 3.14159f
 
-GLfloat getScaler(GLfloat w,GLfloat h){
-  GLfloat fw=floorf(w/42);
-  GLfloat fh=floorf(h/18);
-  if(fw<=fh){return fw;}
-  else{return fh;}
-}
+
 
 // keeps track of the VBO/VAO Points and Colors
 class Object3D{
@@ -270,54 +270,4 @@ class Object3D{
     out[2]=avg/amtP;
     }
 };
-
-// render object
-// has a list of all Object3D and renders them squentuly
-// does new list and all that
-//
-class Renderer{
-  public:
-    std::vector<Object3D*> obj;
-    
-    void push(Object3D *item){
-      std::cout << "rend/rendTx added: "<< item->name << std::endl;
-      obj.insert(obj.begin(),item);
-    }
-
-    void rend(int p,GLfloat w,GLfloat h,GLfloat s,bool reGenBuffer){
-     for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
-         if((*i)==NULL){continue;}
-      	 (*i)->rend(p,w,h,s,reGenBuffer);
-      }
-    }
-    
-    Object3D* search(std::string name){
-      for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
-        if((*i)==NULL){continue;}
-        if(name.compare((*i)->name)==0){return (*i);}
-      }
-      return NULL;// return null if unfound 
-    }
-
-    void del(Object3D *item){
-      for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
-	      if((*i) == item){
-      	  (*i)->cleanUp();
-          (*i)=NULL;
-        }
-      }
-    obj.erase(std::remove(obj.begin(),obj.end(),item),obj.end());
-    }
-
-    void cleanUp(){//del all
-      for(std::vector<Object3D*>::iterator i = obj.begin();i< obj.end();i++){
-        (*i)->cleanUp();
-	      delete (*i);
-	      (*i) = NULL;
-        obj.erase(i);
-      }
-     obj.clear();
-     obj.shrink_to_fit();
-    }
-};
-
+#endif //RENDER_H
