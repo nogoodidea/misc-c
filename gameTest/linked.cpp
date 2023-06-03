@@ -3,7 +3,6 @@
 //linked list struct
 struct node {
   Object3D *value;
-  struct node *prev;
   struct node *next;
 };
 typedef struct node node_t;
@@ -26,22 +25,18 @@ void nodeAppendTail(node_t **head,node_t *node){
     temp = temp->next;
   } 
   temp->next = node;
-  node->prev = temp;
 }
 
 //Appends a node to the front of the linked list
 void nodeAppendHead(node_t **head,node_t *node){
   node->next = *head;
-  (*head)->prev = node;
   *head = node;
 }
 
 //Appends a node after the taget node
 void nodeAppendAfter(node_t *target,node_t *node){
   node->next=target->next;
-  node->prev=target;
   target->next=node;
-  node->next->prev = node;
 }
 
 //finds a node by checking int, returns a pointer to the node, returns NULL on error
@@ -63,11 +58,10 @@ node_t *nodeSearch(node_t *head,std::string value){
 node_t *nodeGenerate(Object3D *in){
   node_t *node = (node_t*) malloc(sizeof(node_t));
   if(node == NULL){// malloc checker
-    fprintf(stderr,"ERROR:Malloc returned null");
+    std::cerr << "ERROR:Malloc returned null" << std::endl;
     return NULL;
   }
   node->next=NULL;
-  node->prev=NULL;
   node->value=in;
   return node;
 }
@@ -89,22 +83,19 @@ void nodeFreeAll(node_t *head){
 void nodeFree(node_t **head,node_t *node){
   node_t *temp = *head;
   if(*head == node){
-    *head = temp->next;
-    (*head)->prev = NULL;
+    (*head) = temp->next;
     temp->value->cleanUp();
     delete (temp->value);
     temp->value = NULL;
     free(temp);
   }else{
-    node_t *temp = *head;
+    node_t *prevNode = NULL;
     while(temp != NULL && temp != node){
+      prevNode = temp;
       temp=temp->next;
     }
     if(temp == NULL){return;}// can't find it return
-    temp->prev->next = temp->next;
-    if(temp->next != NULL){
-      temp->next->prev = temp->prev;
-    }
+    prevNode->next = temp->next;
     temp->value->cleanUp();
     delete (temp->value);
     temp->value = NULL;

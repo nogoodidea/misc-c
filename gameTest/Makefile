@@ -1,9 +1,9 @@
 CC=g++ -Wall -g
 LDFLAGS= -fsanitize=address -lglfw -lGL -Iinclude 
 
-OGLTest: OGLTest.cpp
+OGLTest: OGLTest.cpp linked.cpp
 	echo "Building OGLTest"
-	$(CC) $(LDFLAGS) src/gl.c OGLTest.cpp -o OGLTest
+	$(CC) $(LDFLAGS) src/gl.c linked.cpp  OGLTest.cpp -o OGLTest
 
 glad:
 	echo "Running GLAD"

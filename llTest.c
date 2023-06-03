@@ -63,6 +63,7 @@ node_t *nodeGenerate(int in){
   node_t *node = malloc(sizeof(node_t));
   if(node == NULL){// malloc checker
     fprintf(stderr,"ERROR:Malloc returned null");
+    return NULL;
   }
   node->next=NULL;
   node->prev=NULL;
@@ -94,9 +95,7 @@ void nodeFree(node_t **head,node_t *node){
     }
     if(temp == NULL){return;}// can't find it return
     temp->prev->next = temp->next;
-    if(temp->next != NULL){
-      temp->next->prev = temp->prev;
-    }
+    temp->next->prev = temp->prev;
     free(temp);
   }
 }

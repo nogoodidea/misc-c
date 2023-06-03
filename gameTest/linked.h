@@ -7,7 +7,6 @@
 
 struct node {
   Object3D *value;
-  struct node *prev;
   struct node *next;
 };
 typedef struct node node_t;

@@ -256,8 +256,8 @@ void unloadSlide(struct Slide **slides,unsigned int slide,node_t **rend,node_t *
     if(obj == NULL){
       obj = nodeSearch((*rendTx),slides[slide]->obj[i].name);
       if(obj == NULL){continue;}
-      else{nodeFree(rend,obj);}      
-    }else{nodeFree(rendTx,obj);}
+      else{nodeFree(rendTx,obj);}      
+    }else{nodeFree(rend,obj);}
   }
   std::cout << "Slide: " << slide << " unloaded" << std::endl;
 }
