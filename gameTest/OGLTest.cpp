@@ -33,7 +33,7 @@
 enum shape_func {sq,sqTx,recTx,cu,tri};
 enum tran_func {rot,rotA,tran,scal};
 
-#define MAX_SLIDES 6
+#define MAX_SLIDES 12
 // consts for each slide
 struct SlideObject {
 	enum shape_func shape; // function to run
@@ -75,6 +75,7 @@ GLfloat* mallocFloat(GLfloat *in,const unsigned int len){
 	return out;
 }
 
+//slide 0 alloc
 struct Slide *returnSlide0(){
   // bad way to do this but it does not work
   // your going to need to free this
@@ -106,6 +107,8 @@ struct Slide *returnSlide0(){
   slide->func[0].points = mallocFloat(point2,4);
   return slide;
 }
+
+//silde 1 alloc
 struct Slide *returnSlide1(){
   struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
   slide->amt = 1;
@@ -122,6 +125,187 @@ struct Slide *returnSlide1(){
   slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
   return slide;
 }
+
+//silde 2 alloc
+struct Slide *returnSlide2(){
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 1;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
+  slide->obj[0].shape = recTx;
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/SlideText2.png";
+  slide->obj[0].texPath = mallocStr(path0);
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  // function section
+  slide->funcAmt = 0;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  return slide;
+}
+
+//silde 3 alloc
+struct Slide *returnSlide3(){
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 1;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
+  slide->obj[0].shape = recTx;
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/SlideText3.png";
+  slide->obj[0].texPath = mallocStr(path0);
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  // function section
+  slide->funcAmt = 0;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  return slide;
+}
+
+//silde 4 alloc
+struct Slide *returnSlide4(){
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 1;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
+  slide->obj[0].shape = recTx;
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/SlideText4.png";
+  slide->obj[0].texPath = mallocStr(path0);
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  // function section
+  slide->funcAmt = 0;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  return slide;
+}
+
+//silde 5 alloc
+struct Slide *returnSlide5(){
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 1;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
+  slide->obj[0].shape = recTx;
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/SlideText5.png";
+  slide->obj[0].texPath = mallocStr(path0);
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  // function section
+  slide->funcAmt = 0;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  return slide;
+}
+
+//silde 6 alloc
+struct Slide *returnSlide6(){
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 1;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
+  slide->obj[0].shape = recTx;
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/SlideText6.png";
+  slide->obj[0].texPath = mallocStr(path0);
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  // function section
+  slide->funcAmt = 0;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  return slide;
+}
+
+//silde 7 alloc
+struct Slide *returnSlide7(){
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 1;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
+  slide->obj[0].shape = recTx;
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/SlideText7.png";
+  slide->obj[0].texPath = mallocStr(path0);
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  // function section
+  slide->funcAmt = 0;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  return slide;
+}
+
+//silde 8 alloc
+struct Slide *returnSlide8(){
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 1;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
+  slide->obj[0].shape = recTx;
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/SlideText8.png";
+  slide->obj[0].texPath = mallocStr(path0);
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  // function section
+  slide->funcAmt = 0;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  return slide;
+}
+
+//silde 9 alloc
+struct Slide *returnSlide9(){
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 1;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
+  slide->obj[0].shape = recTx;
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/SlideText9.png";
+  slide->obj[0].texPath = mallocStr(path0);
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  // function section
+  slide->funcAmt = 0;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  return slide;
+}
+
+//silde 10 alloc
+struct Slide *returnSlide10(){
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 1;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
+  slide->obj[0].shape = recTx;
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/SlideText10.png";
+  slide->obj[0].texPath = mallocStr(path0);
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  // function section
+  slide->funcAmt = 0;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  return slide;
+}
+
+//silde 11 alloc
+struct Slide *returnSlide11(){
+  struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
+  slide->amt = 1;
+  slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
+  slide->obj[0].shape = recTx;
+  char name0[] = "slideText";
+  slide->obj[0].name =  mallocStr(name0);
+  char path0[] = "textures/testTexture.png";
+  slide->obj[0].texPath = mallocStr(path0);
+  GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
+  slide->obj[0].points = mallocFloat(point0,6);
+  // function section
+  slide->funcAmt = 0;
+  slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  return slide;
+}
+
 // function to FREE US ALL BE SAVED BE FREE POINTERS
 void freeSlide(struct Slide *slide){
 	for(size_t i=0;i<slide->amt;i+=1){
@@ -137,13 +321,31 @@ void freeSlide(struct Slide *slide){
 	free(slide->func);
 	free(slide);
 }
+
+// warper to call freeSlide on every slides
+void freeSlides(struct Slide **slides){
+  for(size_t i = 0; i < MAX_SLIDES;i+=1){
+    freeSlide(slides[i]);
+    std::cout << "Freeing Slide: " << i << std::endl;
+  }
+  free(slides);
+}
+
 // placeholders are more painfull than a config file said no one ever
 struct Slide **intSlides(){
 	struct Slide **slides = (struct Slide**) malloc(sizeof(struct Slide*)*MAX_SLIDES);
 	slides[0] = returnSlide0();
-	slides[1] = returnSlide0();
-  slides[2] = returnSlide0();
-  freeSlide(slides[2]);
+	slides[1] = returnSlide1();
+  slides[2] = returnSlide2();
+	slides[3] = returnSlide3();
+	slides[4] = returnSlide4();
+  slides[5] = returnSlide5();
+	slides[6] = returnSlide6();
+	slides[7] = returnSlide7();
+  slides[8] = returnSlide8();
+	slides[9] = returnSlide9();
+	slides[10] = returnSlide10();
+  slides[11] = returnSlide11();
 	return slides;
 }
 // data setting
@@ -363,7 +565,8 @@ int main(int argc, char** argv){
    if(glfwGetKey(win,GLFW_KEY_SPACE)){
    	if(keyPressed==false){keyPressed=true;
 		unloadSlide(slideobj,slide,&rend3d,&rend3dt);
-		slide+=1;
+		if(slide+1==MAX_SLIDES){slide = 0;}
+    else{slide+=1;}
 		loadSlide(slideobj,slide,&shadCol,&shadTex,&rend3d,&rend3dt);
    		}
    	}else{keyPressed=false;}
@@ -390,6 +593,7 @@ int main(int argc, char** argv){
   shadTex.cleanUp();
   nodeFreeAll(rend3d); 
   nodeFreeAll(rend3dt);
+  freeSlides(slideobj);
 
   glfwTerminate();
   return 0;
