@@ -1,5 +1,5 @@
-CC=g++ -Wall -g
-LDFLAGS= -fsanitize=address -lglfw -lGL -Iinclude 
+CC=g++ -Wall -Werror -Wpedantic -fsanitize=address 
+LDFLAGS= -lglfw -lGL -Iinclude 
 
 OGLTest: OGLTest.cpp linked.cpp
 	echo "Building OGLTest"
