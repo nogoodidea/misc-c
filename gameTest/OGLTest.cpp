@@ -33,7 +33,7 @@
 enum shape_func {sq,sqTx,recTx,cu,tri};
 enum tran_func {rot,rotA,tran,scal};
 
-#define MAX_SLIDES 12
+#define MAX_SLIDES 11
 // consts for each slide
 struct SlideObject {
 	enum shape_func shape; // function to run
@@ -100,7 +100,7 @@ struct Slide *returnSlide0(){
   // function section
   slide->funcAmt = 1;
   slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
-  char name2[] = "slideText";
+  char name2[] = "testCube";
   slide->func[0].name = mallocStr(name2);
   slide->func[0].func = rot;
   GLfloat point2[] = {0.1f,0.1f,1.0f,0.001f};
@@ -211,8 +211,17 @@ struct Slide *returnSlide6(){
   GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
   slide->obj[0].points = mallocFloat(point0,6);
   // function section
-  slide->funcAmt = 0;
+  slide->funcAmt = 2;
   slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  char name2[] = "slideText";
+  slide->func[0].name = mallocStr(name2);
+  slide->func[0].func = scal;
+  GLfloat point2[] = {1.001f,1.001f,1.0f,0.0f,0.5f};
+  slide->func[0].points = mallocFloat(point2,5);
+  slide->func[1].name = mallocStr(name2);
+  slide->func[1].func = rot;
+  GLfloat point3[] = {0.0f,0.0f,1.0f,0.001f};
+  slide->func[1].points = mallocFloat(point3,4);
   return slide;
 }
 
@@ -324,7 +333,7 @@ void freeSlide(struct Slide *slide){
 
 // warper to call freeSlide on every slides
 void freeSlides(struct Slide **slides){
-  for(size_t i = 0; i < MAX_SLIDES;i+=1){
+  for(size_t i = 0; i < MAX_SLIDES+1;i+=1){
     freeSlide(slides[i]);
     std::cout << "Freeing Slide: " << i << std::endl;
   }
@@ -333,7 +342,7 @@ void freeSlides(struct Slide **slides){
 
 // placeholders are more painfull than a config file said no one ever
 struct Slide **intSlides(){
-	struct Slide **slides = (struct Slide**) malloc(sizeof(struct Slide*)*MAX_SLIDES);
+	struct Slide **slides = (struct Slide**) malloc(sizeof(struct Slide*)*(MAX_SLIDES+1));//1+ so we get the right amount of memory
 	slides[0] = returnSlide0();
 	slides[1] = returnSlide1();
   slides[2] = returnSlide2();
@@ -440,10 +449,19 @@ void runSlide(struct Slide **slides,unsigned int slide,node_t **rend,node_t **re
 				slides[slide]->func[i].points[2]);
 				break;
 		  case scal:
+     	slides[slide]->func[i].points[4] += 0.1f;
+      if(slides[slide]->func[i].points[4] <= slides[slide]->func[i].points[3]){
+			obj->value->scale(
+				slides[slide]->func[i].points[0]*-1,
+				slides[slide]->func[i].points[1]*-1,
+				slides[slide]->func[i].points[2]*-1);
+      if(slides[slide]->func[i].points[4] <= slides[slide]->func[i].points[3]*2){slides[slide]->func[i].points[4]=0.0f;}
+      }else{
 			obj->value->scale(
 				slides[slide]->func[i].points[0],
 				slides[slide]->func[i].points[1],
 				slides[slide]->func[i].points[2]);
+        }
 				break;
 	  	}
 	  }
@@ -565,8 +583,11 @@ int main(int argc, char** argv){
    if(glfwGetKey(win,GLFW_KEY_SPACE)){
    	if(keyPressed==false){keyPressed=true;
 		unloadSlide(slideobj,slide,&rend3d,&rend3dt);
-		if(slide+1==MAX_SLIDES){slide = 0;}
-    else{slide+=1;}
+    if(glfwGetKey(win,GLFW_KEY_LEFT_SHIFT)){
+      if(slide == 0){slide=MAX_SLIDES;}
+      else{slide-=1;}
+    }else if(slide==MAX_SLIDES){slide = 0;
+    }else{slide+=1;}
 		loadSlide(slideobj,slide,&shadCol,&shadTex,&rend3d,&rend3dt);
    		}
    	}else{keyPressed=false;}
