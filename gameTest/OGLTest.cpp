@@ -216,7 +216,7 @@ struct Slide *returnSlide6(){
   char name2[] = "slideText";
   slide->func[0].name = mallocStr(name2);
   slide->func[0].func = scal;
-  GLfloat point2[] = {1.001f,1.001f,1.0f,0.0f,0.5f};
+  GLfloat point2[] = {1.001f,1.001f,1.0f,100.0f,0.0f};
   slide->func[0].points = mallocFloat(point2,5);
   slide->func[1].name = mallocStr(name2);
   slide->func[1].func = rot;
@@ -450,12 +450,12 @@ void runSlide(struct Slide **slides,unsigned int slide,node_t **rend,node_t **re
 				break;
 		  case scal:
      	slides[slide]->func[i].points[4] += 0.1f;
-      if(slides[slide]->func[i].points[4] <= slides[slide]->func[i].points[3]){
+      if(slides[slide]->func[i].points[4] >= slides[slide]->func[i].points[3]){
 			obj->value->scale(
-				slides[slide]->func[i].points[0]*-1,
-				slides[slide]->func[i].points[1]*-1,
-				slides[slide]->func[i].points[2]*-1);
-      if(slides[slide]->func[i].points[4] <= slides[slide]->func[i].points[3]*2){slides[slide]->func[i].points[4]=0.0f;}
+				fabsf(slides[slide]->func[i].points[0]-2),
+				fabsf(slides[slide]->func[i].points[1]-2),
+				fabsf(slides[slide]->func[i].points[2]-2));
+      if(slides[slide]->func[i].points[4] >= slides[slide]->func[i].points[3]*2){slides[slide]->func[i].points[4]=0.0f;}
       }else{
 			obj->value->scale(
 				slides[slide]->func[i].points[0],
