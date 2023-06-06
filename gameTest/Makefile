@@ -1,4 +1,4 @@
-CC=g++ -Wall -Werror -Wpedantic -fsanitize=address 
+CC=g++ -Wall -Werror -Wpedantic
 LDFLAGS= -lglfw -lGL -Iinclude 
 
 OGLTest: OGLTest.cpp linked.cpp
