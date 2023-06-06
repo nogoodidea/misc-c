@@ -103,7 +103,7 @@ struct Slide *returnSlide0(){
   char name2[] = "testCube";
   slide->func[0].name = mallocStr(name2);
   slide->func[0].func = rot;
-  GLfloat point2[] = {0.1f,0.1f,1.0f,0.001f};
+  GLfloat point2[] = {0.1f,0.1f,1.0f,0.1f};
   slide->func[0].points = mallocFloat(point2,4);
   return slide;
 }
@@ -264,7 +264,7 @@ struct Slide *returnSlide8(){
 //silde 9 alloc
 struct Slide *returnSlide9(){
   struct Slide *slide = (struct Slide*) malloc(sizeof(struct Slide));
-  slide->amt = 1;
+  slide->amt = 2;
   slide->obj = (struct SlideObject*) malloc(sizeof(struct SlideObject)*(slide->amt));
   slide->obj[0].shape = recTx;
   char name0[] = "slideText";
@@ -273,6 +273,15 @@ struct Slide *returnSlide9(){
   slide->obj[0].texPath = mallocStr(path0);
   GLfloat point0[] = {21.0f,9.0f,0.0f,-21.0f,-9.0f,0.0f};
   slide->obj[0].points = mallocFloat(point0,6);
+  
+  slide->obj[1].shape = tri;
+  char name1[] = "tri";
+  slide->obj[1].name =  mallocStr(name1);
+  char path1[] = "";
+  slide->obj[1].texPath = mallocStr(path1);
+  GLfloat point1[] = {-2.0f,-2.0f,-1.0f,-2.0f,-0.0f,0.0f,4.0f,0.0f,-1.0f};
+  slide->obj[1].points = mallocFloat(point1,9);
+
   // function section
   slide->funcAmt = 0;
   slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));

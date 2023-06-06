@@ -136,5 +136,5 @@ Object3D *genTriangle(std::string name,Shader *shad,GLfloat x0,GLfloat y0,GLfloa
     	x2,y2,z2,  1.0f,1.0f,1.0f, 0.0f,0.0f//0,1
 	};
 	GLuint* t = new GLuint[] {0,1,2};
-	return new Object3D(name,vert,8,t,12,0,shad);
+	return new Object3D(name,vert,3,t,1,0,shad);
 }
