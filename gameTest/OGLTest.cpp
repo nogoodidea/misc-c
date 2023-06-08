@@ -103,7 +103,7 @@ struct Slide *returnSlide0(){
   char name2[] = "testCube";
   slide->func[0].name = mallocStr(name2);
   slide->func[0].func = rot;
-  GLfloat point2[] = {0.1f,0.1f,1.0f,0.1f};
+  GLfloat point2[] = {0.4f,0.1f,1.0f,0.1f};
   slide->func[0].points = mallocFloat(point2,4);
   return slide;
 }
@@ -279,12 +279,16 @@ struct Slide *returnSlide9(){
   slide->obj[1].name =  mallocStr(name1);
   char path1[] = "";
   slide->obj[1].texPath = mallocStr(path1);
-  GLfloat point1[] = {-2.0f,-2.0f,-1.0f,-2.0f,-0.0f,0.0f,4.0f,0.0f,-1.0f};
+  GLfloat point1[] = {4.5f,4.5f,-1.0f,6.5f,6.5f,-1.0f,4.5f,6.5f,-1.0f};
   slide->obj[1].points = mallocFloat(point1,9);
 
   // function section
-  slide->funcAmt = 0;
+  slide->funcAmt = 1;
   slide->func = (struct FuncObject*) malloc(sizeof(struct FuncObject)*(slide->funcAmt));
+  slide->func[0].name = mallocStr(name1);
+  slide->func[0].func = rot;
+  GLfloat point2[] = {0.0f,0.0f,1.0f,0.1f};
+  slide->func[0].points = mallocFloat(point2,4);
   return slide;
 }
 
